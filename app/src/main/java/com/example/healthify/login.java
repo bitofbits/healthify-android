@@ -88,8 +88,8 @@ public class login extends AppCompatActivity
     }
     public void go_to_Customet_Home()
     {
-        Bundle b = new Bundle();
-        b.putString("user_name",email.getText().toString());
+//        Bundle b = new Bundle();
+//        b.putString("user_name",email.getText().toString());
         Intent i = new Intent(context,CustomerHome.class);
         i.putExtra("user_name",email.getText().toString());
         startActivity(i);

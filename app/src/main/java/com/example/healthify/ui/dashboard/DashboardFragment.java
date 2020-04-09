@@ -26,12 +26,14 @@ public class DashboardFragment extends Fragment
                 ViewModelProviders.of(this).get(DashboardViewModel.class);
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
         final TextView textView = root.findViewById(R.id.text_dashboard);
+        //final String k = getArguments().getString("user_email");
+        textView.setText(getArguments().getString("user_email"));
         dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>()
         {
             @Override
             public void onChanged(@Nullable String s)
             {
-                textView.setText(s);
+                //textView.setText(getArguments().getString("user_email"));
             }
         });
         return root;

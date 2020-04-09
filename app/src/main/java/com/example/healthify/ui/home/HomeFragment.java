@@ -1,10 +1,12 @@
 package com.example.healthify.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.healthify.Confirmation;
 import com.example.healthify.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,10 +31,12 @@ public class HomeFragment extends Fragment
 
     private HomeViewModel homeViewModel;
     private RecyclerView recyclerView;
+    private RecyclerViewAdapter adapter;
     private FloatingActionButton confirm_button;
     private ArrayList<String> img_urls = new ArrayList<>();
     private ArrayList<String> fd_name = new ArrayList<>();
     private ArrayList<Integer> fd_price = new ArrayList<>();
+    private Intent pay;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, final Bundle savedInstanceState)
     {
@@ -43,13 +47,14 @@ public class HomeFragment extends Fragment
         confirm_button = root.findViewById(R.id.order_check_out);
         //final TextView textView = root.findViewById(R.id.text_home);
         recyclerView = root.findViewById(R.id.recycle_view_menu);
+        initData();
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>()
         {
             @Override
             public void onChanged(@Nullable String s)
             {
                 //textView.setText(s);
-                initData();
+                //initData();
             }
         });
         confirm_button.setOnClickListener(new View.OnClickListener()
@@ -59,9 +64,17 @@ public class HomeFragment extends Fragment
             {
 
                // String email = savedInstanceState.get("user_name").toString();
-                System.out.println("Home Fragment--------- :"+getActivity().toString());
+                //System.out.println("Home Fragment--------- :"+getActivity().toString());
                 //Toast.makeText(getContext(),getActivity().toString(), Toast.LENGTH_SHORT).show();
-
+                //adapter.notifyDataSetChanged();
+                System.out.println(adapter.order_name + " total : "+adapter.total);
+                Bundle data = new Bundle();
+                //data.putSerializable("HashMap",adapter.order_name);
+                data.putInt("total",adapter.total);
+                pay = new Intent(getContext(),Confirmation.class);
+                pay.putExtras(data);
+                startActivity(pay);
+                //Payment Page;
                 //go to order confirmation page.
                // BaseFirestore.db.collection("Customer")
             }
@@ -127,8 +140,10 @@ public class HomeFragment extends Fragment
     private void InitRecyclerView()
     {
         System.out.println("In InitRecyclerView------------------");
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(getContext(),img_urls,fd_name,fd_price);
+        System.out.println(getContext().toString());
+        adapter = new RecyclerViewAdapter(getContext(),img_urls,fd_name,fd_price);
         recyclerView.setAdapter(adapter);
+        //adapter.notifyDataSetChanged();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 }

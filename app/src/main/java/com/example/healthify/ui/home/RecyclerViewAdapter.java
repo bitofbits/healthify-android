@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.example.healthify.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -24,7 +25,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<String> food_name = new ArrayList<>();
     private ArrayList<Integer> food_price = new ArrayList<>();
     private Context context;
-
+    public HashMap<String,Integer> order_name = new HashMap<>();
+    public int total=0;
     public RecyclerViewAdapter(Context context, ArrayList<String> image, ArrayList<String> img_name,ArrayList<Integer> food_price)
     {
         this.food_img = image;
@@ -68,10 +70,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View view)
             {
+                System.out.println(context.toString());
                 int tmp =Integer.parseInt(holder.quan.getText().toString());
-                tmp--;
-                tmp=Math.max(0,tmp);
+                if(tmp>0)
+                {
+                    total-=Integer.parseInt(food_price.get(position).toString());
+                    tmp--;
+                }
                 holder.quan.setText(Integer.toString(tmp));
+                order_name.put(holder.name.getText().toString(),tmp);
+                if(tmp==0)
+                    order_name.remove(holder.name.getText().toString());
             }
         });
         holder.add.setOnClickListener(new View.OnClickListener()
@@ -80,8 +89,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             public void onClick(View view)
             {
                 int x =Integer.parseInt(holder.quan.getText().toString());
-                x++;
+                if(x<5)
+                {
+                    total+=Integer.parseInt(food_price.get(position).toString());
+                    x++;
+                }
                 holder.quan.setText(Integer.toString(x));
+                order_name.put(holder.name.getText().toString(),x);
+                if(x==0)
+                    order_name.remove(holder.name.getText().toString());
             }
         });
     }

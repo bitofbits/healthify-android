@@ -1,18 +1,18 @@
 package com.example.healthify;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 
 public class CustomerHome extends AppCompatActivity
 {
-    final public Intent curr=getIntent();
+    //final public Intent curr=getIntent();
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -21,8 +21,6 @@ public class CustomerHome extends AppCompatActivity
         System.out.println("Called CustomerHome now!------------------ + "+this);
         setContentView(R.layout.activity_customer_home);
         BottomNavigationView navView = findViewById(R.id.nav_view);
-
-
 //        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener()
 //        {
 //            @Override
@@ -41,7 +39,7 @@ public class CustomerHome extends AppCompatActivity
 //                        selected = new NotificationsFragment();
 //                        break;
 //                }
-//                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,selected).commit();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_container,selected).commit();
 //                return true;
 //            }
 //        });
@@ -50,9 +48,35 @@ public class CustomerHome extends AppCompatActivity
         /*AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
                 .build();*/
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-
+        Bundle b = new Bundle();
+        System.out.println(getIntent().getStringExtra("user_name"));
+        b.putString("user_email",getIntent().getStringExtra("user_name"));
+        final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
+        //navController.navigate(R.id.navigation_dashboard,b);
+        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener()
+        {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item)
+            {
+                if(item.getItemId()==R.id.navigation_home)
+                {
+                    navController.navigate(R.id.navigation_home);
+                }
+                else if(item.getItemId()==R.id.navigation_dashboard)
+                {
+                    Bundle b = new Bundle();
+                    //System.out.println(getIntent().getStringExtra("user_name"));
+                    b.putString("user_email",getIntent().getStringExtra("user_name"));
+                    navController.navigate(R.id.navigation_dashboard,b);
+                }
+                else
+                {
+                    navController.navigate(R.id.navigation_notifications);
+                }
+                return true;
+            }
+        });
+        //NavigationUI.setupWithNavController(navView, navController);
     }
 }
