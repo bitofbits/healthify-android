@@ -1,23 +1,32 @@
 package Model;
 
-public class Product
+public class Product extends BaseFirestore
 {
     private String name;
-    private String discription;
     private int price;
     private String img_url;
+    private String discription;
     private boolean instock;
-
-    public String getName()
-    {
-        return name;
-    }
-
-    public void setName(String name)
+    public Product(String name, String discription,int price, String img_url, boolean instock)
     {
         this.name = name;
+        this.price = price;
+        this.img_url = img_url;
+        this.instock = instock;
+        this.discription=discription;
     }
+    public Product(String n,int p)
+    {
+        this.name=n;
+        this.price=p;
+        this.img_url="";
+        this.discription="";
 
+    }
+    public Product()
+    {
+        this.instock=true;
+    }
     public String getDiscription()
     {
         return discription;
@@ -27,7 +36,14 @@ public class Product
     {
         this.discription = discription;
     }
-
+    public String getName()
+    {
+        return name;
+    }
+    public void setName(String name)
+    {
+        this.name = name;
+    }
     public int getPrice()
     {
         return price;
@@ -56,5 +72,11 @@ public class Product
     public void setInstock(boolean instock)
     {
         this.instock = instock;
+    }
+
+    @Override
+    public String getID()
+    {
+        return this.name;
     }
 }

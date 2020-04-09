@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import Model.Product;
 import androidx.appcompat.app.AppCompatActivity;
 
 
 
 public class MainActivity extends AppCompatActivity {
 
-    //public static FirebaseFirestore db = FirebaseFirestore.getInstance();
     Button login;
     Button signup;
     @Override
@@ -19,6 +19,25 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("Hello_______________________"+this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Product p1 = new Product("Aloo Matar",100);
+        Product p2 = new Product("Poha",50);
+        Product p3 = new Product("Upma",50);
+        Product p4 = new Product("Masala Dosa",100);
+        Product p5 = new Product("Cheese Masala Dosa",120);
+        Product p6 = new Product("Biryani",350);
+        Product p7 = new Product("Grilled Sandwhich",150);
+        Product p8 = new Product("Bread Butter",25);
+        Product p9 = new Product("Roti(all)",50);
+        p1.sendToFirestore();
+        p2.sendToFirestore();
+        p3.sendToFirestore();
+        p4.sendToFirestore();
+        p5.sendToFirestore();
+        p6.sendToFirestore();
+        p7.sendToFirestore();
+        p8.sendToFirestore();
+        p9.sendToFirestore();
+
         login = findViewById(R.id.button_login);
         signup= findViewById(R.id.button_mainactivity_signup);
     }
@@ -27,9 +46,6 @@ public class MainActivity extends AppCompatActivity {
         Intent log = new Intent(MainActivity.this,login.class);
         startActivity(log);
         System.out.println("Entered onclick");
-        // Access a Cloud Firestore instance from your Activity
-        //Customer c2 = new Customer();
-
 //        DocumentReference docRef = db.collection("Customer").document("55");
 //        docRef.get();
 //        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
