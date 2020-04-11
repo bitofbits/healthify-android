@@ -21,18 +21,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>
 {
-    private ArrayList<String> food_img = new ArrayList<>();
-    private ArrayList<String> food_name = new ArrayList<>();
-    private ArrayList<Integer> food_price = new ArrayList<>();
+    private ArrayList<String> foodImg = new ArrayList<>();
+    private ArrayList<String> foodName = new ArrayList<>();
+    private ArrayList<Integer> foodPrice = new ArrayList<>();
     private Context context;
     public HashMap<String,Integer> order_name = new HashMap<>();
-    public int total=0;
-    public RecyclerViewAdapter(Context context, ArrayList<String> image, ArrayList<String> img_name,ArrayList<Integer> food_price)
+    public int total = 0;
+    public RecyclerViewAdapter(Context context, ArrayList<String> foodImg, ArrayList<String> foodName,ArrayList<Integer> foodPrice)
     {
-        this.food_img = image;
-        this.food_name = img_name;
+        this.foodImg = foodImg;
+        this.foodName = foodName;
         this.context = context;
-        this.food_price = food_price;
+        this.foodPrice = foodPrice;
     }
 
     @NonNull
@@ -47,16 +47,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position)
     {
-        if(food_img.get(position).equals(""))
+        if(foodImg.get(position).equals(""))
         {
             holder.img.setImageResource(R.drawable.capture);
         }
         else
         {
-            Glide.with(context).asBitmap().load(food_img.get(position)).into(holder.img);
+            Glide.with(context).asBitmap().load(foodImg.get(position)).into(holder.img);
         }
-        holder.name.setText(food_name.get(position));
-        holder.price.setText("₹ "+food_price.get(position).toString());
+        holder.name.setText(foodName.get(position));
+        holder.price.setText("₹ "+ foodPrice.get(position).toString());
         holder.parentLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -74,7 +74,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 int tmp =Integer.parseInt(holder.quan.getText().toString());
                 if(tmp>0)
                 {
-                    total-=Integer.parseInt(food_price.get(position).toString());
+                    total-=Integer.parseInt(foodPrice.get(position).toString());
                     tmp--;
                 }
                 holder.quan.setText(Integer.toString(tmp));
@@ -91,7 +91,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 int x =Integer.parseInt(holder.quan.getText().toString());
                 if(x<5)
                 {
-                    total+=Integer.parseInt(food_price.get(position).toString());
+                    total+=Integer.parseInt(foodPrice.get(position).toString());
                     x++;
                 }
                 holder.quan.setText(Integer.toString(x));
@@ -105,7 +105,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public int getItemCount()
     {
-        return food_img.size();
+        return foodImg.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder

@@ -24,8 +24,9 @@
         android:id="@+id/food_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
         android:text="Food_name"
         android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/food_image"
@@ -35,44 +36,44 @@
         android:id="@+id/food_cost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="15dp"
         android:text="Rs 250"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/food_image"
         app:layout_constraintTop_toBottomOf="@+id/food_name" />
 
-    <TextView
-        android:id="@+id/food_quantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginBottom="14dp"
-        android:text="0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/food_subtract" />
-
     <Button
         android:id="@+id/food_subtract"
-        android:layout_width="50dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="14dp"
-        android:ellipsize="none"
-        android:scrollbarSize="4dp"
-        android:text="--"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:text="-"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/food_image"
         app:layout_constraintTop_toBottomOf="@+id/food_cost" />
 
+
+    <TextView
+        android:id="@+id/food_quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="28dp"
+        android:text="0"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toRightOf="@id/food_subtract"
+        app:layout_constraintTop_toTopOf="@id/food_subtract" />
+
     <Button
         android:id="@+id/food_add"
-        android:layout_width="50dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginBottom="14dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
         android:text="+"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/food_quantity" />
