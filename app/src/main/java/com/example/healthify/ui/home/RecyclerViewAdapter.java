@@ -34,7 +34,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.context = context;
         this.foodPrice = foodPrice;
     }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -43,7 +42,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
-
+    @Override
+    public int getItemViewType(int position)
+    {
+        return position;
+    }
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position)
     {

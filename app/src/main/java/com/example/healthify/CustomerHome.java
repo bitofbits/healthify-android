@@ -3,6 +3,7 @@ package com.example.healthify;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.healthify.ui.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import androidx.navigation.Navigation;
 public class CustomerHome extends AppCompatActivity
 {
     //final public Intent curr=getIntent();
+    int flag=0;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -48,20 +50,27 @@ public class CustomerHome extends AppCompatActivity
         /*AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
                 .build();*/
-        Bundle b = new Bundle();
+        //Bundle b = new Bundle();
         System.out.println(getIntent().getStringExtra("user_name"));
-        b.putString("user_email",getIntent().getStringExtra("user_name"));
+        //b.putString("user_email",getIntent().getStringExtra("user_name"));
         final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         //navController.navigate(R.id.navigation_dashboard,b);
+        //getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_container,new HomeFragment()).commit();
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener()
         {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item)
             {
-                if(item.getItemId()==R.id.navigation_home)
+                if(item.getItemId()==R.id.navigation_home || flag==0)
                 {
-                    navController.navigate(R.id.navigation_home);
+                    flag=1;
+                    Bundle b = new Bundle();
+                    //System.out.println(getIntent().getStringExtra("user_name"));
+                    b.putString("user_email",getIntent().getStringExtra("user_name"));
+                    System.out.println("inside CustomerHome if of navigtion_home");
+                    navController.navigate(R.id.navigation_home,b);
+                    System.out.println(this+"111111111111111111111111111");
                 }
                 else if(item.getItemId()==R.id.navigation_dashboard)
                 {
@@ -69,6 +78,7 @@ public class CustomerHome extends AppCompatActivity
                     //System.out.println(getIntent().getStringExtra("user_name"));
                     b.putString("user_email",getIntent().getStringExtra("user_name"));
                     navController.navigate(R.id.navigation_dashboard,b);
+                    System.out.println(this+"22222222222222222222222");
                 }
                 else
                 {

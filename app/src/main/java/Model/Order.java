@@ -1,17 +1,54 @@
 package Model;
 
-public class Order
+import java.util.HashMap;
+
+public class Order extends BaseFirestore
 {
-    private Customer customer;
-    private DeliveryPartner partner;
+    private String customer_email;
+    private String order_id;
+    private String partner;
     private int cost;
     private String name;
-    public Order(Customer c,DeliveryPartner p, int co,String na)
+    private HashMap<String , Integer> order_name;
+    public Order(String c, int co,HashMap<String,Integer> x)
     {
-        customer=c;
-        partner=p;
+        order_id=Integer.toString(c.hashCode());
+        customer_email = c;
         cost=co;
-        name=na;
+        order_name = x;
+    }
+    public Order()
+    {
+
+    }
+    public String getCustomer_email()
+    {
+        return customer_email;
+    }
+
+    public void setCustomer_email(String customer_email)
+    {
+        this.customer_email = customer_email;
+    }
+
+    public String getPartner()
+    {
+        return partner;
+    }
+
+    public void setPartner(String partner)
+    {
+        this.partner = partner;
+    }
+
+    public HashMap<String, Integer> getOrder_name()
+    {
+        return order_name;
+    }
+
+    public void setOrder_name(HashMap<String, Integer> order_name)
+    {
+        this.order_name = order_name;
     }
     public String getName()
     {
@@ -22,25 +59,25 @@ public class Order
     {
         this.name = name;
     }
-    public Customer getCustomer()
-    {
-        return customer;
-    }
+//    public Customer getCustomer()
+//    {
+//        return customer;
+//    }
+//
+//    public void setCustomer(Customer customer)
+//    {
+//        this.customer = customer;
+//    }
 
-    public void setCustomer(Customer customer)
-    {
-        this.customer = customer;
-    }
-
-    public DeliveryPartner getPartner()
-    {
-        return partner;
-    }
-
-    public void setPartner(DeliveryPartner partner)
-    {
-        this.partner = partner;
-    }
+//    public DeliveryPartner getPartner()
+//    {
+//        return partner;
+//    }
+//
+//    public void setPartner(DeliveryPartner partner)
+//    {
+//        this.partner = partner;
+//    }
 
     public int getCost()
     {
@@ -50,5 +87,11 @@ public class Order
     public void setCost(int cost)
     {
         this.cost = cost;
+    }
+
+    @Override
+    public String getID()
+    {
+        return order_id;
     }
 }

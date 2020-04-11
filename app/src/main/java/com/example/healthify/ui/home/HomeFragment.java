@@ -17,6 +17,8 @@ import com.example.healthify.ui.dashboard.DashboardFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import Model.BaseFirestore;
+import Model.Order;
 import Model.Product;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,21 +56,20 @@ public class HomeFragment extends Fragment
     {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
-
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         confirmButton = root.findViewById(R.id.order_check_out);
         //final TextView textView = root.findViewById(R.id.text_home);
         recyclerView = root.findViewById(R.id.recycle_view_menu);
         initData();
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>()
-        {
-            @Override
-            public void onChanged(@Nullable String s)
-            {
-                //textView.setText(s);
-                //initData();
-            }
-        });
+//        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>()
+//        {
+//            @Override
+//            public void onChanged(@Nullable String s)
+//            {
+//                //textView.setText(s);
+//                //initData();
+//            }
+//        });
         confirmButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -79,17 +81,20 @@ public class HomeFragment extends Fragment
                 //Toast.makeText(getContext(),getActivity().toString(), Toast.LENGTH_SHORT).show();
                 //adapter.notifyDataSetChanged();
                 System.out.println(adapter.order_name + " total : "+adapter.total);
-//                pay = new Intent(getContext(),Confirmation.class);
-
                 Bundle orderData = new Bundle();
                 orderData.putSerializable("HashMap",adapter.order_name);
                 orderData.putInt("total",adapter.total);
-
-//                pay.putExtra("orderData", orderData);
-//                startActivity(pay);
+                orderData.putString("user_email",getArguments().get("user_email").toString());
+                System.out.println(getArguments().get("user_email"));
                 confirmationFragment newDialogFragment = new confirmationFragment();
                 newDialogFragment.setArguments(orderData);
                 newDialogFragment.show(getChildFragmentManager(),"confirationDialog");
+                System.out.println("After showing dialog box");
+                //recyclerView.setAdapter(null);
+                //recyclerView.setLayoutManager(null);
+                recyclerView.setAdapter(adapter);
+                //recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                //adapter.notifyDataSetChanged();
                 //Payment Page;
                 //go to order confirmation page.
                // BaseFirestore.db.collection("Customer")
@@ -136,8 +141,9 @@ public class HomeFragment extends Fragment
         ListView listView;
         @Nullable
         @Override
-        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            System.out.println("Inside OnCreateView-------------------------121212121212");
             final Bundle mBundle = getArguments();
             View rootView = inflater.inflate(R.layout.content_confirmation, container, false);
 
@@ -154,12 +160,44 @@ public class HomeFragment extends Fragment
             placeOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getDialog().dismiss();
-                    final NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-                    Bundle b = new Bundle();
-                    //System.out.println(getIntent().getStringExtra("user_name"));
-                    b.putString("user_email","19981999ab");
-                    navController.navigate(R.id.navigation_dashboard,b);
+
+                    DocumentReference documentReference = BaseFirestore.db.collection("Order").document(Integer.toString(mBundle.get("user_email").toString().hashCode()));
+                    documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                        {
+                            if(task.isSuccessful())
+                            {
+                                DocumentSnapshot doc = task.getResult();
+                                if(doc.exists())
+                                {
+                                    Toast.makeText(getContext(),"Cannot order due to pending order.",Toast.LENGTH_SHORT).show();
+                                    getDialog().dismiss();
+                                }
+                                else
+                                {
+                                    Order send = new Order(mBundle.get("user_email").toString(),mBundle.getInt("total"),(HashMap<String,Integer>)mBundle.getSerializable("HashMap"));
+                                    send.sendToFirestore();
+                                    Toast.makeText(getContext(),"Ordered Successfuly , thanks for trusting us!",Toast.LENGTH_SHORT).show();
+                                    getDialog().dismiss();
+                                }
+                            }
+                            else
+                            {
+                                Toast.makeText(getContext(),"Low Network connectivity, Please try again later!",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+//                    Order send = new Order(mBundle.get("user_email").toString(),mBundle.getInt("total"),(HashMap<String,Integer>)mBundle.getSerializable("HashMap"));
+//                    send.sendToFirestore();
+//                    getDialog().dismiss();
+                    //final NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                    //Bundle b = new Bundle();
+                    //System.out.println();
+                    //b.putString("user_emails","UTSAV TESTING");
+
+                    //navController.navigate(R.id.navigation_dashboard);
                 }
             });
 
