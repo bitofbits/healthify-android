@@ -37,4 +37,15 @@
         android:textAlignment="center"
         android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@+id/textUpperDashboardFragment" />
+    <Button
+        android:id="@+id/cancelButtonDashboardFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="20dp"
+        android:clickable="true"
+        android:text="Cancel current Order"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

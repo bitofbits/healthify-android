@@ -91,7 +91,7 @@ public class login extends AppCompatActivity
 //        Bundle b = new Bundle();
 //        b.putString("user_name",email.getText().toString());
         Intent i = new Intent(context,CustomerHome.class);
-        i.putExtra("user_name",email.getText().toString());
+        i.putExtra("user_email",email.getText().toString());
         startActivity(i);
     }
 
