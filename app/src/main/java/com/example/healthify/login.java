@@ -13,7 +13,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import Model.BaseFirestore;
 import Model.Customer;
+import Model.DeliveryPartner;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,6 +30,8 @@ public class login extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        DeliveryPartner raj = new DeliveryPartner("raj@email.com","1212","raj","raj123",true,0);
+        raj.sendToFirestore();
         email=findViewById(R.id.edittext_login_enail);
         password=findViewById(R.id.editText_password);
         System.out.println("INSIDE LOGIN CLASS -----------------------");
@@ -40,7 +44,7 @@ public class login extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                String e_mail = email.getText().toString();
+                final String e_mail = email.getText().toString();
                 DocumentReference docref = Customer.db.collection("Customer").document(e_mail);
                 docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
                 {
@@ -66,11 +70,39 @@ public class login extends AppCompatActivity
                                 }
                                 else
                                 {
-                                    Toast.makeText(getApplicationContext(),"Incorrect Password",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(),"Incorrect Password customer",Toast.LENGTH_SHORT).show();
                                 }
                             }
                             else
                             {
+                                final DocumentReference  doc2= BaseFirestore.db.collection("DeliveryPartner").document(e_mail);
+                                doc2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                                {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                                    {
+                                        if(task.isSuccessful())
+                                        {
+                                            DocumentSnapshot ref = task.getResult();
+                                            if(ref.exists())
+                                            {
+                                                String pa = ref.getString("password");
+                                                if(pa.equals(password.getText().toString()))
+                                                {
+                                                    got_to_DeliveryPerson_Home();
+                                                }
+                                                else
+                                                {
+                                                    Toast.makeText(getApplicationContext(),"Incorrect Password delivery",Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+
+                                        }
+                                    }
+                                });
                                 Toast.makeText(getApplicationContext(),"User does not exist , please sign up",Toast.LENGTH_SHORT).show();
                                 finish();
                                 //go to previous activity
@@ -91,6 +123,14 @@ public class login extends AppCompatActivity
 //        Bundle b = new Bundle();
 //        b.putString("user_name",email.getText().toString());
         Intent i = new Intent(context,CustomerHome.class);
+        i.putExtra("user_name",email.getText().toString());
+        startActivity(i);
+    }
+    public void got_to_DeliveryPerson_Home()
+    {
+
+        System.out.println("Inside Delivery Partner!");
+        Intent i = new Intent(context,DeliveryPartnerHome.class);
         i.putExtra("user_name",email.getText().toString());
         startActivity(i);
     }

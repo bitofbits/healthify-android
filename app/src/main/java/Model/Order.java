@@ -6,10 +6,19 @@ public class Order extends BaseFirestore
 {
     private String customer_email;
     private String order_id;
-    private String partner;
+    private String partner="raj@email.com";
     private int cost;
     private String name;
     private HashMap<String , Integer> order_name;
+    public String getOrder_id()
+    {
+        return order_id;
+    }
+
+    public void setOrder_id(String order_id)
+    {
+        this.order_id = order_id;
+    }
     public Order(String c, int co,HashMap<String,Integer> x)
     {
         order_id=Integer.toString(c.hashCode());

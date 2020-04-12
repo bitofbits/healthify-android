@@ -1,5 +1,6 @@
 package com.example.healthify.ui.home;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.TransitionManager;
@@ -176,6 +177,7 @@ public class HomeFragment extends Fragment
                     {
                         activeOrder = true;
                         mBundle.putBoolean("activeOrder", activeOrder);
+                        //get online delivery email id;
                         Order createNewOrder = new Order(mBundle.get("user_email").toString(),mBundle.getInt("total"),(HashMap<String,Integer>)mBundle.getSerializable("HashMap"));
                         createNewOrder.sendToFirestore();
                         Toast.makeText(getContext(),"Ordered Successfully , thanks for trusting us!",Toast.LENGTH_SHORT).show();

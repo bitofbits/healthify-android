@@ -12,9 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".DeliveryPartnerHome"
+            android:label="@string/title_activity_delivery_partner_home"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".Confirmation"
             android:label="@string/title_activity_confirmation"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CustomerHome"
             android:label="@string/title_activity_customer_home" />

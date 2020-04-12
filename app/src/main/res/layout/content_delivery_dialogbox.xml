@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ListView
+        android:id="@+id/order_details_deliverypartner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/total_DeliveryParter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Total :"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@+id/list_view_delivery"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/cust_name_DeliveryPartner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="cust_name"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/total_DeliveryParter" />
+
+    <TextView
+        android:id="@+id/cust_phone_DeliveryPartner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="cust_phone"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/cust_name_DeliveryPartner" />
+
+    <TextView
+        android:id="@+id/cust_add_DeliveryPartner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="cust_add"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/cust_phone_DeliveryPartner" />
+
+    <Button
+        android:id="@+id/deliverdone_DeliveryPartner"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="374dp"
+        android:text="Delivered"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/total_DeliveryParter" />
+</androidx.constraintlayout.widget.ConstraintLayout>
