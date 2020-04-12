@@ -61,7 +61,7 @@ public class login extends AppCompatActivity
                                 {
                                     //login successful
 
-                                    Toast.makeText(getApplicationContext(),"Correct: "+c.getEmail(),Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getApplicationContext(),"Correct: "+c.getEmail(),Toast.LENGTH_SHORT).show();
                                     go_to_Customet_Home();
                                 }
                                 else

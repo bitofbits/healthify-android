@@ -69,8 +69,9 @@ public class HomeFragment extends Fragment
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
         //Check if the customer has active order or not
-        activeOrder = getArguments().getBoolean("activeOrder");
-
+        this.activeOrder = getArguments().getBoolean("activeOrder");
+        Toast.makeText(getContext(),"Active Order : "+activeOrder,Toast.LENGTH_SHORT).show();
+        System.out.println("Inside HomFragment activity with "+this+" ,activeOrder : "+activeOrder);
         //Initialize the view
         confirmButton = root.findViewById(R.id.order_check_out);
         confirmButton.setVisibility(View.INVISIBLE);
@@ -140,6 +141,7 @@ public class HomeFragment extends Fragment
         System.out.println("In InitRecyclerView------------------");
         System.out.println(getContext().toString());
         adapter = new RecyclerViewAdapter(getContext(),imgUrls, fdName, fdPrice);
+        adapter.activeOrder = activeOrder;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
