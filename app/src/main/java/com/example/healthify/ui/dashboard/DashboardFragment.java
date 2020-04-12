@@ -40,7 +40,7 @@ public class DashboardFragment extends Fragment
     }
     public void resetTextView(){
         TextView activeOrderTextView = getActivity().findViewById(R.id.textLowerDashboardFragment);
-        activeOrderTextView.setText("Currently Active Order:" + new Boolean(activeOrder).toString());
+        activeOrderTextView.setText("Currently Active Order:" + new Boolean(this.activeOrder).toString());
     }
 
 }

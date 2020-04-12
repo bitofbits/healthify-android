@@ -9,8 +9,8 @@
         android:id="@+id/order_check_out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="36dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="36dp"
         android:background="@color/colorPrimaryDark"
         android:clickable="true"
         android:src="@drawable/background_main_activity"
@@ -21,5 +21,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle_view_menu"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="69dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

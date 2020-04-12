@@ -2,10 +2,13 @@ package com.example.healthify.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,6 +45,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.Fade;
+import androidx.transition.Transition;
 
 public class HomeFragment extends Fragment
 {
@@ -49,7 +54,7 @@ public class HomeFragment extends Fragment
     private HomeViewModel homeViewModel;
     private static RecyclerView recyclerView;
     private static RecyclerViewAdapter adapter;
-    private FloatingActionButton confirmButton;
+    public  static FloatingActionButton confirmButton;
     private ArrayList<String> imgUrls = new ArrayList<>();
     private ArrayList<String> fdName = new ArrayList<>();
     private ArrayList<Integer> fdPrice = new ArrayList<>();
@@ -68,6 +73,7 @@ public class HomeFragment extends Fragment
 
         //Initialize the view
         confirmButton = root.findViewById(R.id.order_check_out);
+        confirmButton.setVisibility(View.INVISIBLE);
         recyclerView = root.findViewById(R.id.recycle_view_menu);
 
         //Initialize the data
@@ -102,11 +108,6 @@ public class HomeFragment extends Fragment
                     adapter.activeOrder = activeOrder;
                 }
 
-                //recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                //adapter.notifyDataSetChanged();
-                //Payment Page;
-                //go to order confirmation page.
-               // BaseFirestore.db.collection("Customer")
             }
         });
         return root;
@@ -126,13 +127,8 @@ public class HomeFragment extends Fragment
                                 imgUrls.add(d.getImg_url());
                                 fdName.add(d.getName());
                                 fdPrice.add(d.getPrice());
-                                //Log.d(TAG, document.getId() + " => " + document.getData());
                             }
                             InitRecyclerView();
-                        }
-                        else {
-
-                            //Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });
@@ -153,7 +149,9 @@ public class HomeFragment extends Fragment
         @Override
 
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            System.out.println("Inside OnCreateView-------------------------121212121212");
+            System.out.println("Inside OnCreateView-------------------------121212121212" + getArguments());
+
+            //Create a new Bundle
             final Bundle mBundle = getArguments();
             View rootView = inflater.inflate(R.layout.content_confirmation, container, false);
             listView = (ListView) rootView.findViewById(R.id.orderListView);
@@ -176,9 +174,9 @@ public class HomeFragment extends Fragment
                     {
                         activeOrder = true;
                         mBundle.putBoolean("activeOrder", activeOrder);
-                        Order send = new Order(mBundle.get("user_email").toString(),mBundle.getInt("total"),(HashMap<String,Integer>)mBundle.getSerializable("HashMap"));
-                        send.sendToFirestore();
-                        Toast.makeText(getContext(),"Ordered Successfuly , thanks for trusting us!",Toast.LENGTH_SHORT).show();
+                        Order createNewOrder = new Order(mBundle.get("user_email").toString(),mBundle.getInt("total"),(HashMap<String,Integer>)mBundle.getSerializable("HashMap"));
+                        createNewOrder.sendToFirestore();
+                        Toast.makeText(getContext(),"Ordered Successfully , thanks for trusting us!",Toast.LENGTH_SHORT).show();
                     }
 //                    DocumentReference documentReference = BaseFirestore.db.collection("Order").document(Integer.toString(mBundle.get("user_email").toString().hashCode()));
 //                    System.out.println("bc");
@@ -237,6 +235,7 @@ public class HomeFragment extends Fragment
                     dashboardFragment.resetTextView();
                     BottomNavigationView mBottomNavigationView = getActivity().findViewById(R.id.nav_view);
                     mBottomNavigationView.findViewById(R.id.navigation_dashboard).performClick();
+                    confirmButton.hide();
 
                 }
             });
@@ -244,5 +243,14 @@ public class HomeFragment extends Fragment
             return rootView;
         }
 
+    }
+    public static void setFloatingActionButtonVisibility(boolean visibility){
+
+        if(visibility){
+            confirmButton.show();
+        }
+        else{
+            confirmButton.hide();
+        }
     }
 }

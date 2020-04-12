@@ -23,7 +23,7 @@ import Model.Customer;
 
 public class CustomerHome extends AppCompatActivity {
     //final public Intent curr=getIntent();
-    private boolean activeOrder;
+    public static boolean activeOrder;
     private String emailAddress;
     final Fragment homeFragment = new HomeFragment();
     final Fragment dashboardFragment = new DashboardFragment();
@@ -36,21 +36,8 @@ public class CustomerHome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //To find if user has an active order
-        Customer.db.collection("Order").whereEqualTo("customer_email", emailAddress).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    Log.v("CustomerHome", "Order Found");
-                    activeOrder = true;
-                }
-                else {
-                    Log.v("CustomerHome", "Order NOT Found");
-                    activeOrder = false;
-                }
-            }
-        });
         setContentView(R.layout.activity_customer_home);
+        emailAddress = getIntent().getStringExtra("user_name");
 //        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener()
 //        {
 //            @Override
@@ -80,11 +67,29 @@ public class CustomerHome extends AppCompatActivity {
 //                .build();
 // Bundle b = new Bundle();
         // Bundle to send Email Address
+
+        //To find if user has an active order
+        Customer.db.collection("Order").whereEqualTo("customer_email", emailAddress).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful())
+                {
+                    Log.v("CustomerHome", "Order Found");
+                    activeOrder = true;
+                    System.out.println("tasksuccessfulklk ke andar" + activeOrder);
+                }
+                else {
+                    Log.v("CustomerHome", "Order NOT Found");
+                    activeOrder = false;
+                }
+                System.out.println("oncomplete ke bahar" + activeOrder);
+            }
+        });
+
         Bundle mBundle = new Bundle();
-        emailAddress = getIntent().getStringExtra("user_name");
         mBundle.putString("user_email", emailAddress);
         mBundle.putBoolean("activeOrder", activeOrder);
-
+        System.out.println("IN CUSTOMER HOME ACTIVE ORDER" + activeOrder);
         homeFragment.setArguments(mBundle);
         dashboardFragment.setArguments(mBundle);
 

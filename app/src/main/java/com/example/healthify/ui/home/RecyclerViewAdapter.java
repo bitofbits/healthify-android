@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.healthify.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,6 +82,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 if(activeOrder) {
                     tmp = 0;
                     Toast.makeText(context,"Sorry! You have already placed an Order",Toast.LENGTH_SHORT).show();
+                    HomeFragment.setFloatingActionButtonVisibility(false);
                 }
                 else
                     {
@@ -88,7 +90,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             total-=Integer.parseInt(foodPrice.get(position).toString());
                             tmp--;
                         }
+                }
 
+                if(total == 0){
+                    HomeFragment.setFloatingActionButtonVisibility(false);
                 }
                 holder.quan.setText(Integer.toString(tmp));
                 order_name.put(holder.name.getText().toString(),tmp);
@@ -107,18 +112,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 if(activeOrder) {
                     x = 0;
                     Toast.makeText(context,"Sorry! You have already placed an Order",Toast.LENGTH_SHORT).show();
+                    HomeFragment.setFloatingActionButtonVisibility(false);
                 }
                 else{
-
-                    if(x<5) {
+                    if(x < 5) {
                         x++;
                         total+=Integer.parseInt(foodPrice.get(position).toString());
+                        HomeFragment.setFloatingActionButtonVisibility(true);
                     }
                     else {
                         Toast.makeText(context,"Dang! You can purchase only 5 item of same type",Toast.LENGTH_SHORT).show();
                     }
-
                 }
+
+
                 holder.quan.setText(Integer.toString(x));
                 order_name.put(holder.name.getText().toString(),x);
                 if(x==0)
