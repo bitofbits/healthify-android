@@ -73,6 +73,7 @@ public class HomeFragment extends Fragment
         this.activeOrder = getArguments().getBoolean("activeOrder");
         Toast.makeText(getContext(),"Active Order : "+activeOrder,Toast.LENGTH_SHORT).show();
         System.out.println("Inside HomFragment activity with "+this+" ,activeOrder : "+activeOrder);
+
         //Initialize the view
         confirmButton = root.findViewById(R.id.order_check_out);
         confirmButton.setVisibility(View.INVISIBLE);
@@ -182,46 +183,6 @@ public class HomeFragment extends Fragment
                         createNewOrder.sendToFirestore();
                         Toast.makeText(getContext(),"Ordered Successfully , thanks for trusting us!",Toast.LENGTH_SHORT).show();
                     }
-//                    DocumentReference documentReference = BaseFirestore.db.collection("Order").document(Integer.toString(mBundle.get("user_email").toString().hashCode()));
-//                    System.out.println("bc");
-//                    documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
-//                    {
-//                        @Override
-//                        public void onComplete(@NonNull Task<DocumentSnapshot> task)
-//                        {
-//                            if(task.isSuccessful())
-//                            {
-//                                DocumentSnapshot doc = task.getResult();
-//                                if(doc.exists())
-//                                {
-//                                    Toast.makeText(getContext(),"Cannot order due to pending order.",Toast.LENGTH_SHORT).show();
-//                                    System.out.println("chutiya1");
-//                                    getDialog().dismiss();
-//                                }
-//                                else
-//                                {
-//                                    Order send = new Order(mBundle.get("user_email").toString(),mBundle.getInt("total"),(HashMap<String,Integer>)mBundle.getSerializable("HashMap"));
-//                                    send.sendToFirestore();
-//                                    Toast.makeText(getContext(),"Ordered Successfully , thanks for trusting us!",Toast.LENGTH_SHORT).show();
-//                                    getDialog().dismiss();
-//                                    System.out.println("cutoya23");
-//                                }
-//                            }
-//                            else
-//                            {
-//                                Toast.makeText(getContext(),"Low Network connectivity, Please try again later!",Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
-//                    Order send = new Order(mBundle.get("user_email").toString(),mBundle.getInt("total"),(HashMap<String,Integer>)mBundle.getSerializable("HashMap"));
-//                    send.sendToFirestore();
-//                    getDialog().dismiss();
-                    //final NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-                    //Bundle b = new Bundle();
-                    //System.out.println();
-                    //b.putString("user_emails","UTSAV TESTING");
-
-                    //navController.navigate(R.id.navigation_dashboard);
                     getDialog().dismiss();
 
                     /*Logic to not let user buy the items if he already has active Order
@@ -256,5 +217,8 @@ public class HomeFragment extends Fragment
         else{
             confirmButton.hide();
         }
+    }
+    public void setActiveOrder(boolean activeOrder) {
+        this.activeOrder = activeOrder;
     }
 }

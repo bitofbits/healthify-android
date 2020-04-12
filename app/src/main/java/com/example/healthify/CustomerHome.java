@@ -25,13 +25,12 @@ import androidx.navigation.Navigation;
 import Model.Customer;
 
 public class CustomerHome extends AppCompatActivity {
-    //final public Intent curr=getIntent();
-    public boolean activeOrder=false;
+    public boolean activeOrder = false;
     private String emailAddress;
-    Fragment homeFragment;// = new HomeFragment();
-    Fragment dashboardFragment;// = new DashboardFragment();
-    Fragment notificationFragment;// = new NotificationsFragment();
-    Fragment selectedFragment;// = homeFragment;
+    Fragment homeFragment;
+    Fragment dashboardFragment;
+    Fragment notificationFragment;
+    Fragment selectedFragment;
     final FragmentManager fragmentManager = getSupportFragmentManager();
     private Bundle mBundle = new Bundle();
 
@@ -40,44 +39,13 @@ public class CustomerHome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_customer_home);
-        emailAddress = getIntent().getStringExtra("user_name");
-//        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener()
-//        {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item)
-//            {
-//                Fragment selected=null;
-//                switch (item.getItemId())
-//                {
-//                    case R.id.navigation_home:
-//                        selected = new HomeFragment();
-//                        break;
-//                    case R.id.navigation_dashboard:
-//                        selected = new DashboardFragment();
-//                        break;
-//                    case R.id.navigation_notifications:
-//                        selected = new NotificationsFragment();
-//                        break;
-//                }
-//                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_container,selected).commit();
-//                return true;
-//            }
-//        });
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-//        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-//                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-//                .build();
-// Bundle b = new Bundle();
-        // Bundle to send Email Address
+        emailAddress = getIntent().getStringExtra("user_email");
 
-        //To find if user has an active order
         Customer.db.collection("Order").whereEqualTo("customer_email", emailAddress).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful())
                 {
-                    //DocumentReference doc = task.getResult();
                     if(task.getResult().isEmpty())
                     {
                         Toast.makeText(getApplicationContext(),"isEmpty",Toast.LENGTH_SHORT).show();
@@ -88,12 +56,10 @@ public class CustomerHome extends AppCompatActivity {
                         activeOrder = true;
                     }
                     Log.v("CustomerHome", "Order Found");
-                    //activeOrder = true;
                     mBundle.putString("user_email", emailAddress);
                     mBundle.putBoolean("activeOrder", activeOrder);
                     InitFragments();
 //                    homeFragment.setArguments(mBundle);
-//                    dashboardFragment.setArguments(mBundle);
                     System.out.println("tasksuccessfulklk ke andar----------------111111111 : " + activeOrder);
                 }
                 else{
@@ -102,30 +68,16 @@ public class CustomerHome extends AppCompatActivity {
                     mBundle.putString("user_email", emailAddress);
                     mBundle.putBoolean("activeOrder", activeOrder);
                     InitFragments();
-//                    homeFragment.setArguments(mBundle);
-//                    dashboardFragment.setArguments(mBundle);
                 }
-                //System.out.println("oncomplete ke bahar" + activeOrder);
             }
         });
 
-
-//        mBundle.putString("user_email", emailAddress);
-//        mBundle.putBoolean("activeOrder", activeOrder);
         System.out.println("IN CUSTOMER HOME ACTIVE ORDER------------2222222222222222 : " + activeOrder);
-//        homeFragment.setArguments(mBundle);
-//        dashboardFragment.setArguments(mBundle);
 
         //Initialize and populate BottomNavView
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(navListener);
 
-        //Initialize all fragments and hide it except the HomeFragment
-//        fragmentManager.beginTransaction().add(R.id.fragmentContainer, notificationFragment,
-//                "NotificationFragment").hide(notificationFragment).commit();
-//        fragmentManager.beginTransaction().add(R.id.fragmentContainer, dashboardFragment,
-//                "DashboardFragment").hide(dashboardFragment).commit();
-//        fragmentManager.beginTransaction().add(R.id.fragmentContainer, homeFragment,"HomeFragment").commit();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -143,32 +95,38 @@ public class CustomerHome extends AppCompatActivity {
                 fragmentManager.beginTransaction().hide(selectedFragment).show(dashboardFragment).commit();
                 selectedFragment = dashboardFragment;
                 Log.v("NavigationDashboard", "Navigation Dashboard");
-//                    navController.navigate(R.id.navigation_dashboard, mBundle);
             }
             else {
                 fragmentManager.beginTransaction().hide(selectedFragment).show(notificationFragment).commit();
                 selectedFragment = notificationFragment;
                 Log.v("NavigationNotifications", "Navigation Notifications");
             }
-            System.out.println("BOTTOM NAV VIEW");
             return true;
         }
     };
     private void InitFragments()
     {
+        //Initialize all fragments and hide it except the HomeFragment
         homeFragment = new HomeFragment();
         System.out.println("Inside InitFragments with "+this+ "home : "+homeFragment);
         dashboardFragment = new DashboardFragment();
         notificationFragment = new NotificationsFragment();
         homeFragment.setArguments(mBundle);
         dashboardFragment.setArguments(mBundle);
+
         selectedFragment = homeFragment;
+
         fragmentManager.beginTransaction().add(R.id.fragmentContainer, notificationFragment,
                 "NotificationFragment").hide(notificationFragment).commit();
         fragmentManager.beginTransaction().add(R.id.fragmentContainer, dashboardFragment,
                 "DashboardFragment").hide(dashboardFragment).commit();
         fragmentManager.beginTransaction().add(R.id.fragmentContainer, homeFragment,"HomeFragment").commit();
         System.out.println("Last in InitFragment func -------------------");
+
+        if(activeOrder) {
+            BottomNavigationView mBottomNavigationView = findViewById(R.id.nav_view);
+            mBottomNavigationView.findViewById(R.id.navigation_dashboard).performClick();
+        }
     }
 }
 
