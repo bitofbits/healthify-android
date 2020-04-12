@@ -25,6 +25,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<String> foodName = new ArrayList<>();
     private ArrayList<Integer> foodPrice = new ArrayList<>();
     private Context context;
+    public boolean activeOrder = false;
     public HashMap<String,Integer> order_name = new HashMap<>();
     public int total = 0;
     public RecyclerViewAdapter(Context context, ArrayList<String> foodImg, ArrayList<String> foodName,ArrayList<Integer> foodPrice)
@@ -75,10 +76,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             {
                 System.out.println(context.toString());
                 int tmp =Integer.parseInt(holder.quan.getText().toString());
-                if(tmp>0)
-                {
-                    total-=Integer.parseInt(foodPrice.get(position).toString());
-                    tmp--;
+
+                //Button work only if customer don't have an active order
+                if(activeOrder) {
+                    tmp = 0;
+                    Toast.makeText(context,"Sorry! You have already placed an Order",Toast.LENGTH_SHORT).show();
+                }
+                else
+                    {
+                        if(tmp>0) {
+                            total-=Integer.parseInt(foodPrice.get(position).toString());
+                            tmp--;
+                        }
+
                 }
                 holder.quan.setText(Integer.toString(tmp));
                 order_name.put(holder.name.getText().toString(),tmp);
@@ -92,10 +102,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             public void onClick(View view)
             {
                 int x =Integer.parseInt(holder.quan.getText().toString());
-                if(x<5)
-                {
-                    total+=Integer.parseInt(foodPrice.get(position).toString());
-                    x++;
+
+                //Button work only if customer don't have an active order
+                if(activeOrder) {
+                    x = 0;
+                    Toast.makeText(context,"Sorry! You have already placed an Order",Toast.LENGTH_SHORT).show();
+                }
+                else{
+
+                    if(x<5) {
+                        x++;
+                        total+=Integer.parseInt(foodPrice.get(position).toString());
+                    }
+                    else {
+                        Toast.makeText(context,"Dang! You can purchase only 5 item of same type",Toast.LENGTH_SHORT).show();
+                    }
+
                 }
                 holder.quan.setText(Integer.toString(x));
                 order_name.put(holder.name.getText().toString(),x);

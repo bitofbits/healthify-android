@@ -9,10 +9,11 @@
         android:id="@+id/order_check_out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="60dp"
         android:background="@color/colorPrimaryDark"
         android:clickable="true"
+        android:src="@drawable/background_main_activity"
         app:layout_constraintBottom_toBottomOf="@+id/recycle_view_menu"
         app:layout_constraintEnd_toEndOf="@+id/recycle_view_menu"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
