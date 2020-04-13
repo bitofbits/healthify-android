@@ -12,7 +12,7 @@ public class DeliveryPartner extends BaseFirestore
     {
 
     }
-    public  DeliveryPartner(String e_mail,String num,String name, String pass, Boolean online, int till_now)
+    public DeliveryPartner(String e_mail,String num,String name, String pass, Boolean online, int till_now)
     {
         this.email = e_mail;
         this.mobile_number = num;

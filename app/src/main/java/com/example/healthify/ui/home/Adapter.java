@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class Adapter extends BaseAdapter {
     private final ArrayList mData;
-    public Adapter(HashMap<String,Integer> map){
+    public Adapter(HashMap<String,Long> map){
         mData = new ArrayList();
         mData.addAll(map.entrySet());
     }
@@ -26,7 +26,7 @@ public class Adapter extends BaseAdapter {
     }
 
     @Override
-    public Map.Entry<String, Integer> getItem(int position) {
+    public Map.Entry<String, Long> getItem(int position) {
         return (Map.Entry) mData.get(position);
     }
 
@@ -43,12 +43,13 @@ public class Adapter extends BaseAdapter {
         } else {
             result = convertView;
         }
-        Map.Entry<String, Integer> item = getItem(position);
+        Map.Entry<String, Long> item = getItem(position);
         Log.v("Adapter", "item.getKey() ka value" + item.getKey());
         Log.v("Adapter", "item.getValue() ka value" + item.getValue());
         TextView orderName = (TextView) result.findViewById(R.id.orderNameConfirmation);
         orderName.setText(item.getKey());
         TextView orderQuantity = (TextView) result.findViewById(R.id.orderQuantityConfirmation);
+        Long value = ((Number) item.getValue()).longValue();
         orderQuantity.setText(item.getValue().toString());
         return result;
     }

@@ -69,7 +69,7 @@ Bundle info = new Bundle();
                     {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             order_list.add("Order id : "+document.get("order_id").toString());
-                            info.putSerializable(document.get("order_id").toString(),(HashMap<String,Integer>)document.get("order_name"));
+                            info.putSerializable(document.get("order_id").toString(),(HashMap<String,Long>)document.get("order_name"));
                             info.putInt("cost"+document.get("order_id").toString(),Integer.parseInt(document.get("cost").toString()));
                             info.putString("cust_email"+document.get("order_id").toString(),document.get("customer_email").toString());
                             System.out.println("inside doc : "+info.getSerializable(document.get("order_id").toString()) + info.getInt(document.get("order_id").toString()));
@@ -141,10 +141,10 @@ Bundle info = new Bundle();
             String many = properties.get("KEY").toString();
             total.setText("Total         ₹"+Integer.toString(properties.getInt("cost"+many)));
             cname.setText(properties.getString("cust_email"+many));
-            adapter = new Adapter((HashMap<String, Integer>) properties.getSerializable("HashMap"));
+            adapter = new Adapter((HashMap<String, Long>) properties.getSerializable("HashMap"));
             details.setAdapter(adapter);
             getDialog().setTitle("Details");
-            return super.onCreateView(inflater, container, savedInstanceState);
+            return rootView;
         }
     }
 

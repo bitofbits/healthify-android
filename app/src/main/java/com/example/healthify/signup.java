@@ -1,5 +1,7 @@
 package com.example.healthify;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +22,7 @@ public class signup extends AppCompatActivity
     String e="ram@email.com";
     String ph="1234";
     String pa="12";
+    Context context = this;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -49,7 +52,10 @@ public class signup extends AppCompatActivity
                 {
                     Customer c= new Customer(n,e,ph,pa);
                     c.sendToFirestore();
-                    Toast.makeText(getApplicationContext(),"Welcome to the family "+ n+"!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Welcome to the Healthify!!! "+ n+"!",Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(context, CustomerHome.class);
+                    i.putExtra("user_email",email.getText().toString());
+                    startActivity(i);
                 }
 
             }

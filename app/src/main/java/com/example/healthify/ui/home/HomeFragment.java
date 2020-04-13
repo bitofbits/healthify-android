@@ -106,10 +106,9 @@ public class HomeFragment extends Fragment
                     confirmationFragment newDialogFragment = new confirmationFragment();
                     newDialogFragment.setArguments(orderData);
                     newDialogFragment.show(getActivity().getSupportFragmentManager(), "confirmationDialog");
-
-
-                    adapter.activeOrder = activeOrder;
                 }
+
+                adapter.activeOrder = activeOrder;
 
             }
         });
@@ -161,7 +160,7 @@ public class HomeFragment extends Fragment
             listView = (ListView) rootView.findViewById(R.id.orderListView);
             TextView setTotalValue = (TextView) rootView.findViewById(R.id.orderTotalValue);
             setTotalValue.setText("Total Cost       ₹"  + String.valueOf(mBundle.getInt("total")));
-            final Adapter adapterDialog = new Adapter((HashMap<String, Integer>) mBundle.getSerializable("HashMap"));
+            final Adapter adapterDialog = new Adapter((HashMap<String, Long>) mBundle.getSerializable("HashMap"));
             listView.setAdapter(adapterDialog);
 
             Log.v("confirmationFragment", "Currently Inside confirmationFragment");
@@ -179,7 +178,7 @@ public class HomeFragment extends Fragment
                         activeOrder = true;
                         mBundle.putBoolean("activeOrder", activeOrder);
                         //get online delivery email id;
-                        Order createNewOrder = new Order(mBundle.get("user_email").toString(),mBundle.getInt("total"),(HashMap<String,Integer>)mBundle.getSerializable("HashMap"));
+                        Order createNewOrder = new Order(mBundle.get("user_email").toString(),mBundle.getInt("total"),(HashMap<String,Long>)mBundle.getSerializable("HashMap"));
                         createNewOrder.sendToFirestore();
                         Toast.makeText(getContext(),"Ordered Successfully , thanks for trusting us!",Toast.LENGTH_SHORT).show();
                     }

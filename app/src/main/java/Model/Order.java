@@ -6,10 +6,10 @@ public class Order extends BaseFirestore
 {
     private String customer_email;
     private String order_id;
-    private String partner="raj@email.com";
+    private String partner="dp";
     private int cost;
     private String name;
-    private HashMap<String , Integer> order_name;
+    private HashMap<String , Long> order_name;
     public String getOrder_id()
     {
         return order_id;
@@ -19,7 +19,7 @@ public class Order extends BaseFirestore
     {
         this.order_id = order_id;
     }
-    public Order(String c, int co,HashMap<String,Integer> x)
+    public Order(String c, int co,HashMap<String,Long> x)
     {
         order_id=Integer.toString(c.hashCode());
         customer_email = c;
@@ -50,12 +50,12 @@ public class Order extends BaseFirestore
         this.partner = partner;
     }
 
-    public HashMap<String, Integer> getOrder_name()
+    public HashMap<String, Long> getOrder_name()
     {
         return order_name;
     }
 
-    public void setOrder_name(HashMap<String, Integer> order_name)
+    public void setOrder_name(HashMap<String, Long> order_name)
     {
         this.order_name = order_name;
     }

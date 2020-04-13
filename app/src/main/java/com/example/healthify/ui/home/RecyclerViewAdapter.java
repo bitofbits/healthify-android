@@ -27,7 +27,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<Integer> foodPrice = new ArrayList<>();
     private Context context;
     public boolean activeOrder = false;
-    public HashMap<String,Integer> order_name = new HashMap<>();
+    public HashMap<String,Long> order_name = new HashMap<>();
     public int total = 0;
     public RecyclerViewAdapter(Context context, ArrayList<String> foodImg, ArrayList<String> foodName,ArrayList<Integer> foodPrice)
     {
@@ -76,7 +76,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             public void onClick(View view)
             {
                 System.out.println(context.toString());
-                int tmp =Integer.parseInt(holder.quan.getText().toString());
+                long tmp =Long.parseLong(holder.quan.getText().toString());
 
                 //Button work only if customer don't have an active order
                 if(activeOrder) {
@@ -95,7 +95,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 if(total == 0){
                     HomeFragment.setFloatingActionButtonVisibility(false);
                 }
-                holder.quan.setText(Integer.toString(tmp));
+                holder.quan.setText(Long.toString(tmp));
                 order_name.put(holder.name.getText().toString(),tmp);
                 if(tmp==0)
                     order_name.remove(holder.name.getText().toString());
@@ -106,11 +106,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View view)
             {
-                int x =Integer.parseInt(holder.quan.getText().toString());
+                Long x = Long.parseLong(holder.quan.getText().toString());
 
                 //Button work only if customer don't have an active order
                 if(activeOrder) {
-                    x = 0;
+                    x = 0l;
                     Toast.makeText(context,"Sorry! You have already placed an Order",Toast.LENGTH_SHORT).show();
                     HomeFragment.setFloatingActionButtonVisibility(false);
                 }
@@ -126,7 +126,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 }
 
 
-                holder.quan.setText(Integer.toString(x));
+                holder.quan.setText(Long.toString(x));
                 order_name.put(holder.name.getText().toString(),x);
                 if(x==0)
                     order_name.remove(holder.name.getText().toString());

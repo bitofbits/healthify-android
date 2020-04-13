@@ -30,7 +30,7 @@ public class login extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        DeliveryPartner raj = new DeliveryPartner("raj@email.com","1212","raj","raj123",true,0);
+        DeliveryPartner raj = new DeliveryPartner("dp","1212","dp","dp",true,0);
         raj.sendToFirestore();
         email=findViewById(R.id.edittext_login_enail);
         password=findViewById(R.id.editText_password);
