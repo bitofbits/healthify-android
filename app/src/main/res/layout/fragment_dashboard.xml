@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textUpperDashboardFragment"
+        android:id="@+id/textLowerDashboardFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="191dp"
@@ -29,14 +29,37 @@
         app:layout_constraintTop_toBottomOf="@+id/textView"
         tools:layout_editor_absoluteX="8dp" />
 
-    <TextView
-        android:id="@+id/textLowerDashboardFragment"
+    <ListView
+        android:id="@+id/dashboardListView"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/textView"
+        app:layout_constraintBottom_toTopOf="@id/cancelButtonDashboardFragment"
+        android:layout_marginTop="140dp"
+        android:layout_marginBottom="150dp"/>
+
+    <TextView
+        android:id="@+id/dashBoardDeliveryPersonName"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@+id/textUpperDashboardFragment" />
+        app:layout_constraintBottom_toTopOf="@id/cancelButtonDashboardFragment"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="130dp"
+        android:text="Cancel current Order"/>
+
+    <TextView
+        android:id="@+id/dashBoardTotalOrder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@id/cancelButtonDashboardFragment"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="65dp"
+        android:text="Cancel current Order"/>
+
     <Button
         android:id="@+id/cancelButtonDashboardFragment"
         android:layout_width="wrap_content"
@@ -45,7 +68,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:clickable="true"
         android:text="Cancel current Order"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

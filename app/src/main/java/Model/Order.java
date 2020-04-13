@@ -6,7 +6,7 @@ public class Order extends BaseFirestore
 {
     private String customer_email;
     private String order_id;
-    private String partner="dp";
+    private String partner = "dp";
     private int cost;
     private String name;
     private HashMap<String , Long> order_name;

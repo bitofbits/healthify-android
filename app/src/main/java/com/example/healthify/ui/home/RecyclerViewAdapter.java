@@ -134,6 +134,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         });
     }
 
+    public void resetParams(){
+        order_name = new HashMap<>();
+        int total = 0;
+    }
+
     @Override
     public int getItemCount()
     {
