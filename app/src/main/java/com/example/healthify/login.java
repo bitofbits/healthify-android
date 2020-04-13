@@ -30,8 +30,8 @@ public class login extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        DeliveryPartner raj = new DeliveryPartner("dp","1212","dp","dp",true,0);
-        raj.sendToFirestore();
+        //DeliveryPartner raj = new DeliveryPartner("dp","1212","dp","dp",false,0);
+        //raj.sendToFirestore();
         email=findViewById(R.id.edittext_login_enail);
         password=findViewById(R.id.editText_password);
         System.out.println("INSIDE LOGIN CLASS -----------------------");
@@ -129,10 +129,10 @@ public class login extends AppCompatActivity
     public void got_to_DeliveryPerson_Home()
     {
 
-        System.out.println("Inside Delivery Partner!");
-        Intent i = new Intent(context,DeliveryPartnerHome.class);
-        i.putExtra("user_name",email.getText().toString());
-        startActivity(i);
+        System.out.println("Inside Delivery Partner!"+email.getText().toString());
+        Intent it = new Intent(context,DeliveryPartnerHome.class);
+        it.putExtra("user_name",email.getText().toString());
+        startActivity(it);
     }
 
 }

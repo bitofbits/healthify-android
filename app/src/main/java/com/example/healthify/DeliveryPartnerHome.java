@@ -1,6 +1,7 @@
 package com.example.healthify;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 
 import com.example.healthify.ui.home.Adapter;
@@ -25,8 +26,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,56 +41,127 @@ public class DeliveryPartnerHome extends AppCompatActivity
 {
 ArrayList<String> order_list = new ArrayList<>();
 ListView display;
+Switch aSwitch;
 Bundle info = new Bundle();
+Context context = this;
+String email;
+
+//    @Override
+//    protected void onStop()
+//    {
+//        super.onStop();
+//        if(aSwitch.isChecked())
+//        {
+//            aSwitch.setChecked(false);
+//            BaseFirestore.db.collection("DeliveryPartner").document(email).update("isonline", false);
+//        }
+//    }
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delivery_partner_home);
+        email = getIntent().getStringExtra("user_name");
+        System.out.println("-------------------------Email is : "+email);
         FloatingActionButton fab = findViewById(R.id.fab);
         display = findViewById(R.id.list_view_delivery);
+        aSwitch = findViewById(R.id.switch_DeliveryPartner);
+
+        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b)
+            {
+                if(!b)
+                {
+                    BaseFirestore.db.collection("DeliveryPartner").document(email).update("isonline",false);
+                    aSwitch.setText("Offline");
+                    System.out.println("You are offline, please complete the current deliveries.");
+                }
+                else
+                {
+                    BaseFirestore.db.collection("DeliveryPartner").document(email).update("isonline",true);
+                    System.out.println("You are online");
+                    aSwitch.setText("Online");
+                }
+            }
+        });
         fab.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        BaseFirestore.db.collection("Order").whereEqualTo("partner",getIntent().getStringExtra("user_name")).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-        {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task)
-            {
-                if(task.isSuccessful())
+                BaseFirestore.db.collection("Order").whereEqualTo("partner",getIntent().getStringExtra("user_name")).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
                 {
-                    if(task.getResult().isEmpty())
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task)
                     {
-                        //no order to show to this delivery partner
-                    }
-                    else
-                    {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            order_list.add("Order id : "+document.get("order_id").toString());
-                            info.putSerializable(document.get("order_id").toString(),(HashMap<String,Long>)document.get("order_name"));
-                            info.putInt("cost"+document.get("order_id").toString(),Integer.parseInt(document.get("cost").toString()));
-                            info.putString("cust_email"+document.get("order_id").toString(),document.get("customer_email").toString());
-                            System.out.println("inside doc : "+info.getSerializable(document.get("order_id").toString()) + info.getInt(document.get("order_id").toString()));
+                        if(task.isSuccessful())
+                        {
+                            if(task.getResult().isEmpty())
+                            {
+                                //no order to show to this delivery partner
+                            }
+                            else
+                            {
+                                info.clear();
+                                order_list.clear();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    order_list.add("Order id : "+document.get("order_id").toString());
+                                    info.putSerializable(document.get("order_id").toString(),(HashMap<String,Long>)document.get("order_name"));
+                                    info.putInt("cost"+document.get("order_id").toString(),Integer.parseInt(document.get("cost").toString()));
+                                    info.putString("cust_email"+document.get("order_id").toString(),document.get("customer_email").toString());
+                                    //System.out.println("inside doc : "+info.getSerializable(document.get("order_id").toString()) + info.getInt(document.get("order_id").toString()));
+                                }
+                                ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(),android.R.layout.simple_list_item_1,order_list);
+                                System.out.println(order_list.size());
+                                display.setAdapter(arrayAdapter);
+                                listener();
+                            }
                         }
-                        ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(),android.R.layout.simple_list_item_1,order_list);
-                        System.out.println(order_list.size());
-                        display.setAdapter(arrayAdapter);
-                        listener();
+                        else
+                        {
+                            Toast.makeText(DeliveryPartnerHome.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
+                            //error connecting to database
+                        }
                     }
-                }
-                else
-                {
-                    Toast.makeText(DeliveryPartnerHome.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
-                    //error connecting to database
-                }
+                });
             }
         });
+//        BaseFirestore.db.collection("Order").whereEqualTo("partner",getIntent().getStringExtra("user_name")).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+//        {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task)
+//            {
+//                if(task.isSuccessful())
+//                {
+//                    if(task.getResult().isEmpty())
+//                    {
+//                        //no order to show to this delivery partner
+//                    }
+//                    else
+//                    {
+//                        info.clear();
+//                        for (QueryDocumentSnapshot document : task.getResult()) {
+//                            order_list.add("Order id : "+document.get("order_id").toString());
+//                            info.putSerializable(document.get("order_id").toString(),(HashMap<String,Long>)document.get("order_name"));
+//                            info.putInt("cost"+document.get("order_id").toString(),Integer.parseInt(document.get("cost").toString()));
+//                            info.putString("cust_email"+document.get("order_id").toString(),document.get("customer_email").toString());
+//                            //System.out.println("inside doc : "+info.getSerializable(document.get("order_id").toString()) + info.getInt(document.get("order_id").toString()));
+//                        }
+//                        ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(),android.R.layout.simple_list_item_1,order_list);
+//                        System.out.println(order_list.size());
+//                        display.setAdapter(arrayAdapter);
+//                        listener();
+//                    }
+//                }
+//                else
+//                {
+//                    Toast.makeText(DeliveryPartnerHome.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
+//                    //error connecting to database
+//                }
+//            }
+//        });
 
     }
     private void listener()
@@ -139,7 +214,7 @@ Bundle info = new Bundle();
             cadd = rootView.findViewById(R.id.cust_add_DeliveryPartner);
             delivered=rootView.findViewById(R.id.deliverdone_DeliveryPartner);
             String many = properties.get("KEY").toString();
-            total.setText("Total         ₹"+Integer.toString(properties.getInt("cost"+many)));
+            total.setText("Total               ₹"+Integer.toString(properties.getInt("cost"+many)));
             cname.setText(properties.getString("cust_email"+many));
             adapter = new Adapter((HashMap<String, Long>) properties.getSerializable("HashMap"));
             details.setAdapter(adapter);

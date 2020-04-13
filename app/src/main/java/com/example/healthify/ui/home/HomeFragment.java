@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import Model.BaseFirestore;
+import Model.DeliveryPartner;
 import Model.Order;
 import Model.Product;
 import androidx.annotation.NonNull;
@@ -51,7 +53,8 @@ import androidx.transition.Transition;
 
 public class HomeFragment extends Fragment
 {
-
+    private static String allot;
+    private static int tm=999;
     private HomeViewModel homeViewModel;
     private static RecyclerView recyclerView;
     private static RecyclerViewAdapter adapter;
@@ -116,6 +119,39 @@ public class HomeFragment extends Fragment
     }
     private void initData()
     {
+        BaseFirestore.db.collection("DeliveryPartner")
+                .whereEqualTo("isonline", true)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            //QueryDocumentSnapshot min;
+                            //int tm=9999;
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                DeliveryPartner t = document.toObject(DeliveryPartner.class);
+                                if(t.getAlloted_till_now()<tm)
+                                {
+                                    allot=t.getID();
+                                    tm = t.getAlloted_till_now();
+                                }
+                                //Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+                            //BaseFirestore.db.collection("DeliveryPartner").document(allot).update("alloted_till_now",tm+1);
+                            //activeOrder = true;
+                            //mBundle.putBoolean("activeOrder", activeOrder);
+                            //get online delivery email id;
+                            //Order createNewOrder = new Order(mBundle.get("user_email").toString(),allot,mBundle.getInt("total"),(HashMap<String,Long>)mBundle.getSerializable("HashMap"));
+                            //createNewOrder.sendToFirestore();
+                            //Toast.makeText(getContext(),"Ordered Successfully , thanks for trusting us!",Toast.LENGTH_SHORT).show();
+//                                            getDialog().dismiss();
+//                                            adapter.activeOrder = true;
+//                                            recyclerView.setAdapter(adapter);
+                        } else {
+                            //Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
         //Initialize the data: Fetch from FireStore
         BaseFirestore.db.collection("Product")
                 .get()
@@ -147,6 +183,7 @@ public class HomeFragment extends Fragment
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
     public static class confirmationFragment extends DialogFragment{
+        //private String allot="dp";
         ListView listView;
         @Nullable
         @Override
@@ -175,27 +212,79 @@ public class HomeFragment extends Fragment
                     }
                     else
                     {
-                        activeOrder = true;
+
+//                        BaseFirestore.db.collection("DeliveryPartner")
+//                                .whereEqualTo("isonline", true)
+//                                .get()
+//                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                        if (task.isSuccessful()) {
+//                                            QueryDocumentSnapshot min;
+//                                            int tm=9999;
+//                                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                                DeliveryPartner t = document.toObject(DeliveryPartner.class);
+//                                                if(t.getAlloted_till_now()<tm)
+//                                                {
+//                                                    allot=t.getID();
+//                                                    tm = t.getAlloted_till_now();
+//                                                }
+//                                                //Log.d(TAG, document.getId() + " => " + document.getData());
+//                                            }
+                        if(allot!=null)
+                        {
+                            BaseFirestore.db.collection("DeliveryPartner").document(allot).update("alloted_till_now",tm+1);
+                            activeOrder = true;
+                            adapter.activeOrder = true;
+                            Order createNewOrder = new Order(mBundle.get("user_email").toString(),allot,mBundle.getInt("total"),(HashMap<String,Long>)mBundle.getSerializable("HashMap"));
+                            createNewOrder.sendToFirestore();
+                            Toast.makeText(getContext(),"Ordered Successfully , thanks for trusting us!",Toast.LENGTH_SHORT).show();
+                            getDialog().dismiss();
+                        }
+                        else
+                        {
+                            Toast.makeText(getContext(), "No delivery partners online, please try again later", Toast.LENGTH_SHORT).show();
+                            activeOrder = false;
+                            adapter.activeOrder = false;
+                            getDialog().dismiss();
+                        }
+
+//                                            activeOrder = true;
+//                                            mBundle.putBoolean("activeOrder", activeOrder);
+//                                            //get online delivery email id;
+//                                            Order createNewOrder = new Order(mBundle.get("user_email").toString(),allot,mBundle.getInt("total"),(HashMap<String,Long>)mBundle.getSerializable("HashMap"));
+//                                            createNewOrder.sendToFirestore();
+//                                            //Toast.makeText(getContext(),"Ordered Successfully , thanks for trusting us!",Toast.LENGTH_SHORT).show();
+////                                            getDialog().dismiss();
+////                                            adapter.activeOrder = true;
+////                                            recyclerView.setAdapter(adapter);
+//                                        } else {
+//                                            //Log.d(TAG, "Error getting documents: ", task.getException());
+//                                        }
+//                                    }
+//                                });
+//                        activeOrder = true;
                         mBundle.putBoolean("activeOrder", activeOrder);
                         //get online delivery email id;
-                        Order createNewOrder = new Order(mBundle.get("user_email").toString(),mBundle.getInt("total"),(HashMap<String,Long>)mBundle.getSerializable("HashMap"));
-                        createNewOrder.sendToFirestore();
-                        Toast.makeText(getContext(),"Ordered Successfully , thanks for trusting us!",Toast.LENGTH_SHORT).show();
+                        //Order createNewOrder = new Order(mBundle.get("user_email").toString(),allot,mBundle.getInt("total"),(HashMap<String,Long>)mBundle.getSerializable("HashMap"));
+//                        createNewOrder.sendToFirestore();
+//                        Toast.makeText(getContext(),"Ordered Successfully , thanks for trusting us!",Toast.LENGTH_SHORT).show();
                     }
-                    getDialog().dismiss();
+                    //getDialog().dismiss();
 
                     /*Logic to not let user buy the items if he already has active Order
                     Right now user has guaranteed placed an order
                     */
-                    adapter.activeOrder = true;
+//                    adapter.activeOrder = true;
 
                     //Refresh View
                     recyclerView.setAdapter(adapter);
-
+                    adapter.total=0;
+                    adapter.order_name = new HashMap<>();
                     //Redirect to Order Confirmation Page a.k.a dashboard page
                     DashboardFragment dashboardFragment = (DashboardFragment) getActivity().getSupportFragmentManager().findFragmentByTag("DashboardFragment");
                     HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentByTag("HomeFragment");
-                    dashboardFragment.setActiveOrder(true);
+                    dashboardFragment.setActiveOrder(activeOrder);
                     dashboardFragment.resetTextView();
                     BottomNavigationView mBottomNavigationView = getActivity().findViewById(R.id.nav_view);
                     mBottomNavigationView.findViewById(R.id.navigation_dashboard).performClick();

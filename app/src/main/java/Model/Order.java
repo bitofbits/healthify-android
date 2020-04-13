@@ -19,9 +19,10 @@ public class Order extends BaseFirestore
     {
         this.order_id = order_id;
     }
-    public Order(String c, int co,HashMap<String,Long> x)
+    public Order(String c, String alloteddeliveryperson,int co,HashMap<String,Long> x)
     {
         order_id=Integer.toString(c.hashCode());
+        partner = alloteddeliveryperson;
         customer_email = c;
         cost=co;
         order_name = x;
