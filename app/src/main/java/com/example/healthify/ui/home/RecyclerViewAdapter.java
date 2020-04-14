@@ -4,17 +4,21 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.healthify.R;
+import com.google.android.gms.common.util.JsonUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -27,8 +31,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<Integer> foodPrice = new ArrayList<>();
     private Context context;
     public boolean activeOrder = false;
-    public HashMap<String,Long> order_name = new HashMap<>();
+    public HashMap<String, ArrayList<String>> order_name = new HashMap<String, ArrayList<String>>();
     public int total = 0;
+    private ArrayList<String> arrayList = new ArrayList<String>();
+    private String orderSize = "Small";
+    private double orderCost;
+    private String selected;
     public RecyclerViewAdapter(Context context, ArrayList<String> foodImg, ArrayList<String> foodName,ArrayList<Integer> foodPrice)
     {
         this.foodImg = foodImg;
@@ -76,48 +84,86 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             public void onClick(View view)
             {
                 System.out.println(context.toString());
-                long tmp =Long.parseLong(holder.quan.getText().toString());
+                long quantityTemp = Long.parseLong(holder.quan.getText().toString());
+                selected = holder.spinner.getSelectedItem().toString();
 
                 //Button work only if customer don't have an active order
                 if(activeOrder) {
-                    tmp = 0;
+                    quantityTemp = 0;
                     Toast.makeText(context,"Sorry! You have already placed an Order",Toast.LENGTH_SHORT).show();
                     HomeFragment.setFloatingActionButtonVisibility(false);
                 }
                 else
-                    {
-                        if(tmp>0) {
-                            total-=Integer.parseInt(foodPrice.get(position).toString());
-                            tmp--;
+                {
+                    if(quantityTemp > 0) {
+
+
+                        orderCost = foodPrice.get(position);
+                        switch(holder.spinner.getSelectedItem().toString()) {
+                            case("Small"):
+                                total -= orderCost;
+                                break;
+                            case("Medium"):
+                                orderCost = orderCost * 1.5;
+                                total -= orderCost;
+                                break;
+                            case("Large"):
+                                orderCost = orderCost * 2;
+                                total -= orderCost;
+                                break;
                         }
+                        quantityTemp--;
+                    }
                 }
 
                 if(total == 0){
                     HomeFragment.setFloatingActionButtonVisibility(false);
                 }
-                holder.quan.setText(Long.toString(tmp));
-                order_name.put(holder.name.getText().toString(),tmp);
-                if(tmp==0)
-                    order_name.remove(holder.name.getText().toString());
+                holder.quan.setText(Long.toString(quantityTemp));
+                arrayList = new ArrayList<String>();
+                arrayList.add(Long.toString(quantityTemp));
+                arrayList.add(String.valueOf(orderCost));
+                arrayList.add(holder.spinner.getSelectedItem().toString());
+
+                order_name.put(holder.name.getText().toString() + " (" + arrayList.get(2) + ")", arrayList);
+
+                if(quantityTemp == 0)
+                    order_name.remove(holder.name.getText().toString() + " (" + selected + ")");
             }
         });
         holder.add.setOnClickListener(new View.OnClickListener()
         {
+
             @Override
             public void onClick(View view)
             {
-                Long x = Long.parseLong(holder.quan.getText().toString());
+                Long quantityTemp = Long.parseLong(holder.quan.getText().toString());
 
                 //Button work only if customer don't have an active order
                 if(activeOrder) {
-                    x = 0l;
+                    quantityTemp = 0l;
                     Toast.makeText(context,"Sorry! You have already placed an Order",Toast.LENGTH_SHORT).show();
                     HomeFragment.setFloatingActionButtonVisibility(false);
                 }
                 else{
-                    if(x < 5) {
-                        x++;
-                        total+=Integer.parseInt(foodPrice.get(position).toString());
+                    if(quantityTemp < 5) {
+
+                        orderCost = foodPrice.get(position);
+                        switch(holder.spinner.getSelectedItem().toString()) {
+                            case("Small"):
+                                total += orderCost;
+                                break;
+                            case("Medium"):
+                                orderCost = orderCost * 1.5;
+                                total += orderCost;
+                                break;
+                            case("Large"):
+                                orderCost = orderCost * 2;
+                                total += orderCost;
+                                break;
+                        }
+
+                        quantityTemp++;
                         HomeFragment.setFloatingActionButtonVisibility(true);
                     }
                     else {
@@ -125,13 +171,55 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     }
                 }
 
+                holder.quan.setText(Long.toString(quantityTemp));
+                arrayList = new ArrayList<String>();
+                arrayList.add(Long.toString(quantityTemp));
+                arrayList.add(String.valueOf(orderCost));
+                arrayList.add(holder.spinner.getSelectedItem().toString());
+                order_name.put(holder.name.getText().toString() + " (" + arrayList.get(2) + ")", arrayList);
 
-                holder.quan.setText(Long.toString(x));
-                order_name.put(holder.name.getText().toString(),x);
-                if(x==0)
+                if(quantityTemp == 0)
                     order_name.remove(holder.name.getText().toString());
+
             }
         });
+
+        holder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                System.out.println(order_name+"ordername");
+                orderCost = foodPrice.get(position);
+                selected = parent.getItemAtPosition(pos).toString();
+                if(order_name.containsKey(holder.name.getText().toString() + " (" + selected + ")"))
+                {
+                    String orderName = holder.name.getText().toString() + " (" + selected + ")";
+                    holder.quan.setText(order_name.get(orderName).get(0));
+                }
+                else{
+                    holder.quan.setText("0");
+                }
+                switch(selected) {
+                    case("Small"):
+                        holder.price.setText("₹ "+ orderCost);
+                        break;
+                    case("Medium"):
+                        orderCost = orderCost * 1.5;
+                        holder.price.setText("₹ "+ orderCost);
+                        break;
+                    case("Large"):
+                        orderCost = orderCost * 2;
+                        holder.price.setText("₹ "+ orderCost);
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                String selected = "Small";
+            }
+
+        });
+
     }
 
     public void resetParams(){
@@ -153,6 +241,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TextView quan;
         Button add;
         Button subtract;
+        Spinner spinner;
         ConstraintLayout parentLayout;
         public ViewHolder(@NonNull View itemView)
         {
@@ -164,6 +253,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             add = itemView.findViewById(R.id.food_add);
             subtract=itemView.findViewById(R.id.food_subtract);
             parentLayout=itemView.findViewById(R.id.parent_layout);
+            spinner = itemView.findViewById(R.id.spinner);
         }
     }
 }

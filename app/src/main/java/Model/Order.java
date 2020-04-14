@@ -1,5 +1,6 @@
 package Model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Order extends BaseFirestore
@@ -9,17 +10,10 @@ public class Order extends BaseFirestore
     private String partner;
     private int cost;
     private String name;
-    private HashMap<String , Long> order_name;
-    private String orderCategory;
+    private HashMap<String , ArrayList<String>> order_name;
 
-    public String getOrderCategory(){
-        return this.orderCategory;
-    }
-    public void setOrderCategory(String orderCategory){
-        this.orderCategory = orderCategory;
-    }
-    public String getOrder_id()
-    {
+
+    public String getOrder_id() {
         return order_id;
     }
 
@@ -27,10 +21,10 @@ public class Order extends BaseFirestore
     {
         this.order_id = order_id;
     }
-    public Order(String c, String alloteddeliveryperson,int co,HashMap<String,Long> x)
-    {
+    
+    public Order(String c, String allotedDeliveryPerson,int co,HashMap<String, ArrayList<String>> x) {
         order_id=Integer.toString(c.hashCode());
-        partner = alloteddeliveryperson;
+        partner = allotedDeliveryPerson;
         customer_email = c;
         cost=co;
         order_name = x;
@@ -59,15 +53,15 @@ public class Order extends BaseFirestore
         this.partner = partner;
     }
 
-    public HashMap<String, Long> getOrder_name()
+    public HashMap<String, ArrayList<String>> getOrder_name()
     {
         return order_name;
     }
 
-    public void setOrder_name(HashMap<String, Long> order_name)
-    {
+    public void setOrder_name(HashMap<String, ArrayList<String>> order_name) {
         this.order_name = order_name;
     }
+
     public String getName()
     {
         return name;
@@ -77,25 +71,6 @@ public class Order extends BaseFirestore
     {
         this.name = name;
     }
-//    public Customer getCustomer()
-//    {
-//        return customer;
-//    }
-//
-//    public void setCustomer(Customer customer)
-//    {
-//        this.customer = customer;
-//    }
-
-//    public DeliveryPartner getPartner()
-//    {
-//        return partner;
-//    }
-//
-//    public void setPartner(DeliveryPartner partner)
-//    {
-//        this.partner = partner;
-//    }
 
     public int getCost()
     {

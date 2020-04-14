@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         Product p5 = new Product("Cheese Masala Dosa",120);
         Product p6 = new Product("Biryani",350);
         Product p7 = new Product("Grilled Sandwhich",150);
-        Product p8 = new Product("Bread Butter",25);
+        Product p8 = new Product("Bread Butter",30);
         Product p9 = new Product("Roti(all)",50);
         p1.sendToFirestore();
         p2.sendToFirestore();
