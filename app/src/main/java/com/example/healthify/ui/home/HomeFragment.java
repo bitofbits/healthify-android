@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.healthify.Confirmation;
+import com.example.healthify.CustomerHome;
 import com.example.healthify.R;
 import com.example.healthify.ui.dashboard.DashboardFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -70,7 +71,7 @@ public class HomeFragment extends Fragment
                 ViewModelProviders.of(this).get(HomeViewModel.class);
 
         deliveryPersonID = null;
-
+        deliveryOrderAllotedTillNow = Integer.MAX_VALUE;
         //Make a root View
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
@@ -130,8 +131,9 @@ public class HomeFragment extends Fragment
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 DeliveryPartner t = document.toObject(DeliveryPartner.class);
-                                if(t.getAlloted_till_now() < Integer.MAX_VALUE)
+                                if(t.getAlloted_till_now() < deliveryOrderAllotedTillNow)
                                 {
+                                    System.out.println(deliveryPersonID + "deliveryPersonId" + t.getAlloted_till_now());
                                     deliveryPersonID = t.getID();
                                     deliveryOrderAllotedTillNow = t.getAlloted_till_now();
                                 }
@@ -216,7 +218,7 @@ public class HomeFragment extends Fragment
                             recyclerView.setAdapter(adapter);
                             
                             adapter.resetParams();
-                            
+
                             //Redirect to Order Confirmation Page a.k.a dashboard page
                             DashboardFragment dashboardFragment = (DashboardFragment) getActivity().getSupportFragmentManager().findFragmentByTag("DashboardFragment");
                             HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentByTag("HomeFragment");

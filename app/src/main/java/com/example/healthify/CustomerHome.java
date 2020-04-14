@@ -33,7 +33,7 @@ public class CustomerHome extends AppCompatActivity {
     Fragment selectedFragment;
     final FragmentManager fragmentManager = getSupportFragmentManager();
     private Bundle mBundle = new Bundle();
-
+    public String coke = "coke";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

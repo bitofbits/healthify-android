@@ -145,7 +145,9 @@ public class DashboardFragment extends Fragment
                             Adapter adapterDialog = new Adapter(order.getOrder_name());
                             ListView listView = (ListView) DashboardFragment.root.findViewById(R.id.dashboardListView);
                             TextView DeliveryPersonTextView = DashboardFragment.root.findViewById(R.id.dashBoardDeliveryPersonName);
+                            TextView TotalValueTextView = DashboardFragment.root.findViewById(R.id.dashBoardTotalOrder);
                             DeliveryPersonTextView.setText("Delivery Person Email: " + order.getPartner());
+                            TotalValueTextView.setText("Total Cost    ₹"  +String.valueOf(order.getCost()));
                             listView.setAdapter(adapterDialog);
                         }
 
@@ -153,7 +155,7 @@ public class DashboardFragment extends Fragment
                 }
             });
             activeOrderTextView.setVisibility(View.GONE);
-            TotalValueTextView.setText("Total Cost       ₹"  + String.valueOf(getArguments().getInt("total")));
+            TotalValueTextView.setText("Total Cost    ₹"  + String.valueOf(getArguments().getInt("total")));
 //            Adapter adapterDialog = new Adapter((HashMap<String, Long>) getArguments().getSerializable("HashMap"));
 
         }
