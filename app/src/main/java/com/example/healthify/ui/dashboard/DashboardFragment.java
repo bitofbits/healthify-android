@@ -25,6 +25,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
@@ -47,7 +48,7 @@ public class DashboardFragment extends Fragment
     private boolean activeOrder;
     private String deliveryPersonID;
     private HashMap<String, Long> orderName;
-    View root;
+    static View root;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState)
@@ -63,6 +64,7 @@ public class DashboardFragment extends Fragment
         TextView activeOrderTextView = root.findViewById(R.id.textLowerDashboardFragment);
 
         activeOrder = getArguments().getBoolean("activeOrder");
+        System.out.println("called db fragment 67");
         resetTextView();
 //        activeOrderTextView.setText("Currently Active Order:" + new Boolean(activeOrder).toString());
 
@@ -95,6 +97,7 @@ public class DashboardFragment extends Fragment
                                     // Delete Order
                                     Customer.db.collection("Order").document(document.getId()).delete();
                                     setActiveOrder(false);
+                                    System.out.println("called dbfragment 100");
                                     resetTextView();
 
                                     //Go back to Home Fragment
@@ -126,16 +129,39 @@ public class DashboardFragment extends Fragment
         activeOrderTextView.setText("There are no orders right now");
         if(this.activeOrder){
 
+            TotalValueTextView.setVisibility(View.VISIBLE);
+            DeliveryPersonTextView.setVisibility(View.VISIBLE);
+            listView.setVisibility(View.VISIBLE);
+
+            System.out.println("resetTextView()" + this.activeOrder);
+            BaseFirestore.db.collection("Order").whereEqualTo("customer_email", getArguments()
+                    .getString("user_email")).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if(task.isSuccessful()){
+                        for (QueryDocumentSnapshot document : task.getResult()){
+                            Order order = document.toObject(Order.class);
+                            Adapter adapterDialog = new Adapter(order.getOrder_name());
+                            ListView listView = (ListView) DashboardFragment.root.findViewById(R.id.dashboardListView);
+                            TextView DeliveryPersonTextView = DashboardFragment.root.findViewById(R.id.dashBoardDeliveryPersonName);
+                            DeliveryPersonTextView.setText("Delivery Person Email: " + order.getPartner());
+                            listView.setAdapter(adapterDialog);
+                        }
+
+                    }
+                }
+            });
             activeOrderTextView.setVisibility(View.GONE);
             TotalValueTextView.setText("Total Cost       ₹"  + String.valueOf(getArguments().getInt("total")));
 //            Adapter adapterDialog = new Adapter((HashMap<String, Long>) getArguments().getSerializable("HashMap"));
-//            listView.setAdapter(adapterDialog);
+
         }
         else{
             TotalValueTextView.setVisibility(View.GONE);
             DeliveryPersonTextView.setVisibility(View.GONE);
             listView.setVisibility(View.GONE);
-            activeOrderTextView.setText("There are no orders right now");
+            activeOrderTextView.setText("You have no pending orders right now");
         }
 
     }

@@ -220,8 +220,8 @@ public class HomeFragment extends Fragment
                             //Redirect to Order Confirmation Page a.k.a dashboard page
                             DashboardFragment dashboardFragment = (DashboardFragment) getActivity().getSupportFragmentManager().findFragmentByTag("DashboardFragment");
                             HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentByTag("HomeFragment");
+                            System.out.println("called from home fragment");
                             dashboardFragment.setActiveOrder(activeOrder);
-//                            System.out.println(mBundle + "mBundle");
                             dashboardFragment.setArguments(mBundle);
                             dashboardFragment.resetTextView();
                             BottomNavigationView mBottomNavigationView = getActivity().findViewById(R.id.nav_view);
