@@ -141,7 +141,7 @@ public class DashboardFragment extends Fragment
                     if(task.isSuccessful()){
                         for (QueryDocumentSnapshot document : task.getResult()){
                             Order order = document.toObject(Order.class);
-                            Adapter adapterDialog = new Adapter(order.getOrder_name());
+                            Adapter adapterDialog = new AdapterDashboard(order.getOrder_name());
                             ListView listView = (ListView) DashboardFragment.root.findViewById(R.id.dashboardListView);
                             TextView DeliveryPersonTextView = DashboardFragment.root.findViewById(R.id.dashBoardDeliveryPersonName);
                             TextView TotalValueTextView = DashboardFragment.root.findViewById(R.id.dashBoardTotalOrder);

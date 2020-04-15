@@ -187,7 +187,7 @@ public class HomeFragment extends Fragment
             listView = (ListView) rootView.findViewById(R.id.orderListView);
             TextView setTotalValue = (TextView) rootView.findViewById(R.id.orderTotalValue);
             setTotalValue.setText("Total Cost       ₹"  + String.valueOf(mBundle.getInt("total")));
-            final Adapter adapterDialog = new Adapter((HashMap<String, Long>) mBundle.getSerializable("HashMap"));
+            final Adapter adapterDialog = new Adapter((HashMap<String, ArrayList<String>>) mBundle.getSerializable("HashMap"));
             listView.setAdapter(adapterDialog);
 
             Log.v("confirmationFragment", "Currently Inside confirmationFragment");
@@ -209,7 +209,7 @@ public class HomeFragment extends Fragment
                             activeOrder = true;
                             adapter.activeOrder = true;
                             mBundle.putBoolean("activeOrder", true);
-                            Order createNewOrder = new Order(mBundle.get("user_email").toString(),deliveryPersonID,mBundle.getInt("total"),(HashMap<String,Long>)mBundle.getSerializable("HashMap"));
+                            Order createNewOrder = new Order(mBundle.get("user_email").toString(),deliveryPersonID,mBundle.getInt("total"),(HashMap<String,ArrayList<String>>)mBundle.getSerializable("HashMap"));
                             createNewOrder.sendToFirestore();
                             Toast.makeText(getContext(),"Ordered Successfully , thanks for trusting us!",Toast.LENGTH_SHORT).show();
                             getDialog().dismiss();

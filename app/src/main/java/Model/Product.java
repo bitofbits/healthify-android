@@ -10,6 +10,14 @@ public class Product extends BaseFirestore
     private String img_url;
     private String discription;
     private boolean instock;
+    private String orderCategory;
+
+    public String getOrderCategory(){
+        return this.orderCategory;
+    }
+    public void setOrderCategory(String orderCategory){
+        this.orderCategory = orderCategory;
+    }
     public Product(String name, String discription,int price, String img_url, boolean instock)
     {
         this.name = name;

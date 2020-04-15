@@ -258,7 +258,7 @@ String email;
             String many = properties.get("KEY").toString();
             total.setText("Total           ₹"+Integer.toString(properties.getInt("cost"+many)));
             cname.setText(properties.getString("cust_email"+many));
-            adapter = new Adapter((HashMap<String, Long>) properties.getSerializable("HashMap"));
+            adapter = new Adapter((HashMap<String, ArrayList<String>>) properties.getSerializable("HashMap"));
             details.setAdapter(adapter);
             delivered.setOnClickListener(new View.OnClickListener()
             {
