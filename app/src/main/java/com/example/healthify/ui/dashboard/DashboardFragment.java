@@ -82,7 +82,6 @@ public class DashboardFragment extends Fragment
                             if(task.getResult().isEmpty()) {
 
                             }
-
                             else {
 
                                 Toast.makeText(getContext(),"Deleting Order...",Toast.LENGTH_SHORT).show();

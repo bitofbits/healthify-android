@@ -2,6 +2,7 @@ package com.example.healthify;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.healthify.ui.home.Adapter;
@@ -10,10 +11,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import Model.BaseFirestore;
+import Model.Customer;
+import Model.DeliveryPartner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,7 +51,6 @@ Switch aSwitch;
 Bundle info = new Bundle();
 Context context = this;
 String email;
-
 //    @Override
 //    protected void onStop()
 //    {
@@ -66,7 +71,36 @@ String email;
         FloatingActionButton fab = findViewById(R.id.fab);
         display = findViewById(R.id.list_view_delivery);
         aSwitch = findViewById(R.id.switch_DeliveryPartner);
+        DocumentReference doc = BaseFirestore.db.collection("DeliveryPartner").document(email);
+        doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+            {
+                if(task.isSuccessful())
+                {
+                    DocumentSnapshot d = task.getResult();
+                    DeliveryPartner x = d.toObject(DeliveryPartner.class);
+                    if(x.isIsonline())
+                    {
+                        aSwitch.setTextOn("Online");
+                        aSwitch.setChecked(true);
+                    }
+                    else
+                    {
+                        aSwitch.setChecked(false);
+                        aSwitch.setText("Offline");
+                        //aSwitch.setTextOff("Offline---");
 
+                    }
+                }
+                else
+                {
+                    Toast.makeText(context, "Network Problem, status not updated properly", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
             @Override
@@ -78,12 +112,12 @@ String email;
                     aSwitch.setText("Offline");
                     System.out.println("You are offline, please complete the current deliveries.");
                 }
-                else
-                {
+                else {
                     BaseFirestore.db.collection("DeliveryPartner").document(email).update("isonline",true);
                     System.out.println("You are online");
                     aSwitch.setText("Online");
                 }
+
             }
         });
         fab.setOnClickListener(new View.OnClickListener()
@@ -101,10 +135,18 @@ String email;
                             if(task.getResult().isEmpty())
                             {
                                 //no order to show to this delivery partner
+                                Toast.makeText(context, "No orders to show!", Toast.LENGTH_SHORT).show();
+                                System.out.println("Inside isEmpty()-----------------------");
+                                order_list.clear();
+                                ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(),android.R.layout.simple_list_item_1,order_list);
+                                System.out.println(order_list.size());
+                                display.setAdapter(arrayAdapter);
+                                listener();
                             }
                             else
                             {
-                                info.clear();
+                                //info.clear();
+                                System.out.println("Inside if statement before order_list.clear()-----------------------------");
                                 order_list.clear();
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     order_list.add("Order id : "+document.get("order_id").toString());
@@ -214,10 +256,50 @@ String email;
             cadd = rootView.findViewById(R.id.cust_add_DeliveryPartner);
             delivered=rootView.findViewById(R.id.deliverdone_DeliveryPartner);
             String many = properties.get("KEY").toString();
-            total.setText("Total               ₹"+Integer.toString(properties.getInt("cost"+many)));
+            total.setText("Total           ₹"+Integer.toString(properties.getInt("cost"+many)));
             cname.setText(properties.getString("cust_email"+many));
             adapter = new Adapter((HashMap<String, Long>) properties.getSerializable("HashMap"));
             details.setAdapter(adapter);
+            delivered.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    Query orderQuery = Customer.db.collection("Order").whereEqualTo("customer_email",
+                            cname.getText());
+
+                    orderQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                if(task.getResult().isEmpty()) {
+
+                                }
+                                else {
+
+                                    //Toast.makeText(getActivity(),"Updated Database!",Toast.LENGTH_SHORT).show();
+
+                                    //Start Deleting Files
+                                    for (DocumentSnapshot document : task.getResult()) {
+
+                                        // Update alloted till now
+                                        BaseFirestore.db.collection("DeliveryPartner").document(
+                                                document.getString("partner")).update("alloted_till_now", FieldValue.increment(-1l));
+
+                                        // Delete Order
+                                        BaseFirestore.db.collection("Order").document(document.getId()).delete();
+                                        //setActiveOrder(false);
+                                    }
+                                }
+                            }
+                            else{
+                                Log.v("DeliveryPartnerHome", "didn't find order");
+                            }
+                        }
+                    });
+                    getDialog().dismiss();
+                }
+            });
             getDialog().setTitle("Details");
             return rootView;
         }
