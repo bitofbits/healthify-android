@@ -4,15 +4,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activityCustomerContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
+    <ImageButton
+        android:id="@+id/setCurrentLocationButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="#BDCFD1"
+        android:src="@android:drawable/ic_menu_mylocation"
+        android:textSize="30sp"
+        android:tint="#F80202" />
+    <TextView
+        android:id="@+id/setCurrentLocationText"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_toRightOf="@id/setCurrentLocationButton"
+        android:text="No Location Set"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:padding="10dp"/>
+
+
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/nav_view"/>
+        android:layout_above="@id/nav_view"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="91dp" />
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
+    <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/nav_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

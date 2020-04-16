@@ -171,6 +171,37 @@ public class HomeFragment extends Fragment
         adapter.activeOrder = activeOrder;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState == recyclerView.SCROLL_STATE_IDLE)
+                {
+//                    confirmButton.setVisibility(View.VISIBLE);
+//                    getActivity().findViewById(R.id.setCurrentLocationButton).setVisibility(View.VISIBLE);
+//                    getActivity().findViewById(R.id.setCurrentLocationText).setVisibility(View.VISIBLE);
+//                    getActivity().findViewById(R.id.nav_view).setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(dy != 0){
+//                    confirmButton.setVisibility(View.GONE);
+//                    getActivity().findViewById(R.id.setCurrentLocationButton).setVisibility(View.GONE);
+//                    getActivity().findViewById(R.id.setCurrentLocationText).setVisibility(View.GONE);
+//                    getActivity().findViewById(R.id.nav_view).setVisibility(View.GONE);
+                }
+                else{
+//                    confirmButton.setVisibility(View.VISIBLE);
+//                    getActivity().findViewById(R.id.setCurrentLocationButton).setVisibility(View.VISIBLE);
+//                    getActivity().findViewById(R.id.setCurrentLocationText).setVisibility(View.VISIBLE);
+//                    getActivity().findViewById(R.id.nav_view).setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
     }
     public static class confirmationFragment extends DialogFragment{
         //private String allot="dp";

@@ -218,6 +218,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 String selected = "Small";
             }
 
+
         });
 
     }
