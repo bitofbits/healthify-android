@@ -27,12 +27,29 @@
         android:gravity="center"
         android:textSize="15sp"
         android:id="@+id/orderTotalValue"/>
+
     <Button
+        android:id="@+id/orderButtonDialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/orderButtonDialog"
         android:layout_gravity="center"
         android:clickable="true"
-        android:text="Place Order"/>
+        android:text="Place Order" />
+
+    <Button
+        android:id="@+id/promo_button"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:text="Apply"
+        android:textSize="14sp"
+        />
+
+    <EditText
+        android:id="@+id/promoCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="promo"
+        android:inputType="textPersonName" />
 
 </LinearLayout>

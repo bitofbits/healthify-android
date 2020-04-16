@@ -20,6 +20,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import Model.BaseFirestore;
 import Model.Customer;
 import Model.DeliveryPartner;
+import Model.PromoCodes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,6 +43,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class DeliveryPartnerHome extends AppCompatActivity
 {
@@ -51,6 +53,7 @@ Switch aSwitch;
 Bundle info = new Bundle();
 Context context = this;
 String email;
+FloatingActionButton fab;
 //    @Override
 //    protected void onStop()
 //    {
@@ -68,9 +71,11 @@ String email;
         setContentView(R.layout.activity_delivery_partner_home);
         email = getIntent().getStringExtra("user_name");
         System.out.println("-------------------------Email is : "+email);
-        FloatingActionButton fab = findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
         display = findViewById(R.id.list_view_delivery);
         aSwitch = findViewById(R.id.switch_DeliveryPartner);
+        System.out.println("Clicking fab inside oncreate od DeliveryPartnerHome----------");
+        fab.performClick();
         DocumentReference doc = BaseFirestore.db.collection("DeliveryPartner").document(email);
         doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
         {
@@ -120,6 +125,7 @@ String email;
 
             }
         });
+        //fab.performClick();
         fab.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -139,7 +145,7 @@ String email;
                                 System.out.println("Inside isEmpty()-----------------------");
                                 order_list.clear();
                                 ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(),android.R.layout.simple_list_item_1,order_list);
-                                System.out.println(order_list.size());
+                                System.out.println("---------------------order_list.size() : "+order_list.size());
                                 display.setAdapter(arrayAdapter);
                                 listener();
                             }
@@ -153,6 +159,7 @@ String email;
                                     info.putSerializable(document.get("order_id").toString(),(HashMap<String,Long>)document.get("order_name"));
                                     info.putInt("cost"+document.get("order_id").toString(),Integer.parseInt(document.get("cost").toString()));
                                     info.putString("cust_email"+document.get("order_id").toString(),document.get("customer_email").toString());
+                                    info.putString("OTP"+document.get("order_id").toString(),document.get("otp").toString());
                                     //System.out.println("inside doc : "+info.getSerializable(document.get("order_id").toString()) + info.getInt(document.get("order_id").toString()));
                                 }
                                 ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(),android.R.layout.simple_list_item_1,order_list);
@@ -224,6 +231,7 @@ String email;
                 specific.putInt("cost"+val,info.getInt("cost"+val));
                 specific.putString("cust_email"+val,info.getString("cust_email"+val));
                 specific.putString("KEY",val);
+                specific.putString("OTP"+val,info.get("OTP"+val).toString());
                 Details dialog = new Details();
                 dialog.setArguments(specific);
                 dialog.show(getSupportFragmentManager(),"Details Box");
@@ -241,10 +249,12 @@ String email;
         TextView cphone;
         TextView cadd;
         Button delivered;
+        Customer current_customer;
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
         {
+
             System.out.println("inside onCreateView--------------------; "+this);
             View rootView = inflater.inflate(R.layout.content_delivery_dialogbox, container, false);
             Bundle properties = getArguments();
@@ -256,17 +266,42 @@ String email;
             cadd = rootView.findViewById(R.id.cust_add_DeliveryPartner);
             delivered=rootView.findViewById(R.id.deliverdone_DeliveryPartner);
             String many = properties.get("KEY").toString();
-            total.setText("Total           ₹"+Integer.toString(properties.getInt("cost"+many)));
-            cname.setText(properties.getString("cust_email"+many));
+            total.setText("Total             ₹"+Integer.toString(properties.getInt("cost"+many)));
+            //cname.setText(properties.getString("cust_email"+many));
+            cadd.setText("OTP: "+properties.getString("OTP"+many));
             adapter = new Adapter((HashMap<String, ArrayList<String>>) properties.getSerializable("HashMap"));
             details.setAdapter(adapter);
+            final DocumentReference customer_ref = BaseFirestore.db.collection("Customer").document(properties.getString("cust_email"+many));
+            customer_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+            {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                {
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists())
+                    {
+                        current_customer = doc.toObject(Customer.class);
+                        cphone.setText("Phone: "+current_customer.getPhone_number());
+                        cname.setText("Name: "+current_customer.getName());
+                    }
+                    else
+                    {
+                        System.out.println("Some Error, Please try again later!");
+                    }
+                }
+            });
+
             delivered.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
                 {
+                    current_customer.setPast_orders(current_customer.getPast_orders()+1);
+                    if(current_customer.getPast_orders()>=3)
+                        current_customer.setPreferred_customer(true);
+                    current_customer.sendToFirestore();
                     Query orderQuery = Customer.db.collection("Order").whereEqualTo("customer_email",
-                            cname.getText());
+                            current_customer.getEmail());
 
                     orderQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
                         @Override
@@ -290,6 +325,18 @@ String email;
                                         BaseFirestore.db.collection("Order").document(document.getId()).delete();
                                         //setActiveOrder(false);
                                     }
+                                    PromoCodes code = new PromoCodes(generateString(),generate_disc());
+                                    JavaMailAPI obj = new JavaMailAPI(getActivity(),
+                                            "utsavshah99@live.com",
+                                            "Order Delivered!",
+                                            "Hola, <b>"+current_customer.getName()+"</b><br>"
+                                                    +"Thanks for trusting us!<br><br>"
+                                                    +"Your order has just been delivered! Hope you enjoy your meal<br><br>"
+                                                    +"A sweet dessert for you! Apply promo code : "+code.getCode()+" for a discount of "+code.getDiscount_percent()*100+ "% on next order!<br><br>"
+                                                    +"-Healthify Team"
+                                    );
+                                    obj.execute();
+                                    code.sendToFirestore();
                                 }
                             }
                             else{
@@ -297,11 +344,36 @@ String email;
                             }
                         }
                     });
+                    System.out.println("Clicking fab inside Dialog-----------------");
+                    //fab.performClick();
                     getDialog().dismiss();
                 }
             });
             getDialog().setTitle("Details");
             return rootView;
+        }
+        public static String generateString()
+        {
+            String ALL = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            StringBuilder generate = new StringBuilder();
+            Random rnd = new Random();
+            while (generate.length() < 7) { // length of the random string.
+                int index = (int) (rnd.nextFloat() * ALL.length());
+                generate.append(ALL.charAt(index));
+            }
+            String gen = generate.toString();
+            return gen;
+        }
+        public static double generate_disc()
+        {
+            Random r = new Random();
+            int gen = r.nextInt(3);
+            if(gen==0)
+                return 0.10;
+            else if(gen==1)
+                return 0.15;
+            else
+                return 0.20;
         }
     }
 
