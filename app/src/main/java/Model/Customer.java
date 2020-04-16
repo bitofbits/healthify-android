@@ -2,11 +2,13 @@ package Model;
 
 public class Customer extends BaseFirestore
 {
+    private int past_orders;
     private String name;
     private int age;
     private String email;
     private String password;
     private String phone_number;
+    private boolean preferred_customer;
     @Override
     public String getID()
     {
@@ -23,6 +25,8 @@ public class Customer extends BaseFirestore
         password=pass;
         phone_number=pho;
         age=0;
+        preferred_customer=false;
+        past_orders=0;
     }
     public Customer()
     {
@@ -32,6 +36,27 @@ public class Customer extends BaseFirestore
     {
         this.password = password;
     }
+
+    public boolean isPreferred_customer()
+    {
+        return preferred_customer;
+    }
+
+    public void setPreferred_customer(boolean preferred_customer)
+    {
+        this.preferred_customer = preferred_customer;
+    }
+
+    public int getPast_orders()
+    {
+        return past_orders;
+    }
+
+    public void setPast_orders(int past_orders)
+    {
+        this.past_orders = past_orders;
+    }
+
     public String getPhone_number()
     {
         return phone_number;

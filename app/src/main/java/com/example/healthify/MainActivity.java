@@ -7,6 +7,7 @@ import android.widget.Button;
 
 import Model.Order;
 import Model.Product;
+import Model.PromoCodes;
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -21,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("Hello_______________________"+this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        PromoCodes c1 = new PromoCodes("AA123",0.1);
+        c1.sendToFirestore();
         Product p1 = new Product("Aloo Matar",100);
         Product p2 = new Product("Poha",50);
         Product p3 = new Product("Upma",50);

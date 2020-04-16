@@ -1,5 +1,6 @@
 package com.example.healthify.ui.home;
 
+import android.app.Application;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.healthify.Confirmation;
 import com.example.healthify.CustomerHome;
+import com.example.healthify.JavaMailAPI;
 import com.example.healthify.R;
 import com.example.healthify.ui.dashboard.DashboardFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,13 +31,18 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import Model.BaseFirestore;
+import Model.Customer;
 import Model.DeliveryPartner;
 import Model.Order;
 import Model.Product;
+import Model.PromoCodes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -58,6 +65,8 @@ public class HomeFragment extends Fragment
     private static int deliveryOrderAllotedTillNow;
     private HomeViewModel homeViewModel;
     private static RecyclerView recyclerView;
+    private static Customer cust_details;
+    private static String otp="";
     private static RecyclerViewAdapter adapter;
     public  static FloatingActionButton confirmButton;
     private ArrayList<String> imgUrls = new ArrayList<>();
@@ -118,6 +127,30 @@ public class HomeFragment extends Fragment
 
             }
         });
+        DocumentReference dr = BaseFirestore.db.collection("Customer").document(getArguments().getString("user_email"));
+        dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+            {
+                if(task.isSuccessful())
+                {
+                    DocumentSnapshot ds = task.getResult();
+                    if(ds.exists())
+                    {
+                        cust_details = ds.toObject(Customer.class);
+                    }
+                    else
+                    {
+                        cust_details = new Customer();
+                    }
+                }
+                else
+                {
+                    cust_details = new Customer();
+                }
+            }
+        });
         return root;
     }
     private void initData()
@@ -175,6 +208,8 @@ public class HomeFragment extends Fragment
     public static class confirmationFragment extends DialogFragment{
         //private String allot="dp";
         ListView listView;
+        TextView promo;
+        Button promo_button;
         @Nullable
         @Override
 
@@ -185,14 +220,25 @@ public class HomeFragment extends Fragment
             final Bundle mBundle = getArguments();
             View rootView = inflater.inflate(R.layout.content_confirmation, container, false);
             listView = (ListView) rootView.findViewById(R.id.orderListView);
-            TextView setTotalValue = (TextView) rootView.findViewById(R.id.orderTotalValue);
+            final TextView setTotalValue = (TextView) rootView.findViewById(R.id.orderTotalValue);
+            promo = rootView.findViewById(R.id.promoCode);
+            promo_button=rootView.findViewById(R.id.promo_button);
             setTotalValue.setText("Total Cost       ₹"  + String.valueOf(mBundle.getInt("total")));
             final Adapter adapterDialog = new Adapter((HashMap<String, ArrayList<String>>) mBundle.getSerializable("HashMap"));
             listView.setAdapter(adapterDialog);
 
             Log.v("confirmationFragment", "Currently Inside confirmationFragment");
             getDialog().setTitle("Hello");
-
+            mBundle.putInt("preferred_discount",0);
+            if(cust_details.isPreferred_customer())
+            {
+                int val =(int)Math.floor(mBundle.getInt("total")* 0.9);
+                mBundle.putInt("preferred_discount",(int)Math.ceil(mBundle.getInt("total") * 0.1));
+                mBundle.putInt("total",val);
+                setTotalValue.setText("Total Cost       ₹"  + String.valueOf(val));
+                adapter.total = val;
+                Toast.makeText(getContext(), "10% regular customer discount added!", Toast.LENGTH_LONG).show();
+            }
             Button placeOrder = rootView.findViewById(R.id.orderButtonDialog);
             placeOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -209,8 +255,22 @@ public class HomeFragment extends Fragment
                             activeOrder = true;
                             adapter.activeOrder = true;
                             mBundle.putBoolean("activeOrder", true);
-                            Order createNewOrder = new Order(mBundle.get("user_email").toString(),deliveryPersonID,mBundle.getInt("total"),(HashMap<String,ArrayList<String>>)mBundle.getSerializable("HashMap"));
+                            otp=generateOTP();
+                            mBundle.putString("OTP",otp);
+                            mBundle.putInt("promo_discount",0);
+                            Order createNewOrder = new Order(mBundle.get("user_email").toString(),deliveryPersonID,mBundle.getInt("total"),(HashMap<String,ArrayList<String>>)mBundle.getSerializable("HashMap"),otp);
                             createNewOrder.sendToFirestore();
+                            // Send a confirmation email
+
+                            JavaMailAPI obj = new JavaMailAPI(getActivity(),
+                                    "utsavshah99@live.com",
+                                    "Order Placed",
+                                    "Hola, <b>"+/*createNewOrder.getCustomer_email()*/cust_details.getName()+"</b><br>"
+                                    +"Thanks for ordering from Healthify-the new healthy eating joint!<br><br>"
+                                    +"We have received your order and putting our heart and soul to create tasty dishes.<br><br>"
+                                    +"-Healthify Team"
+                            );
+                            obj.execute();
                             Toast.makeText(getContext(),"Ordered Successfully , thanks for trusting us!",Toast.LENGTH_SHORT).show();
                             getDialog().dismiss();
 
@@ -242,10 +302,69 @@ public class HomeFragment extends Fragment
                     }
                 }
             });
+            promo_button.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    if(promo.getText().toString().equals(""))
+                    {
+                        Toast.makeText(getActivity(), "Enter PromoCode!", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        System.out.println("Text entered  :  "+promo.getText().toString());
+                        BaseFirestore.db.collection("PromoCodes").document(promo.getText().toString())
+//                                .whereEqualTo("Code",promo.getText().toString())
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                                {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                                    {
+                                        if(task.isSuccessful())
+                                        {
+                                            DocumentSnapshot document = task.getResult();
+                                            if(document.exists())
+                                            {
+                                                PromoCodes pr;
+                                                pr = document.toObject(PromoCodes.class);
 
+                                                System.out.println("------------disc : "+pr.getDiscount_percent());
+                                                int final_val = (int)Math.floor((1-pr.getDiscount_percent())*mBundle.getInt("total"));
+                                                System.out.println("--------------------final_Val (integer) is : "+final_val);
+                                                setTotalValue.setText("Total Cost       ₹"  + String.valueOf(final_val));
+                                                mBundle.putInt("promo_discount",(int)Math.ceil(pr.getDiscount_percent()*mBundle.getInt("total")));
+                                                mBundle.putInt("total",final_val);
+                                                adapter.total=final_val;
+                                                Toast.makeText(getActivity(), "Voila, Promo Applied!", Toast.LENGTH_SHORT).show();
+                                                promo_button.setClickable(false);
+                                                BaseFirestore.db.collection("PromoCodes").document(pr.getID()).delete();
+                                            }
+                                            else
+                                            {
+                                                Toast.makeText(getActivity(), "Invalid PromoCode!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    }
+                                });
+                    }
+                }
+            });
             return rootView;
         }
-
+        public static String generateOTP()
+        {
+            String ALL = "1234567890";
+            StringBuilder generate = new StringBuilder();
+            Random rnd = new Random();
+            while (generate.length() < 4) { // length of the random string.
+                int index = rnd.nextInt(10);
+                generate.append(ALL.charAt(index));
+            }
+            String gen = generate.toString();
+            return gen;
+        }
     }
     public static void setFloatingActionButtonVisibility(boolean visibility){
 
