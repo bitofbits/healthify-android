@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.example.healthify.R;
 import com.google.android.gms.common.util.JsonUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -23,6 +24,8 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>
 {
@@ -78,111 +81,158 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Toast.makeText(context,"Hello food item!", Toast.LENGTH_SHORT).show();
             }
         });
-        holder.subtract.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                System.out.println(context.toString());
-                long quantityTemp = Long.parseLong(holder.quan.getText().toString());
-                selected = holder.spinner.getSelectedItem().toString();
 
-                //Button work only if customer don't have an active order
-                if(activeOrder) {
-                    quantityTemp = 0;
+        if(activeOrder){
+            HomeFragment.setFloatingActionButtonVisibility(false);
+            holder.elegantNumberButton.setRange(0, 0);
+            holder.elegantNumberButton.setOnClickListener(new ElegantNumberButton.OnClickListener() {
+                @Override
+                public void onClick(View view) {
                     Toast.makeText(context,"Sorry! You have already placed an Order",Toast.LENGTH_SHORT).show();
-                    HomeFragment.setFloatingActionButtonVisibility(false);
                 }
-                else
-                {
-                    if(quantityTemp > 0) {
-
-
-                        orderCost = foodPrice.get(position);
-                        switch(holder.spinner.getSelectedItem().toString()) {
-                            case("Small"):
-                                total -= orderCost;
-                                break;
-                            case("Medium"):
-                                orderCost = orderCost * 1.5;
-                                total -= orderCost;
-                                break;
-                            case("Large"):
-                                orderCost = orderCost * 2;
-                                total -= orderCost;
-                                break;
-                        }
-                        quantityTemp--;
+            });
+        }
+        else{
+            holder.elegantNumberButton.setRange(0, 5);
+            holder.elegantNumberButton.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
+                @Override
+                public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
+                    selected = holder.spinner.getSelectedItem().toString();
+                    orderCost = foodPrice.get(position);
+                    switch(holder.spinner.getSelectedItem().toString()) {
+                        case("Small"):
+                            total += (newValue - oldValue ) * orderCost;
+                            break;
+                        case("Medium"):
+                            orderCost = orderCost * 1.5;
+                            total += (newValue - oldValue ) * orderCost;
+                            break;
+                        case("Large"):
+                            orderCost = orderCost * 2;
+                            total += (newValue - oldValue ) * orderCost;
+                            break;
                     }
-                }
-
-                if(total == 0){
-                    HomeFragment.setFloatingActionButtonVisibility(false);
-                }
-                holder.quan.setText(Long.toString(quantityTemp));
-                arrayList = new ArrayList<String>();
-                arrayList.add(Long.toString(quantityTemp));
-                arrayList.add(String.valueOf(orderCost));
-                arrayList.add(holder.spinner.getSelectedItem().toString());
-
-                order_name.put(holder.name.getText().toString() + " (" + arrayList.get(2) + ")", arrayList);
-
-                if(quantityTemp == 0)
-                    order_name.remove(holder.name.getText().toString() + " (" + selected + ")");
-            }
-        });
-        holder.add.setOnClickListener(new View.OnClickListener()
-        {
-
-            @Override
-            public void onClick(View view)
-            {
-                Long quantityTemp = Long.parseLong(holder.quan.getText().toString());
-
-                //Button work only if customer don't have an active order
-                if(activeOrder) {
-                    quantityTemp = 0l;
-                    Toast.makeText(context,"Sorry! You have already placed an Order",Toast.LENGTH_SHORT).show();
-                    HomeFragment.setFloatingActionButtonVisibility(false);
-                }
-                else{
-                    if(quantityTemp < 5) {
-
-                        orderCost = foodPrice.get(position);
-                        switch(holder.spinner.getSelectedItem().toString()) {
-                            case("Small"):
-                                total += orderCost;
-                                break;
-                            case("Medium"):
-                                orderCost = orderCost * 1.5;
-                                total += orderCost;
-                                break;
-                            case("Large"):
-                                orderCost = orderCost * 2;
-                                total += orderCost;
-                                break;
-                        }
-
-                        quantityTemp++;
+                    if(newValue > 0)
                         HomeFragment.setFloatingActionButtonVisibility(true);
-                    }
-                    else {
-                        Toast.makeText(context,"Dang! You can purchase only 5 item of same type",Toast.LENGTH_SHORT).show();
-                    }
+                    else if(newValue == 0 && total == 0)
+                        HomeFragment.setFloatingActionButtonVisibility(false);
+
+                    arrayList = new ArrayList<String>();
+                    arrayList.add(holder.elegantNumberButton.getNumber());
+                    arrayList.add(String.valueOf(orderCost));
+                    arrayList.add(holder.spinner.getSelectedItem().toString());
+                    order_name.put(holder.name.getText().toString() + " (" + arrayList.get(2) + ")", arrayList);
+
+                    if(newValue == 0)
+                        order_name.remove(holder.name.getText().toString() + " (" + selected + ")");
                 }
-
-                holder.quan.setText(Long.toString(quantityTemp));
-                arrayList = new ArrayList<String>();
-                arrayList.add(Long.toString(quantityTemp));
-                arrayList.add(String.valueOf(orderCost));
-                arrayList.add(holder.spinner.getSelectedItem().toString());
-                order_name.put(holder.name.getText().toString() + " (" + arrayList.get(2) + ")", arrayList);
-
-                if(quantityTemp == 0)
-                    order_name.remove(holder.name.getText().toString());
-
-            }
-        });
+            });
+        }
+//        holder.subtract.setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View view)
+//            {
+//                System.out.println(context.toString());
+//                long quantityTemp = Long.parseLong(holder.quan.getText().toString());
+//                selected = holder.spinner.getSelectedItem().toString();
+//
+//                //Button work only if customer don't have an active order
+//                if(activeOrder) {
+//                    quantityTemp = 0;
+//                    Toast.makeText(context,"Sorry! You have already placed an Order",Toast.LENGTH_SHORT).show();
+//                    HomeFragment.setFloatingActionButtonVisibility(false);
+//                }
+//                else
+//                {
+//                    if(quantityTemp > 0) {
+//
+//
+//                        orderCost = foodPrice.get(position);
+//                        switch(holder.spinner.getSelectedItem().toString()) {
+//                            case("Small"):
+//                                total -= orderCost;
+//                                break;
+//                            case("Medium"):
+//                                orderCost = orderCost * 1.5;
+//                                total -= orderCost;
+//                                break;
+//                            case("Large"):
+//                                orderCost = orderCost * 2;
+//                                total -= orderCost;
+//                                break;
+//                        }
+//                        quantityTemp--;
+//                    }
+//                }
+//
+//                if(total == 0){
+//                    HomeFragment.setFloatingActionButtonVisibility(false);
+//                }
+//                holder.quan.setText(Long.toString(quantityTemp));
+//                arrayList = new ArrayList<String>();
+//                arrayList.add(Long.toString(quantityTemp));
+//                arrayList.add(String.valueOf(orderCost));
+//                arrayList.add(holder.spinner.getSelectedItem().toString());
+//
+//                order_name.put(holder.name.getText().toString() + " (" + arrayList.get(2) + ")", arrayList);
+//
+//                if(quantityTemp == 0)
+//                    order_name.remove(holder.name.getText().toString() + " (" + selected + ")");
+//            }
+//        });
+//        holder.add.setOnClickListener(new View.OnClickListener()
+//        {
+//
+//            @Override
+//            public void onClick(View view)
+//            {
+//                Long quantityTemp = Long.parseLong(holder.quan.getText().toString());
+//
+//                //Button work only if customer don't have an active order
+//                if(activeOrder) {
+//                    quantityTemp = 0l;
+//                    Toast.makeText(context,"Sorry! You have already placed an Order",Toast.LENGTH_SHORT).show();
+//                    HomeFragment.setFloatingActionButtonVisibility(false);
+//                }
+//                else{
+//                    if(quantityTemp < 5) {
+//
+//                        orderCost = foodPrice.get(position);
+//                        switch(holder.spinner.getSelectedItem().toString()) {
+//                            case("Small"):
+//                                total += orderCost;
+//                                break;
+//                            case("Medium"):
+//                                orderCost = orderCost * 1.5;
+//                                total += orderCost;
+//                                break;
+//                            case("Large"):
+//                                orderCost = orderCost * 2;
+//                                total += orderCost;
+//                                break;
+//                        }
+//
+//                        quantityTemp++;
+//                        HomeFragment.setFloatingActionButtonVisibility(true);
+//                    }
+//                    else {
+//                        Toast.makeText(context,"Dang! You can purchase only 5 item of same type",Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//
+//                holder.quan.setText(Long.toString(quantityTemp));
+//                arrayList = new ArrayList<String>();
+//                arrayList.add(Long.toString(quantityTemp));
+//                arrayList.add(String.valueOf(orderCost));
+//                arrayList.add(holder.spinner.getSelectedItem().toString());
+//                order_name.put(holder.name.getText().toString() + " (" + arrayList.get(2) + ")", arrayList);
+//
+//                if(quantityTemp == 0)
+//                    order_name.remove(holder.name.getText().toString());
+//
+//            }
+//        });
 
         holder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -193,10 +243,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 if(order_name.containsKey(holder.name.getText().toString() + " (" + selected + ")"))
                 {
                     String orderName = holder.name.getText().toString() + " (" + selected + ")";
-                    holder.quan.setText(order_name.get(orderName).get(0));
+                    holder.elegantNumberButton.setNumber(order_name.get(orderName).get(0));
+                    HomeFragment.setFloatingActionButtonVisibility(true);
                 }
                 else{
-                    holder.quan.setText("0");
+                    holder.elegantNumberButton.setNumber("0");
                 }
                 switch(selected) {
                     case("Small"):
@@ -236,7 +287,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder
     {
-        ImageView img;
+        CircleImageView img;
         TextView name;
         TextView price;
         TextView quan;
@@ -244,15 +295,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Button subtract;
         Spinner spinner;
         ConstraintLayout parentLayout;
+        ElegantNumberButton elegantNumberButton;
         public ViewHolder(@NonNull View itemView)
         {
             super(itemView);
             img =itemView.findViewById(R.id.food_image);
             name=itemView.findViewById(R.id.food_name);
             price=itemView.findViewById(R.id.food_cost);
-            quan =itemView.findViewById(R.id.food_quantity);
-            add = itemView.findViewById(R.id.food_add);
-            subtract=itemView.findViewById(R.id.food_subtract);
+//            quan =itemView.findViewById(R.id.food_quantity);
+//            add = itemView.findViewById(R.id.food_add);
+//            subtract=itemView.findViewById(R.id.food_subtract);
+            elegantNumberButton = itemView.findViewById(R.id.setQuantityButton);
             parentLayout=itemView.findViewById(R.id.parent_layout);
             spinner = itemView.findViewById(R.id.spinner);
         }

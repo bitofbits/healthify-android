@@ -7,7 +7,9 @@
     android:gravity="bottom"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="40dp">
+    android:padding="40dp"
+    android:minWidth="500dp"
+    android:minHeight="450dp">
 
     <TextView
         android:layout_width="wrap_content"

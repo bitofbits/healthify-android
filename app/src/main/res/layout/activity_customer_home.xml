@@ -5,9 +5,18 @@
     android:id="@+id/activityCustomerContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginBottom="-250dp"
+        android:background="#26A69A"
+        android:minHeight="?attr/actionBarSize"
+        app:titleTextColor="@android:color/white" />
     <ImageButton
         android:id="@+id/setCurrentLocationButton"
-        android:layout_width="60dp"
+        android:layout_width="0dp"
         android:layout_height="60dp"
         android:background="#BDCFD1"
         android:src="@android:drawable/ic_menu_mylocation"
@@ -16,29 +25,28 @@
     <TextView
         android:id="@+id/setCurrentLocationText"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_toRightOf="@id/setCurrentLocationButton"
+        android:layout_height="0dp"
         android:text="No Location Set"
         android:textSize="20sp"
         android:textAlignment="center"
         android:padding="10dp"/>
 
-
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="733dp"
         android:layout_above="@id/nav_view"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="91dp" />
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/nav_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:background="?android:attr/windowBackground"
-            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
-            app:menu="@menu/bottom_nav_menu" />
+            app:menu="@menu/bottom_nav_menu"
+            android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
+    />
 
 </RelativeLayout>

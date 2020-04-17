@@ -33,6 +33,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Text;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -263,14 +264,12 @@ public class HomeFragment extends Fragment
             mBundle.putInt("preferred_discount",0);
             if(cust_details.isPreferred_customer())
             {
-                int val =(int)Math.floor(mBundle.getInt("total")* 0.9);
-                mBundle.putInt("preferred_discount",(int)Math.ceil(mBundle.getInt("total") * 0.1));
-                mBundle.putInt("total",val);
-                setTotalValue.setText("Total Cost       ₹"  + String.valueOf(val));
-                adapter.total = val;
+                mBundle.putInt("preferred_discount",10);
+                setTotalValue.setText("Total Cost       ₹"  + String.valueOf((int)Math.floor(mBundle.getInt("total")* 0.9)));
                 Toast.makeText(getContext(), "10% regular customer discount added!", Toast.LENGTH_LONG).show();
             }
-            Button placeOrder = rootView.findViewById(R.id.orderButtonDialog);
+            final Button placeOrder = rootView.findViewById(R.id.orderButtonDialog);
+
             placeOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -288,8 +287,8 @@ public class HomeFragment extends Fragment
                             mBundle.putBoolean("activeOrder", true);
                             otp=generateOTP();
                             mBundle.putString("OTP",otp);
-                            mBundle.putInt("promo_discount",0);
-                            Order createNewOrder = new Order(mBundle.get("user_email").toString(),deliveryPersonID,mBundle.getInt("total"),(HashMap<String,ArrayList<String>>)mBundle.getSerializable("HashMap"),otp);
+                            int totalDiscount = mBundle.getInt("promo_discount") + mBundle.getInt("preferred_discount");
+                            Order createNewOrder = new Order(mBundle.get("user_email").toString(),deliveryPersonID,mBundle.getInt("total"),(HashMap<String,ArrayList<String>>)mBundle.getSerializable("HashMap"),otp, totalDiscount);
                             createNewOrder.sendToFirestore();
                             // Send a confirmation email
 
@@ -320,6 +319,10 @@ public class HomeFragment extends Fragment
                             BottomNavigationView mBottomNavigationView = getActivity().findViewById(R.id.nav_view);
                             mBottomNavigationView.findViewById(R.id.navigation_dashboard).performClick();
                             confirmButton.hide();
+                            if(!promo.getText().toString().isEmpty()) {
+                                System.out.println("mcdi " + promo.getText().toString());
+                                BaseFirestore.db.collection("PromoCodes").document(promo.getText().toString()).delete();
+                            }
                         }
                         else
                         {
@@ -344,6 +347,7 @@ public class HomeFragment extends Fragment
                     }
                     else
                     {
+                        placeOrder.setClickable(false);
                         System.out.println("Text entered  :  "+promo.getText().toString());
                         BaseFirestore.db.collection("PromoCodes").document(promo.getText().toString())
 //                                .whereEqualTo("Code",promo.getText().toString())
@@ -362,19 +366,20 @@ public class HomeFragment extends Fragment
                                                 pr = document.toObject(PromoCodes.class);
 
                                                 System.out.println("------------disc : "+pr.getDiscount_percent());
-                                                int final_val = (int)Math.floor((1-pr.getDiscount_percent())*mBundle.getInt("total"));
+                                                double regularDiscount = (double)mBundle.getInt("preferred_discount")/100;
+                                                int final_val = (int)Math.floor((1-(pr.getDiscount_percent()+regularDiscount))*mBundle.getInt("total"));
                                                 System.out.println("--------------------final_Val (integer) is : "+final_val);
                                                 setTotalValue.setText("Total Cost       ₹"  + String.valueOf(final_val));
-                                                mBundle.putInt("promo_discount",(int)Math.ceil(pr.getDiscount_percent()*mBundle.getInt("total")));
-                                                mBundle.putInt("total",final_val);
-                                                adapter.total=final_val;
+                                                mBundle.putInt("promo_discount",(int) (pr.getDiscount_percent()* 100));
                                                 Toast.makeText(getActivity(), "Voila, Promo Applied!", Toast.LENGTH_SHORT).show();
                                                 promo_button.setClickable(false);
-                                                BaseFirestore.db.collection("PromoCodes").document(pr.getID()).delete();
+                                                System.out.println(mBundle + "oops" + (int) (pr.getDiscount_percent()* 100) );
+                                                placeOrder.setClickable(true);
                                             }
                                             else
                                             {
                                                 Toast.makeText(getActivity(), "Invalid PromoCode!", Toast.LENGTH_SHORT).show();
+                                                placeOrder.setClickable(true);
                                             }
                                         }
                                     }

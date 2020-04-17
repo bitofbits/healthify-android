@@ -19,7 +19,7 @@
         android:hint="E-mail"
 
         android:inputType="textPersonName"
-        android:text="cp"
+        android:text="1@email.com"
         app:layout_constraintBottom_toTopOf="@+id/editText_password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +36,7 @@
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
-        android:text="cp"
+        android:text="2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

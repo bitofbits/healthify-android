@@ -12,18 +12,28 @@ public class Order extends BaseFirestore
     private int cost;
     private String name;
     private HashMap<String , ArrayList<String>> order_name;
-    public Order(String c, String allotedDeliveryPerson,int co,HashMap<String, ArrayList<String>> x,String otp) {
+    private int totalDiscount;
+    public Order(String c, String allotedDeliveryPerson,int co,HashMap<String, ArrayList<String>> x,String otp, int totalDiscount) {
         order_id=Integer.toString(c.hashCode());
         partner = allotedDeliveryPerson;
         customer_email = c;
         cost=co;
         order_name = x;
         this.otp = otp;
+        this.totalDiscount = totalDiscount;
     }
     public Order()
     {
 
     }
+    public int getTotalDiscount(){
+        return this.totalDiscount;
+    }
+
+    public void setTotalDiscount(int totalDiscount) {
+        this.totalDiscount = totalDiscount;
+    }
+
     public String getOrder_id() {
         return order_id;
     }

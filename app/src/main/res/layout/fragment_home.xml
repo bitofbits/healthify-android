@@ -9,11 +9,11 @@
         android:id="@+id/order_check_out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="36dp"
-        android:background="@color/colorPrimaryDark"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="#FFFFFF"
         android:clickable="true"
-        android:src="@drawable/background_main_activity"
+        android:src="@drawable/shopping_cart_racing"
         app:layout_constraintBottom_toBottomOf="@+id/recycle_view_menu"
         app:layout_constraintEnd_toEndOf="@+id/recycle_view_menu"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
@@ -22,6 +22,6 @@
         android:id="@+id/recycle_view_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="69dp" />
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="16dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
