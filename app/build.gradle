@@ -36,6 +36,7 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.1.0'
     //glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
