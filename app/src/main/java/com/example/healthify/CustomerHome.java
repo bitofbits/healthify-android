@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.healthify.ui.dashboard.DashboardFragment;
+import com.example.healthify.ui.fragmentAboutUs;
 import com.example.healthify.ui.home.HomeFragment;
 import com.example.healthify.ui.notifications.NotificationsFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -30,21 +31,25 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 import Model.Customer;
@@ -61,22 +66,31 @@ public class CustomerHome extends AppCompatActivity{
     int PERMISSION_ID = 44;
     TextView latTextView;
     FusedLocationProviderClient mFusedLocationClient;
+    DrawerLayout drawerLayout;
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_home);
 
-//        ImageButton imageButton = (ImageButton)findViewById(R.id.setCurrentLocationButton);
-//        latTextView = (TextView) findViewById(R.id.setCurrentLocationText);
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        drawerLayout = findViewById(R.id.drawerLayout);
 
-//        imageButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                getLastLocation();
-//            }
-//        });
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
 
         emailAddress = getIntent().getStringExtra("user_email");
         Customer.db.collection("Order").whereEqualTo("customer_email", emailAddress).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
@@ -115,6 +129,9 @@ public class CustomerHome extends AppCompatActivity{
         //Initialize and populate BottomNavView
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(navListener);
+
+        NavigationView navigationView = findViewById(R.id.nav_drawer);
+        navigationView.setNavigationItemSelectedListener(drawerlistener);
 
     }
 
@@ -226,6 +243,10 @@ public class CustomerHome extends AppCompatActivity{
                 selectedFragment = dashboardFragment;
                 Log.v("NavigationDashboard", "Navigation Dashboard");
             }
+            else if (item.getItemId() == R.id.drawer_about_us) {
+                System.out.println("cyka blyat(1)");
+                Log.v("NavigationDashboard", "Navigation Dashboard");
+            }
             else {
                 fragmentManager.beginTransaction().hide(selectedFragment).show(notificationFragment).commit();
                 selectedFragment = notificationFragment;
@@ -258,5 +279,22 @@ public class CustomerHome extends AppCompatActivity{
             mBottomNavigationView.findViewById(R.id.navigation_dashboard).performClick();
         }
     }
+    private NavigationView.OnNavigationItemSelectedListener drawerlistener = new NavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            System.out.println("cyka blyat");
+            switch (item.getItemId()) {
+                case R.id.drawer_about_us:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new fragmentAboutUs()).commit();
+                    break;
+
+            }
+
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        }
+    };
 }
 

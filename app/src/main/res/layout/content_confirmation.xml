@@ -1,57 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:gravity="bottom"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="40dp"
+    android:background="@drawable/order_summary_background"
+    android:gravity="bottom"
     android:minWidth="500dp"
-    android:minHeight="450dp">
+    android:minHeight="450dp"
+    android:orientation="vertical"
+    android:padding="40dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="25sp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="7dp"
         android:text="Order Summary"
-        android:layout_gravity="center"/>
+        android:textColor="@color/colorInput"
+        android:textSize="25sp" />
+
     <ListView
+        android:id="@+id/orderListView"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
         android:layout_weight="1"
-        android:id="@+id/orderListView"/>
+        android:divider="#008577"
+        android:dividerHeight="1dp"
+        android:background="@drawable/order_list_background" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Total Order"
-        android:gravity="center"
-        android:textSize="15sp"
-        android:id="@+id/orderTotalValue"/>
+        android:layout_marginBottom="10dp"
+        android:gravity="right"
+        android:text="Order Total:"
+        android:layout_marginRight="60dp"
+        android:textColor="#ffffff"
+        android:textColorHint="#000000"
+        android:textSize="15sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:gravity="right"
+        android:text="PROMO discount:"
+        android:layout_marginRight="60dp"
+        android:textColor="#ffffff"
+        android:textColorHint="#000000"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/orderTotalValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="17dp"
+        android:layout_marginRight="60dp"
+        android:gravity="right"
+        android:text="@string/total"
+        android:textColor="#ffffff"
+        android:textSize="17sp" />
+
+    <EditText
+        android:id="@+id/promoCode"
+        android:layout_width="218dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="-47dp"
+        android:ems="10"
+        android:hint="PROMO CODE?"
+        android:inputType="textPersonName"
+        android:textColor="#000000"
+        android:textColorHint="@color/colorHint"
+        android:background="@drawable/textbox_back"
+        android:padding="10dp"
+        />
+
+    <Button
+        android:id="@+id/promo_button"
+        android:layout_width="72dp"
+        android:layout_height="45dp"
+        android:layout_gravity="right"
+        android:background="@drawable/button_rounded"
+        android:text="Apply"
+        android:textColor="@color/colorInput"
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/orderButtonDialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/loginbutton_back"
         android:clickable="true"
-        android:text="Place Order" />
-
-    <Button
-        android:id="@+id/promo_button"
-        android:layout_width="72dp"
-        android:layout_height="wrap_content"
-        android:text="Apply"
-        android:textSize="14sp"
-        />
-
-    <EditText
-        android:id="@+id/promoCode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="promo"
-        android:inputType="textPersonName" />
+        android:text="Place Order"
+        android:textColor="@color/colorInput" />
 
 </LinearLayout>

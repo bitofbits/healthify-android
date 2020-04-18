@@ -24,6 +24,7 @@ public class login extends AppCompatActivity
     TextView email;
     TextView password;
     Button signin;
+    TextView signup;
     Context context = this;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -34,6 +35,16 @@ public class login extends AppCompatActivity
         //raj.sendToFirestore();
         email=findViewById(R.id.edittext_login_enail);
         password=findViewById(R.id.editText_password);
+
+        signup=findViewById(R.id.text_signup);
+
+        signup.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(login.this, signup.class);
+                startActivity(intent);
+            }
+        });
+
         System.out.println("INSIDE LOGIN CLASS -----------------------");
         System.out.println("Initially : "+signin);
         signin=findViewById(R.id.button_signin);
@@ -134,5 +145,6 @@ public class login extends AppCompatActivity
         it.putExtra("user_name",email.getText().toString());
         startActivity(it);
     }
+
 
 }

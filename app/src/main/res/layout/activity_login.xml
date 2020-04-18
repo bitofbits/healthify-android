@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="525dp"
         android:layout_marginTop="75dp"
         android:gravity="center"
         android:orientation="vertical"
@@ -26,13 +26,14 @@
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/textbox_back"
-            android:drawableLeft="@drawable/ic_person_outline_white_24dp"
+            android:drawableLeft="@drawable/ic_mail_outline_white_24dp"
             android:ems="10"
-            android:hint=" E-mail"
+            android:hint="E-mail"
             android:inputType="textPersonName"
             android:padding="5dp"
             android:textColor="@color/colorInput"
             android:textColorHint="@color/colorHint"
+            android:drawablePadding="5dp"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/editText_password"
             app:layout_constraintEnd_toEndOf="parent"
@@ -46,8 +47,9 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/textbox_back"
             android:drawableLeft="@drawable/ic_lock_outline_white_24dp"
+            android:drawablePadding="5dp"
             android:ems="10"
-            android:hint=" Password"
+            android:hint="Password"
             android:inputType="textPassword"
             android:padding="5dp"
             android:textColorHint="@color/colorHint"
@@ -70,6 +72,16 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+        android:id="@+id/text_signup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register_text"
+        android:layout_marginTop="20dp"
+        android:textSize="19sp"
+        android:textColor="@color/colorInput"
+        android:padding="5dp" />
 
     </LinearLayout>
 
