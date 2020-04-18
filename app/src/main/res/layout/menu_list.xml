@@ -27,91 +27,49 @@
 
         <TextView
             android:id="@+id/food_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginStart="25dp"
-            android:fontFamily="@font/open_sans"
+            android:layout_marginEnd="25dp"
             android:text="Food_name"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            android:textSize="16sp"
+            android:maxLines="4"
             app:layout_constraintLeft_toRightOf="@id/food_image"
+            app:layout_constraintRight_toLeftOf="@id/food_cost"
             app:layout_constraintTop_toTopOf="@id/food_image" />
 
         <TextView
             android:id="@+id/food_cost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="15dp"
             android:fontFamily="@font/open_sans"
             android:text="Rs 250"
-            android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@+id/food_image"
-            app:layout_constraintTop_toBottomOf="@+id/food_name" />
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="@id/setQuantityButton"
+            app:layout_constraintTop_toTopOf="@id/food_name" />
 
         <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
             android:id="@+id/setQuantityButton"
             android:layout_width="80dp"
             android:layout_height="40dp"
-            android:layout_marginTop="8dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="10dp"
-            app:backGroundColor="#1976D2"
-            app:layout_constraintBottom_toBottomOf="@id/food_cost"
+            app:backGroundColor="#26A69A"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/food_cost"
-            app:layout_constraintTop_toTopOf="@id/food_cost"
-            app:textSize="8sp"/>
-
-        <!--        <Button-->
-        <!--        android:id="@+id/food_subtract"-->
-        <!--        android:layout_width="wrap_content"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:layout_margin="25dp"-->
-        <!--        android:minHeight="0dp"-->
-        <!--        android:minWidth="0dp"-->
-        <!--        android:text="-"-->
-        <!--        android:textSize="14sp"-->
-        <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--        app:layout_constraintStart_toEndOf="@+id/food_image"-->
-        <!--        app:layout_constraintTop_toBottomOf="@+id/food_cost" />-->
-
-
-        <!--    <TextView-->
-        <!--        android:id="@+id/food_quantity"-->
-        <!--        android:layout_width="wrap_content"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:layout_marginLeft="28dp"-->
-        <!--        android:text="0"-->
-        <!--        android:textSize="30sp"-->
-        <!--        app:layout_constraintLeft_toRightOf="@id/food_subtract"-->
-        <!--        app:layout_constraintTop_toTopOf="@id/food_subtract" />-->
-        <!--        -->
-
-
-        <!--        <Button-->
-        <!--        android:id="@+id/food_add"-->
-        <!--        android:layout_width="wrap_content"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:layout_margin="25dp"-->
-        <!--        android:minHeight="0dp"-->
-        <!--        android:minWidth="0dp"-->
-        <!--        android:text="+"-->
-        <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--        app:layout_constraintStart_toEndOf="@+id/food_quantity" />-->
+            app:textSize="8sp" />
 
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
             android:entries="@array/spinnerPromptArray"
             android:prompt="@string/spinnerPromptPlaceholderText"
             android:textAlignment="textStart"
             android:theme="@style/SpinnerTheme"
-            app:layout_constraintBottom_toBottomOf="@id/food_image"
-            app:layout_constraintLeft_toLeftOf="@id/food_cost"
-            app:layout_constraintTop_toBottomOf="@id/food_cost" />
+            app:layout_constraintBottom_toBottomOf="@id/setQuantityButton"
+            app:layout_constraintTop_toTopOf="@id/setQuantityButton"
+            app:layout_constraintLeft_toLeftOf="@id/food_name"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
