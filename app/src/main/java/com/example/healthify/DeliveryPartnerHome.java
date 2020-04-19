@@ -1,21 +1,34 @@
 package com.example.healthify;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ListView;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.healthify.ui.home.Adapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 import Model.BaseFirestore;
 import Model.Customer;
@@ -24,26 +37,7 @@ import Model.PromoCodes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.ListView;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
 
 public class DeliveryPartnerHome extends AppCompatActivity
 {
@@ -160,6 +154,7 @@ FloatingActionButton fab;
                                     info.putInt("cost"+document.get("order_id").toString(),Integer.parseInt(document.get("cost").toString()));
                                     info.putString("cust_email"+document.get("order_id").toString(),document.get("customer_email").toString());
                                     info.putString("OTP"+document.get("order_id").toString(),document.get("otp").toString());
+                                    info.putLong("status"+document.get("order_id").toString(), (Long) document.get("status"));
                                     //System.out.println("inside doc : "+info.getSerializable(document.get("order_id").toString()) + info.getInt(document.get("order_id").toString()));
                                 }
                                 ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(),android.R.layout.simple_list_item_1,order_list);
@@ -232,6 +227,7 @@ FloatingActionButton fab;
                 specific.putString("cust_email"+val,info.getString("cust_email"+val));
                 specific.putString("KEY",val);
                 specific.putString("OTP"+val,info.get("OTP"+val).toString());
+                specific.putInt("status"+val,info.getInt("status"+val));
                 Details dialog = new Details();
                 dialog.setArguments(specific);
                 dialog.show(getSupportFragmentManager(),"Details Box");
@@ -249,6 +245,7 @@ FloatingActionButton fab;
         TextView cphone;
         TextView cadd;
         Button delivered;
+        Button pick;
         Customer current_customer;
         @Nullable
         @Override
@@ -259,6 +256,7 @@ FloatingActionButton fab;
             View rootView = inflater.inflate(R.layout.content_delivery_dialogbox, container, false);
             Bundle properties = getArguments();
             System.out.println("inside oncreateView   "+properties);
+            pick = rootView.findViewById(R.id.pickup_DeliveryPartner);
             details = rootView.findViewById(R.id.order_details_deliverypartner);
             total = rootView.findViewById(R.id.total_DeliveryParter);
             cname = rootView.findViewById(R.id.cust_name_DeliveryPartner);
@@ -291,6 +289,15 @@ FloatingActionButton fab;
                 }
             });
 
+            pick.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    BaseFirestore.db.collection("Order").document(Integer.toString(current_customer.getEmail().hashCode())).update("status",1);
+                    Toast.makeText(getActivity(), "Picked up updated!", Toast.LENGTH_SHORT).show();
+                }
+            });
             delivered.setOnClickListener(new View.OnClickListener()
             {
                 @Override
