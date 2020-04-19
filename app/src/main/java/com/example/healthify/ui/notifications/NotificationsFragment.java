@@ -35,6 +35,8 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
@@ -67,7 +69,12 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import Model.BaseFirestore;
+import Model.Customer;
+import Model.DeliveryPartner;
+import Model.Order;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -92,6 +99,8 @@ public class NotificationsFragment extends Fragment implements OnMapReadyCallbac
     // variables needed to initialize navigation
     private Button button;
     MapboxNavigation navigation;
+    TextView distanceText;
+    TextView estimatedTimeText;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -99,18 +108,13 @@ public class NotificationsFragment extends Fragment implements OnMapReadyCallbac
         notificationsViewModel =
                 ViewModelProviders.of(this).get(NotificationsViewModel.class);
         View root = inflater.inflate(R.layout.activity_maps, container, false);
-        final TextView textView = root.findViewById(R.id.text_notifications);
-//        notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//
-//            }
-//        });
+
         mapView = root.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
         navigation = new MapboxNavigation(getContext(), getString(R.string.access_token));
+        distanceText = root.findViewById(R.id.notificationsFragmentDistance);
+        estimatedTimeText = root.findViewById(R.id.notificationsFragmentTime);
         return root;
     }
 
@@ -138,8 +142,14 @@ public class NotificationsFragment extends Fragment implements OnMapReadyCallbac
 
                 addDestinationIconSymbolLayer(style);
 
+//                TextView distanceText = getActivity().findViewById(R.id.notificationsFragmentDistance);
+//                distanceText.setText(String.valueOf(currentRoute.distance()));
+//                TextView estimatedTimeText = getActivity().findViewById(R.id.notificationsFragmentDistance);
+//                estimatedTimeText.setText(String.valueOf(currentRoute.duration()));
+
                 mapboxMap.addOnMapClickListener(NotificationsFragment.this);
                 button = getView().findViewById(R.id.startButton);
+                button.setVisibility(View.GONE);
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -160,23 +170,64 @@ public class NotificationsFragment extends Fragment implements OnMapReadyCallbac
     @Override
     public boolean onMapClick(@NonNull LatLng point) {
 
-        Point destinationPoint = Point.fromLngLat(point.getLongitude(), point.getLatitude());
-        Point originPoint = Point.fromLngLat(locationComponent.getLastKnownLocation().getLongitude(),
-                locationComponent.getLastKnownLocation().getLatitude());
+        BaseFirestore.db.collection("Customer").document(getArguments().getString("user_email")).
+                get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    System.out.println("NEW NOTIFICAITON FRAGMENT" + " upper");
+                    DocumentSnapshot doc = task.getResult();
+                    Customer customer = doc.toObject(Customer.class);
+                    System.out.println("NEW NOTIFICAITON FRAGMENT" + " upper" + customer.getLatitude());
+                    Point originPoint = Point.fromLngLat(customer.getLongitude(), customer.getLatitude());
 
+                    Customer.db.collection("Order").whereEqualTo("customer_email", getArguments().getString("user_email")).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful())
+                            {
+                                for (DocumentSnapshot document : task.getResult()){
+                                    Order order = document.toObject(Order.class);
+                                    System.out.println("order +" + order.getPartner());
+                                    BaseFirestore.db.collection("DeliveryPartner").document(order.getPartner()).
+                                            get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if(task.isSuccessful()){
+                                                System.out.println("NEW NOTIFICAITON FRAGMENT" + "inner");
+                                                DeliveryPartner deliveryPartner = task.getResult().toObject(DeliveryPartner.class);
+                                                Point destinationPoint = Point.fromLngLat(deliveryPartner.getLongitude(), deliveryPartner.getLatitude());
+                                                GeoJsonSource source = mapboxMap.getStyle().getSourceAs("destination-source-id");
+                                                if (source != null) {
+                                                    source.setGeoJson(Feature.fromGeometry(destinationPoint));
+                                                }
+                                                System.out.println("NEW NOTIFICAITON FRAGMENT origin point" + originPoint);
+                                                System.out.println("NEW NOTIFICAITON FRAGMENT destintaion point" + destinationPoint);
 
-        GeoJsonSource source = mapboxMap.getStyle().getSourceAs("destination-source-id");
-        if (source != null) {
-            source.setGeoJson(Feature.fromGeometry(destinationPoint));
-        }
+                                                getRoute(originPoint, destinationPoint);
+                                                System.out.println("current ROutemapclick" + currentRoute);
+                                                button.setEnabled(true);
+                                                button.setBackgroundResource(R.color.black);
+                                                System.out.println();
+                                            }
+                                        }
+                                    });
+                                }
 
-        getRoute(originPoint, destinationPoint);
-        button.setEnabled(true);
-        button.setBackgroundResource(R.color.black);
+                            }
+
+                        }
+                    });
+                }
+            }
+        });
+
         return true;
     }
 
     private void getRoute(Point origin, Point destination) {
+        System.out.println("NEW NOTIFICAITON FRAGMENT getRoute" + origin);
+        System.out.println("NEW NOTIFICAITON FRAGMENT getRoute" + destination);
         NavigationRoute.builder(getContext())
                 .accessToken(Mapbox.getAccessToken())
                 .origin(origin)
@@ -203,6 +254,14 @@ public class NotificationsFragment extends Fragment implements OnMapReadyCallbac
                             navigationMapRoute = new NavigationMapRoute(null, mapView, mapboxMap, R.style.NavigationMapRoute);
                         }
                         navigationMapRoute.addRoute(currentRoute);
+
+                        distanceText.setText(String.format("%.2f km", currentRoute.distance() / 1000));
+                        int millis = currentRoute.duration().intValue() * 1000;
+                        String time = String.format("%02d hr  %02d min", TimeUnit.MILLISECONDS.toHours(millis),TimeUnit.MILLISECONDS.toMinutes(millis) -
+                                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)));
+                        System.out.println("time" + time);
+                        estimatedTimeText.setText(time);
+                                System.out.println("current ROute getroute distance = " + currentRoute.distance() + "time =" + currentRoute.duration());
                     }
 
                     @Override

@@ -21,6 +21,7 @@ import com.example.healthify.CustomerHome;
 import com.example.healthify.JavaMailAPI;
 import com.example.healthify.R;
 import com.example.healthify.ui.dashboard.DashboardFragment;
+import com.example.healthify.ui.notifications.NotificationsFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -30,6 +31,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.mapbox.geojson.Point;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.turf.TurfMeasurement;
 
 import org.w3c.dom.Text;
 
@@ -171,6 +175,7 @@ public class HomeFragment extends Fragment
                                     System.out.println(deliveryPersonID + "deliveryPersonId" + t.getAlloted_till_now());
                                     deliveryPersonID = t.getID();
                                     deliveryOrderAllotedTillNow = t.getAlloted_till_now();
+
                                 }
                             }
                         } else {
@@ -272,6 +277,7 @@ public class HomeFragment extends Fragment
                             mBundle.putBoolean("activeOrder", true);
                             otp=generateOTP();
                             mBundle.putString("OTP",otp);
+                            mBundle.putString("deliveryPersonID", deliveryPersonID);
                             int totalDiscount = mBundle.getInt("promo_discount") + mBundle.getInt("preferred_discount");
                             Order createNewOrder = new Order(mBundle.get("user_email").toString(),deliveryPersonID,mBundle.getInt("totalPayable"),(HashMap<String,ArrayList<String>>)mBundle.getSerializable("HashMap"),otp, totalDiscount, 0);
                             createNewOrder.sendToFirestore();
@@ -303,7 +309,11 @@ public class HomeFragment extends Fragment
 
                             //Redirect to Order Confirmation Page a.k.a dashboard page
                             DashboardFragment dashboardFragment = (DashboardFragment) getActivity().getSupportFragmentManager().findFragmentByTag("DashboardFragment");
+                            NotificationsFragment notificationsFragment = (NotificationsFragment) getActivity().getSupportFragmentManager().findFragmentByTag("NotificationFragment");
                             HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentByTag("HomeFragment");
+
+                            notificationsFragment.setArguments(mBundle);
+
                             dashboardFragment.setActiveOrder(activeOrder);
                             dashboardFragment.setArguments(mBundle);
                             dashboardFragment.resetTextView();

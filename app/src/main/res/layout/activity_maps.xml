@@ -10,7 +10,26 @@
         android:layout_height="match_parent"
         mapbox:mapbox_cameraTargetLat="38.9098"
         mapbox:mapbox_cameraTargetLng="-77.0295"
-        mapbox:mapbox_cameraZoom="12" />
+        mapbox:mapbox_cameraZoom="12"
+        android:layout_marginBottom="120dp"/>
+    <TextView
+        android:id="@+id/notificationsFragmentDistance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        mapbox:layout_constraintTop_toBottomOf="@id/mapView"
+        android:textSize="30sp"
+        android:layout_marginTop="10dp"
+        android:text="Distance"
+        android:textAlignment="center"/>
+    <TextView
+        android:id="@+id/notificationsFragmentTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        mapbox:layout_constraintTop_toBottomOf="@id/notificationsFragmentDistance"
+        android:textSize="30sp"
+        android:layout_marginTop="10dp"
+        android:text="Estimated Time"
+        android:textAlignment="center"/>
 
     <Button
         android:id="@+id/startButton"

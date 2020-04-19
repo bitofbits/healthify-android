@@ -1,39 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@color/colorPrimaryDark"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/dash_layer_2"
-            android:orientation="vertical">
+            android:orientation="vertical" >
 
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="25dp"
+                android:orientation="vertical"
                 android:background="@drawable/dash_top_layer"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="25dp"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="40dp"
+                    android:layout_centerHorizontal="true"
                     android:text="Order Status"
                     android:textSize="30sp" />
 
@@ -41,22 +37,22 @@
                     android:id="@+id/textLowerDashboardFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textAlignment="center"
                     android:layout_marginTop="270dp"
                     android:layout_marginBottom="50dp"
-                    android:textAlignment="center"
                     android:textSize="20sp" />
 
                 <ListView
+                    android:background="@drawable/dash_layer1"
                     android:id="@+id/dashboardListView"
                     android:layout_width="match_parent"
                     android:layout_height="340dp"
-                    android:layout_marginLeft="50dp"
                     android:layout_marginTop="90dp"
-                    android:layout_marginRight="50dp"
+                    android:layout_marginLeft="50dp"
                     android:layout_marginBottom="17dp"
-                    android:background="@drawable/dash_layer1"
                     android:divider="#ffffff"
-                    android:dividerHeight="1dp" />
+                    android:dividerHeight="1dp"
+                    android:layout_marginRight="50dp"/>
 
             </RelativeLayout>
 
@@ -65,9 +61,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:text="Delivery Person Details"
                 android:layout_marginLeft="15dp"
                 android:layout_marginBottom="3dp"
-                android:text="Delivery Person Details"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="25sp" />
 
@@ -78,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="20dp"
             android:text="Delivery Person Name"
             android:textAlignment="center"
             android:textColor="@color/colorInput"
@@ -119,13 +115,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="0dp"
             android:background="#BA2323"
+            android:layout_marginTop="15dp"
             android:clickable="true"
-            android:padding="1dp"
+            android:padding="5dp"
             android:text="Cancel current Order"
+            android:textColor="#e0f2f1"
             android:textAlignment="center"
-            android:textColor="#e0f2f1" />
+            />
 
     </LinearLayout>
 

@@ -258,7 +258,7 @@ public class CustomerHome extends AppCompatActivity implements NavigationView.On
         notificationFragment = new NotificationsFragment();
         homeFragment.setArguments(mBundle);
         dashboardFragment.setArguments(mBundle);
-
+        notificationFragment.setArguments(mBundle);
         selectedFragment = homeFragment;
 
         fragmentManager.beginTransaction().add(R.id.fragmentContainer, notificationFragment,
