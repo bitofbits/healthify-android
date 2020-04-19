@@ -28,11 +28,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import Model.BaseFirestore;
 import Model.Customer;
 import Model.DeliveryPartner;
+import Model.Order;
 import Model.PromoCodes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -322,6 +324,8 @@ FloatingActionButton fab;
                                     //Toast.makeText(getActivity(),"Updated Database!",Toast.LENGTH_SHORT).show();
 
                                     //Start Deleting Files
+                                    String adding = "";
+                                    HashMap<String,ArrayList<String>> od = new HashMap<>();
                                     for (DocumentSnapshot document : task.getResult()) {
 
                                         // Update alloted till now
@@ -329,8 +333,17 @@ FloatingActionButton fab;
                                                 document.getString("partner")).update("alloted_till_now", FieldValue.increment(-1l));
 
                                         // Delete Order
+                                        Order t = document.toObject(Order.class);
+                                        od= t.getOrder_name();
                                         BaseFirestore.db.collection("Order").document(document.getId()).delete();
                                         //setActiveOrder(false);
+                                    }
+                                    for (Map.Entry<String,ArrayList<String>> entry : od.entrySet())
+                                    {
+                                        adding=adding+ entry.getKey() +"    Q : "+entry.getValue().get(0)/*+"    ₹:"+(Integer.parseInt(entry.getValue().get(0)) * Long.parseLong(entry.getValue().get(1)))*/+"<br>";
+                                        System.out.println("----------------Key = " + entry.getKey() +
+                                                ", Value = " + entry.getValue().get(0)+"-----------------------");
+
                                     }
                                     PromoCodes code = new PromoCodes(generateString(),generate_disc());
                                     JavaMailAPI obj = new JavaMailAPI(getActivity(),
@@ -338,7 +351,9 @@ FloatingActionButton fab;
                                             "Order Delivered!",
                                             "Hola, <b>"+current_customer.getName()+"</b><br>"
                                                     +"Thanks for trusting us!<br><br>"
-                                                    +"Your order has just been delivered! Hope you enjoy your meal<br><br>"
+                                                    +"Your following order has just been delivered. Enjoy your meal!<br><br>"
+                                                    +adding
+                                                    +"<br>"
                                                     +"A sweet dessert for you! Apply promo code : "+code.getCode()+" for a discount of "+code.getDiscount_percent()*100+ "% on next order!<br><br>"
                                                     +"-Healthify Team"
                                     );
