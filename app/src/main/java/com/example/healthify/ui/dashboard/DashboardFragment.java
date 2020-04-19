@@ -156,7 +156,7 @@ public class DashboardFragment extends Fragment
                             TextView TotalValueTextView = DashboardFragment.root.findViewById(R.id.dashBoardTotalOrder);
                             TextView dashBoardDeliveryPersonOTP = DashboardFragment.root.findViewById(R.id.dashBoardDeliveryPersonOTP);
                             DeliveryPersonTextView.setText("Name " + order.getPartner());
-                            TotalValueTextView.setText("Total Cost ₹ "  +String.valueOf(getArguments().getInt("totalPayable")));
+                            TotalValueTextView.setText("Total Cost ₹ "  +String.valueOf(order.getCost()));
                             dashBoardDeliveryPersonOTP.setText("OTP " + order.getOtp());
                             listView.setAdapter(adapterDialog);
                             System.out.println("DeliveryPersonTextView.getText()" + DeliveryPersonTextView.getText());
@@ -184,17 +184,17 @@ public class DashboardFragment extends Fragment
                     }
                 }
             });
-            activeOrderTextView.setVisibility(View.GONE);
+            activeOrderTextView.setVisibility(View.INVISIBLE);
             TotalValueTextView.setText("Total Cost    ₹"  + String.valueOf(getArguments().getInt("total")));
 //            Adapter adapterDialog = new Adapter((HashMap<String, Long>) getArguments().getSerializable("HashMap"));
 
         }
         else{
-            TotalValueTextView.setVisibility(View.GONE);
-            DeliveryPersonTextView.setVisibility(View.GONE);
-            dashBoardDeliveryPersonPhone.setVisibility(View.GONE);
-            dashBoardDeliveryPersonOTP.setVisibility(View.GONE);
-            cancelButtonDashboardFragment.setVisibility(View.GONE);
+            TotalValueTextView.setVisibility(View.INVISIBLE);
+            DeliveryPersonTextView.setVisibility(View.INVISIBLE);
+            dashBoardDeliveryPersonPhone.setVisibility(View.INVISIBLE);
+            dashBoardDeliveryPersonOTP.setVisibility(View.INVISIBLE);
+            cancelButtonDashboardFragment.setVisibility(View.INVISIBLE);
             listView.setVisibility(View.INVISIBLE);
             dashBoardDeliveryDetails.setVisibility(View.INVISIBLE);
             activeOrderTextView.setText("You have no pending orders right now");

@@ -273,7 +273,7 @@ public class HomeFragment extends Fragment
                             otp=generateOTP();
                             mBundle.putString("OTP",otp);
                             int totalDiscount = mBundle.getInt("promo_discount") + mBundle.getInt("preferred_discount");
-                            Order createNewOrder = new Order(mBundle.get("user_email").toString(),deliveryPersonID,mBundle.getInt("total"),(HashMap<String,ArrayList<String>>)mBundle.getSerializable("HashMap"),otp, totalDiscount, 0);
+                            Order createNewOrder = new Order(mBundle.get("user_email").toString(),deliveryPersonID,mBundle.getInt("totalPayable"),(HashMap<String,ArrayList<String>>)mBundle.getSerializable("HashMap"),otp, totalDiscount, 0);
                             createNewOrder.sendToFirestore();
                             // Send a confirmation email
                             HashMap<String , ArrayList<String>> od = (HashMap<String, ArrayList<String>>) mBundle.getSerializable("HashMap");

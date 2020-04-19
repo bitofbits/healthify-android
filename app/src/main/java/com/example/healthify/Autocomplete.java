@@ -178,7 +178,7 @@ public class Autocomplete extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 finish();
                 Intent intent;
-                if(getIntent().getStringExtra("signupType") == "Customer"){
+                if(getIntent().getStringExtra("signupType").equals("Customer")){
                     intent = new Intent(Autocomplete.this, CustomerHome.class);
                     intent.putExtra("user_email", getIntent().getStringExtra("user_email"));
                 }

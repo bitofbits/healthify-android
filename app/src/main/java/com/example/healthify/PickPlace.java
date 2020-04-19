@@ -73,7 +73,7 @@ public class PickPlace extends AppCompatActivity {
             CarmenFeature carmenFeature = PlacePicker.getPlace(data);
 
             if (carmenFeature != null) {
-                System.out.println("CarmernO/P" + carmenFeature.toJson());
+                System.out.println("CarmernO/P" + getIntent().getStringExtra("signupType"));
                 BaseFirestore.db.collection((getIntent().getStringExtra("signupType"))).document(getIntent().getStringExtra("user_email"))
                         .update("latitude", carmenFeature.center().latitude());
                 BaseFirestore.db.collection((getIntent().getStringExtra("signupType"))).document(getIntent().getStringExtra("user_email"))
@@ -81,20 +81,21 @@ public class PickPlace extends AppCompatActivity {
                 BaseFirestore.db.collection((getIntent().getStringExtra("signupType"))).document(getIntent().getStringExtra("user_email"))
                         .update("address", carmenFeature.placeName());
 
+                finish();
+                Intent intent;
+                if(getIntent().getStringExtra("signupType").equals("Customer")){
+                    intent = new Intent(PickPlace.this, CustomerHome.class);
+                    intent.putExtra("user_email", getIntent().getStringExtra("user_email"));
+                }
+                else{
+                    intent = new Intent(PickPlace.this, DeliveryPartnerHome.class);
+                    intent.putExtra("user_name", getIntent().getStringExtra("user_email"));
+                }
+                startActivity(intent);
+
             }
         }
 
-        finish();
-        Intent intent;
-        if(getIntent().getStringExtra("signupType") == "Customer"){
-            intent = new Intent(PickPlace.this, CustomerHome.class);
-            intent.putExtra("user_email", getIntent().getStringExtra("user_email"));
-        }
-        else{
-            intent = new Intent(PickPlace.this, DeliveryPartnerHome.class);
-            intent.putExtra("user_name", getIntent().getStringExtra("user_email"));
-        }
-        startActivity(intent);
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
