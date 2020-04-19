@@ -18,6 +18,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import Model.Customer;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +27,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-
 import Model.Customer;
 
 public class CustomerHome extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -42,7 +42,7 @@ public class CustomerHome extends AppCompatActivity implements NavigationView.On
     TextView latTextView;
     FusedLocationProviderClient mFusedLocationClient;
     DrawerLayout drawerLayout;
-
+    Customer det = new Customer();
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -80,6 +80,7 @@ public class CustomerHome extends AppCompatActivity implements NavigationView.On
                     }
                     else
                     {
+
                         activeOrder = true;
                     }
                     Log.v("CustomerHome", "Order Found");
@@ -118,6 +119,13 @@ public class CustomerHome extends AppCompatActivity implements NavigationView.On
             case R.id.drawer_about_us:
                 startActivity(new Intent(this, AboutUs.class), mBundle);
                 Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.drawer_profile:
+                Intent prof = new Intent(getApplication(),Profile_UpdatePage.class);
+                prof.putExtra("username",getIntent().getStringExtra("user_email"));
+                System.out.println("BEFORE-----------------------");
+                startActivity(prof);
+                System.out.println("AFTER-----------------------");
                 break;
         }
 

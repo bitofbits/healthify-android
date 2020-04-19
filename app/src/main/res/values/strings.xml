@@ -49,5 +49,6 @@
     <string name="total">
         <b>Total Payable Amount:</b>
     </string>
+    <string name="title_activity_profile__update_page">Profile_UpdatePage</string>
 
 </resources>

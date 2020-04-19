@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import Model.Order;
+import Model.BaseFirestore;
 import Model.Product;
 import Model.PromoCodes;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         PromoCodes c1 = new PromoCodes("AA123",0.1);
         c1.sendToFirestore();
+        BaseFirestore.db.collection("PromoCodes").document(c1.getID()).update("Code","AB123");
+        System.out.println("PROMO SHOULD BE UPDATED NOW--------------------");
         Product p1 = new Product("Aloo Matar",100);
         Product p2 = new Product("Poha",50);
         Product p3 = new Product("Upma",50);

@@ -18,19 +18,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ChooseMapAfterSignup">
+        <activity android:name=".ChooseMapAfterSignup"></activity>
+        <activity
+            android:name=".Profile_UpdatePage"
+            android:label="@string/title_activity_profile__update_page"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".AboutUs"></activity>
+        <activity android:name=".PickPlace"></activity>
 <!--             <intent-filter>-->
 <!--             <action android:name="android.intent.action.MAIN" />-->
 <!--             <category android:name="android.intent.category.LAUNCHER" />-->
 <!--             </intent-filter>-->
-        </activity>
-        <activity android:name=".AboutUs" />
-        <activity android:name=".PickPlace">
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
         <activity android:name=".Autocomplete">
 
             <!-- <intent-filter> -->
@@ -83,20 +81,18 @@
             android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--        <activity-->
-<!--            android:name=".MainActivity"-->
-<!--            android:theme="@style/AppTheme.NoActionBar">-->
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-<!--        </activity>-->
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
     </application>
 
 </manifest>
