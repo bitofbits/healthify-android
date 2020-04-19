@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.os.Looper;
 import android.provider.Settings;
@@ -142,18 +143,12 @@ public class NotificationsFragment extends Fragment implements OnMapReadyCallbac
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        boolean simulateRoute = false;
+                        boolean simulateRoute = true;
                         NavigationLauncherOptions options = NavigationLauncherOptions.builder()
                                 .directionsRoute(currentRoute)
                                 .shouldSimulateRoute(simulateRoute)
                                 .build();
                         NavigationLauncher.startNavigation(getActivity(), options);
-                        navigation.addProgressChangeListener(new ProgressChangeListener() {
-                            @Override
-                            public void onProgressChange(Location location, RouteProgress routeProgress) {
-                                System.out.println("bsdk");
-                            }
-                        });
 //                        currentRoute.routeOptions().
                     }
                 });
@@ -168,6 +163,7 @@ public class NotificationsFragment extends Fragment implements OnMapReadyCallbac
         Point destinationPoint = Point.fromLngLat(point.getLongitude(), point.getLatitude());
         Point originPoint = Point.fromLngLat(locationComponent.getLastKnownLocation().getLongitude(),
                 locationComponent.getLastKnownLocation().getLatitude());
+
 
         GeoJsonSource source = mapboxMap.getStyle().getSourceAs("destination-source-id");
         if (source != null) {

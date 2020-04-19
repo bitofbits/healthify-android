@@ -8,7 +8,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.healthify.ui.dashboard.DashboardFragment;
-import com.example.healthify.ui.fragmentAboutUs;
 import com.example.healthify.ui.home.HomeFragment;
 import com.example.healthify.ui.notifications.NotificationsFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -28,8 +27,9 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import Model.Customer;
 
-public class CustomerHome extends AppCompatActivity{
+public class CustomerHome extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     public boolean activeOrder = false;
     private String emailAddress;
     Fragment homeFragment;
@@ -43,6 +43,15 @@ public class CustomerHome extends AppCompatActivity{
     FusedLocationProviderClient mFusedLocationClient;
     DrawerLayout drawerLayout;
     Customer det = new Customer();
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,13 +102,35 @@ public class CustomerHome extends AppCompatActivity{
 
         System.out.println("IN CUSTOMER HOME ACTIVE ORDER------------2222222222222222 : " + activeOrder);
 
-        NavigationView navigationView = findViewById(R.id.nav_drawer);
-        navigationView.setNavigationItemSelectedListener(drawerlistener);
+
+
         //Initialize and populate BottomNavView
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(navListener);
+        NavigationView navigationView = findViewById(R.id.nav_drawer);
+        navigationView.setNavigationItemSelectedListener(this);
 
+    }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        System.out.println("cyka");
+        switch (item.getItemId()) {
+            case R.id.drawer_about_us:
+                startActivity(new Intent(this, AboutUs.class), mBundle);
+                Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.drawer_profile:
+                Intent prof = new Intent(getApplication(),Profile_UpdatePage.class);
+                prof.putExtra("username",getIntent().getStringExtra("user_email"));
+                System.out.println("BEFORE-----------------------");
+                startActivity(prof);
+                System.out.println("AFTER-----------------------");
+                break;
+        }
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
 //    private void getLastLocation(){
@@ -210,10 +241,6 @@ public class CustomerHome extends AppCompatActivity{
                 selectedFragment = dashboardFragment;
                 Log.v("NavigationDashboard", "Navigation Dashboard");
             }
-            else if (item.getItemId() == R.id.drawer_about_us) {
-                System.out.println("cyka blyat(1)");
-                Log.v("NavigationDashboard", "Navigation Dashboard");
-            }
             else {
                 fragmentManager.beginTransaction().hide(selectedFragment).show(notificationFragment).commit();
                 selectedFragment = notificationFragment;
@@ -246,29 +273,5 @@ public class CustomerHome extends AppCompatActivity{
             mBottomNavigationView.findViewById(R.id.navigation_dashboard).performClick();
         }
     }
-    private NavigationView.OnNavigationItemSelectedListener drawerlistener = new NavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            System.out.println("cyka blyat");
-            switch (item.getItemId()) {
-                case R.id.drawer_about_us:
-                    System.out.println("Drawer_about_us-------------");
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new fragmentAboutUs()).commit();
-                    break;
-                case R.id.drawer_profile:
-                    Intent prof = new Intent(getApplication(),Profile_UpdatePage.class);
-                    prof.putExtra("username",getIntent().getStringExtra("user_email"));
-                    System.out.println("BEFORE-----------------------");
-                    startActivity(prof);
-                    System.out.println("AFTER-----------------------");
-                    break;
-            }
-
-            drawerLayout.closeDrawer(GravityCompat.START);
-            return true;
-        }
-    };
 }
 

@@ -39,6 +39,7 @@ import java.util.HashMap;
 
 import Model.BaseFirestore;
 import Model.Customer;
+import Model.DeliveryPartner;
 import Model.Order;
 
 public class DashboardFragment extends Fragment
@@ -56,7 +57,7 @@ public class DashboardFragment extends Fragment
         dashboardViewModel =
                 ViewModelProviders.of(this).get(DashboardViewModel.class);
 
-        View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        View root = inflater.inflate(R.layout.new_fragment_dashboard, container, false);
 
         this.root = root;
 
@@ -123,13 +124,21 @@ public class DashboardFragment extends Fragment
         TextView activeOrderTextView = this.root.findViewById(R.id.textLowerDashboardFragment);
         TextView TotalValueTextView = this.root.findViewById(R.id.dashBoardTotalOrder);
         TextView DeliveryPersonTextView = this.root.findViewById(R.id.dashBoardDeliveryPersonName);
-        ListView listView = (ListView) this.root.findViewById(R.id.dashboardListView);
+        TextView dashBoardDeliveryPersonPhone = this.root.findViewById(R.id.dashBoardDeliveryPersonPhone);
+        TextView dashBoardDeliveryPersonOTP = this.root.findViewById(R.id.dashBoardDeliveryPersonOTP);
+        TextView cancelButtonDashboardFragment = this.root.findViewById(R.id.cancelButtonDashboardFragment);
+        TextView dashBoardDeliveryDetails = this.root.findViewById(R.id.dashBoardDeliveryDetails);;
+        ListView listView =  this.root.findViewById(R.id.dashboardListView);
 
         activeOrderTextView.setText("There are no orders right now");
         if(this.activeOrder){
 
             TotalValueTextView.setVisibility(View.VISIBLE);
             DeliveryPersonTextView.setVisibility(View.VISIBLE);
+            dashBoardDeliveryPersonPhone.setVisibility(View.VISIBLE);
+            dashBoardDeliveryPersonOTP.setVisibility(View.VISIBLE);
+            cancelButtonDashboardFragment.setVisibility(View.VISIBLE);
+            dashBoardDeliveryDetails.setVisibility(View.VISIBLE);
             listView.setVisibility(View.VISIBLE);
 
             System.out.println("resetTextView()" + this.activeOrder);
@@ -145,9 +154,31 @@ public class DashboardFragment extends Fragment
                             ListView listView = (ListView) DashboardFragment.root.findViewById(R.id.dashboardListView);
                             TextView DeliveryPersonTextView = DashboardFragment.root.findViewById(R.id.dashBoardDeliveryPersonName);
                             TextView TotalValueTextView = DashboardFragment.root.findViewById(R.id.dashBoardTotalOrder);
-                            DeliveryPersonTextView.setText("Delivery Person Email: " + order.getPartner());
-                            TotalValueTextView.setText("Total Cost    ₹"  +String.valueOf(order.getCost()));
+                            TextView dashBoardDeliveryPersonOTP = DashboardFragment.root.findViewById(R.id.dashBoardDeliveryPersonOTP);
+                            DeliveryPersonTextView.setText("Name " + order.getPartner());
+                            TotalValueTextView.setText("Total Cost ₹ "  +String.valueOf(order.getCost()));
+                            dashBoardDeliveryPersonOTP.setText("OTP " + order.getOtp());
                             listView.setAdapter(adapterDialog);
+                            System.out.println("DeliveryPersonTextView.getText()" + DeliveryPersonTextView.getText());
+                            BaseFirestore.db.collection("DeliveryPartner").whereEqualTo("name", order.getPartner()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    System.out.println("andar gya");
+                                    if(task.isSuccessful()){
+                                        for (QueryDocumentSnapshot document : task.getResult()){
+                                            if(document.exists())
+                                            {
+                                                DeliveryPartner deliveryPartner = document.toObject(DeliveryPartner.class);
+                                                TextView dashBoardDeliveryPersonPhone = DashboardFragment.root.findViewById(R.id.dashBoardDeliveryPersonPhone);
+                                                String phoneNumber = deliveryPartner.getMobile_number();
+                                                System.out.println("Phone Number" + phoneNumber);
+                                                dashBoardDeliveryPersonPhone.setText("Phone Number " + phoneNumber);
+                                            }
+                                        }
+
+                                    }
+                                }
+                            });
                         }
 
                     }
@@ -161,7 +192,11 @@ public class DashboardFragment extends Fragment
         else{
             TotalValueTextView.setVisibility(View.GONE);
             DeliveryPersonTextView.setVisibility(View.GONE);
-            listView.setVisibility(View.GONE);
+            dashBoardDeliveryPersonPhone.setVisibility(View.GONE);
+            dashBoardDeliveryPersonOTP.setVisibility(View.GONE);
+            cancelButtonDashboardFragment.setVisibility(View.GONE);
+            listView.setVisibility(View.INVISIBLE);
+            dashBoardDeliveryDetails.setVisibility(View.INVISIBLE);
             activeOrderTextView.setText("You have no pending orders right now");
         }
 
