@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".ChooseMapAfterSignup">
+
+    <ImageView
+        android:id="@+id/placeMarkerActivity"
+        android:layout_width="149dp"
+        android:layout_height="166dp"
+        app:srcCompat="@drawable/map_marker"
+        tools:layout_editor_absoluteX="56dp"
+        tools:layout_editor_absoluteY="290dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="20dp"
+        android:clickable="true"/>
+
+    <ImageView
+        android:id="@+id/autoCompleteActivity"
+        android:layout_width="149dp"
+        android:layout_height="166dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="50dp"
+        android:clickable="true"
+        app:srcCompat="@drawable/map_search"
+        tools:layout_editor_absoluteX="56dp"
+        tools:layout_editor_absoluteY="290dp" />
+
+</LinearLayout>

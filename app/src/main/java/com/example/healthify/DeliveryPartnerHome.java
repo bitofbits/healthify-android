@@ -266,7 +266,7 @@ FloatingActionButton fab;
             cadd = rootView.findViewById(R.id.cust_add_DeliveryPartner);
             delivered=rootView.findViewById(R.id.deliverdone_DeliveryPartner);
             String many = properties.get("KEY").toString();
-            total.setText("Total             ₹"+Integer.toString(properties.getInt("cost"+many)));
+            total.setText("₹ "+Integer.toString(properties.getInt("cost"+many)));
             //cname.setText(properties.getString("cust_email"+many));
             cadd.setText("OTP: "+properties.getString("OTP"+many));
             adapter = new Adapter((HashMap<String, ArrayList<String>>) properties.getSerializable("HashMap"));

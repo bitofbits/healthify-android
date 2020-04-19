@@ -122,12 +122,12 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:checked="true"
-                android:text="Delivery Person"
-                android:textColor="@color/colorInput"
                 android:background="@drawable/radio_back"
-                android:textColorLink="#CFB6B6"
                 android:buttonTint="#e78200"
+                android:checked="true"
+                android:text="Customer"
+                android:textColor="@color/colorInput"
+                android:textColorLink="#CFB6B6"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -136,7 +136,7 @@
                 android:layout_weight="1"
                 android:layout_height="40dp"
                 android:layout_marginLeft="5dp"
-                android:text="Customer"
+                android:text="Delivery Person"
                 android:textSize="18sp"
                 android:background="@drawable/radio_back"
                 android:buttonTint="#e78200"

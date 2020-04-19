@@ -10,5 +10,12 @@
             android:id="@+id/drawer_about_us"
             android:title="About us" />
     </group>
-
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawer_pick_place"
+            android:title="Select Location" />
+        <item
+            android:id="@+id/drawer_search_place"
+            android:title="Search Location" />
+    </group>
 </menu>

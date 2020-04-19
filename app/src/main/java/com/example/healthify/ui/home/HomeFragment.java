@@ -250,7 +250,7 @@ public class HomeFragment extends Fragment
                 Toast.makeText(getContext(), "10% regular customer discount added!", Toast.LENGTH_LONG).show();
             }
             else{
-                setTotalValue.setText("@string/total    " + " ₹"  + String.valueOf(mBundle.getInt("total")));
+                setTotalValue.setText("Total Payable Amount    " + " ₹"  + String.valueOf(mBundle.getInt("total")));
                 mBundle.putInt("totalPayable", (int)Math.floor(mBundle.getInt("total")));
             }
             final Button placeOrder = rootView.findViewById(R.id.orderButtonDialog);
