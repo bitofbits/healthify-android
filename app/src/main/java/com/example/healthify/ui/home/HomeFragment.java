@@ -36,6 +36,7 @@ import org.w3c.dom.Text;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import Model.BaseFirestore;
@@ -272,16 +273,23 @@ public class HomeFragment extends Fragment
                             otp=generateOTP();
                             mBundle.putString("OTP",otp);
                             int totalDiscount = mBundle.getInt("promo_discount") + mBundle.getInt("preferred_discount");
-                            Order createNewOrder = new Order(mBundle.get("user_email").toString(),deliveryPersonID,mBundle.getInt("totalPayable"),(HashMap<String,ArrayList<String>>)mBundle.getSerializable("HashMap"),otp, totalDiscount);
+                            Order createNewOrder = new Order(mBundle.get("user_email").toString(),deliveryPersonID,mBundle.getInt("total"),(HashMap<String,ArrayList<String>>)mBundle.getSerializable("HashMap"),otp, totalDiscount, 0);
                             createNewOrder.sendToFirestore();
                             // Send a confirmation email
-
+                            HashMap<String , ArrayList<String>> od = (HashMap<String, ArrayList<String>>) mBundle.getSerializable("HashMap");
+                            String adding="";
+                            for (Map.Entry<String,ArrayList<String>> entry : od.entrySet())
+                            {
+                                adding=adding+ entry.getKey() +"    Q : "+entry.getValue().get(0)/*+"    ₹:"+(Integer.parseInt(entry.getValue().get(0)) * Long.parseLong(entry.getValue().get(1)))*/+"<br>";
+                                System.out.println("----------------Key = " + entry.getKey() +
+                                        ", Value = " + entry.getValue().get(0)+"-----------------------");
+                            }
                             JavaMailAPI obj = new JavaMailAPI(getActivity(),
                                     "utsavshah99@live.com",
                                     "Order Placed",
                                     "Hola, <b>"+/*createNewOrder.getCustomer_email()*/cust_details.getName()+"</b><br>"
-                                    +"Thanks for ordering from Healthify-the new healthy eating joint!<br><br>"
-                                    +"We have received your order and putting our heart and soul to create tasty dishes.<br><br>"
+                                            +"Thanks for ordering from Healthify-the new healthy eating joint!<br><br>"+adding+"<br><br>"
+                                            +"We have received your order and putting our heart and soul to create it!<br><br>"
                                     +"-Healthify Team"
                             );
                             obj.execute();

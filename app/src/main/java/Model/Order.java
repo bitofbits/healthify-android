@@ -5,6 +5,11 @@ import java.util.HashMap;
 
 public class Order extends BaseFirestore
 {
+    /*
+    status 0 : order placed.
+    status 1 : order picked by up delivery person and out for delivery
+    */
+    private int status;
     private String otp;
     private String customer_email;
     private String order_id;
@@ -13,7 +18,7 @@ public class Order extends BaseFirestore
     private String name;
     private HashMap<String , ArrayList<String>> order_name;
     private int totalDiscount;
-    public Order(String c, String allotedDeliveryPerson,int co,HashMap<String, ArrayList<String>> x,String otp, int totalDiscount) {
+    public Order(String c, String allotedDeliveryPerson,int co,HashMap<String, ArrayList<String>> x,String otp, int totalDiscount, int status) {
         order_id=Integer.toString(c.hashCode());
         partner = allotedDeliveryPerson;
         customer_email = c;
@@ -21,6 +26,7 @@ public class Order extends BaseFirestore
         order_name = x;
         this.otp = otp;
         this.totalDiscount = totalDiscount;
+        this.status=status;
     }
     public Order()
     {
@@ -42,6 +48,17 @@ public class Order extends BaseFirestore
     {
         this.order_id = order_id;
     }
+
+    public int getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus(int status)
+    {
+        this.status = status;
+    }
+
     public String getCustomer_email()
     {
         return customer_email;
