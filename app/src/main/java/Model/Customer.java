@@ -9,6 +9,10 @@ public class Customer extends BaseFirestore
     private String password;
     private String phone_number;
     private boolean preferred_customer;
+
+    private String address;
+    private double latitude;
+    private double longitude;
     @Override
     public String getID()
     {
@@ -31,6 +35,29 @@ public class Customer extends BaseFirestore
     public Customer()
     {
 
+    }
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
     public void setPassword(String password)
     {

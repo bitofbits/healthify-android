@@ -20,6 +20,8 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.places.picker.PlacePicker;
 import com.mapbox.mapboxsdk.plugins.places.picker.model.PlacePickerOptions;
 
+import Model.BaseFirestore;
+import Model.Customer;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -72,9 +74,27 @@ public class PickPlace extends AppCompatActivity {
 
             if (carmenFeature != null) {
                 System.out.println("CarmernO/P" + carmenFeature.toJson());
+                BaseFirestore.db.collection((getIntent().getStringExtra("signupType"))).document(getIntent().getStringExtra("user_email"))
+                        .update("latitude", carmenFeature.center().latitude());
+                BaseFirestore.db.collection((getIntent().getStringExtra("signupType"))).document(getIntent().getStringExtra("user_email"))
+                        .update("longitude", carmenFeature.center().longitude());
+                BaseFirestore.db.collection((getIntent().getStringExtra("signupType"))).document(getIntent().getStringExtra("user_email"))
+                        .update("address", carmenFeature.placeName());
+
             }
         }
-        pickerActivity();
+
+        finish();
+        Intent intent;
+        if(getIntent().getStringExtra("signupType") == "Customer"){
+            intent = new Intent(PickPlace.this, CustomerHome.class);
+            intent.putExtra("user_email", getIntent().getStringExtra("user_email"));
+        }
+        else{
+            intent = new Intent(PickPlace.this, DeliveryPartnerHome.class);
+            intent.putExtra("user_name", getIntent().getStringExtra("user_email"));
+        }
+        startActivity(intent);
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {

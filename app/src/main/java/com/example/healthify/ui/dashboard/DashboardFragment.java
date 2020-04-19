@@ -156,7 +156,7 @@ public class DashboardFragment extends Fragment
                             TextView TotalValueTextView = DashboardFragment.root.findViewById(R.id.dashBoardTotalOrder);
                             TextView dashBoardDeliveryPersonOTP = DashboardFragment.root.findViewById(R.id.dashBoardDeliveryPersonOTP);
                             DeliveryPersonTextView.setText("Name " + order.getPartner());
-                            TotalValueTextView.setText("Total Cost ₹ "  +String.valueOf(order.getCost()));
+                            TotalValueTextView.setText("Total Cost ₹ "  +String.valueOf(getArguments().getInt("totalPayable")));
                             dashBoardDeliveryPersonOTP.setText("OTP " + order.getOtp());
                             listView.setAdapter(adapterDialog);
                             System.out.println("DeliveryPersonTextView.getText()" + DeliveryPersonTextView.getText());

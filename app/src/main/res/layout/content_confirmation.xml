@@ -61,7 +61,7 @@
         android:layout_marginBottom="17dp"
         android:layout_marginRight="60dp"
         android:gravity="right"
-        android:text="@string/total"
+        android:text="Total Payable Amount"
         android:textColor="#ffffff"
         android:textSize="17sp" />
 

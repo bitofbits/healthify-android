@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.JsonObject;
 import com.mapbox.api.geocoding.v5.models.CarmenContext;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
@@ -27,6 +28,8 @@ import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+
+import Model.BaseFirestore;
 
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
@@ -137,6 +140,13 @@ public class Autocomplete extends AppCompatActivity implements OnMapReadyCallbac
 
             // Retrieve selected location's CarmenFeature
             CarmenFeature selectedCarmenFeature = PlaceAutocomplete.getPlace(data);
+            System.out.println("signuptype" + getIntent().getStringExtra("signupType"));
+            BaseFirestore.db.collection(getIntent().getStringExtra("signupType")).document(getIntent().getStringExtra("user_email"))
+                    .update("latitude", selectedCarmenFeature.center().latitude());
+            BaseFirestore.db.collection((getIntent().getStringExtra("signupType"))).document(getIntent().getStringExtra("user_email"))
+                    .update("longitude", selectedCarmenFeature.center().longitude());
+            BaseFirestore.db.collection((getIntent().getStringExtra("signupType"))).document(getIntent().getStringExtra("user_email"))
+                    .update("address", selectedCarmenFeature.placeName());
 
             // Create a new FeatureCollection and add a new Feature to it using selectedCarmenFeature above.
             // Then retrieve and update the source designated for showing a selected location's symbol layer icon
@@ -157,12 +167,28 @@ public class Autocomplete extends AppCompatActivity implements OnMapReadyCallbac
                                             ((Point) selectedCarmenFeature.geometry()).longitude()))
                                     .zoom(14)
                                     .build()), 4000);
-                    System.out.println("babuchak" +selectedCarmenFeature + "$$$$$$$$$$$" +
-                            selectedCarmenFeature.placeName());
+
 
                 }
             }
         }
+        FloatingActionButton floatingActionButton = findViewById(R.id.fab_redirect);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                Intent intent;
+                if(getIntent().getStringExtra("signupType") == "Customer"){
+                    intent = new Intent(Autocomplete.this, CustomerHome.class);
+                    intent.putExtra("user_email", getIntent().getStringExtra("user_email"));
+                }
+                else{
+                    intent = new Intent(Autocomplete.this, DeliveryPartnerHome.class);
+                    intent.putExtra("user_name", getIntent().getStringExtra("user_email"));
+                }
+                startActivity(intent);
+            }
+        });
     }
 
     // Add the mapView lifecycle to the activity's lifecycle methods
