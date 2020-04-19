@@ -69,15 +69,6 @@ public class CustomerHome extends AppCompatActivity{
     DrawerLayout drawerLayout;
 
     @Override
-    public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_home);
@@ -126,12 +117,12 @@ public class CustomerHome extends AppCompatActivity{
 
         System.out.println("IN CUSTOMER HOME ACTIVE ORDER------------2222222222222222 : " + activeOrder);
 
+        NavigationView navigationView = findViewById(R.id.nav_drawer);
+        navigationView.setNavigationItemSelectedListener(drawerlistener);
         //Initialize and populate BottomNavView
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(navListener);
 
-        NavigationView navigationView = findViewById(R.id.nav_drawer);
-        navigationView.setNavigationItemSelectedListener(drawerlistener);
 
     }
 
