@@ -93,7 +93,7 @@ public class Autocomplete extends AppCompatActivity implements OnMapReadyCallbac
                         .accessToken(Mapbox.getAccessToken() != null ? Mapbox.getAccessToken() : getString(R.string.access_token))
                         .placeOptions(PlaceOptions.builder()
                                 .backgroundColor(Color.parseColor("#EEEEEE"))
-                                .limit(10)
+                                .limit(30)
                                 .addInjectedFeature(home)
                                 .addInjectedFeature(work)
                                 .build(PlaceOptions.MODE_CARDS))
@@ -159,6 +159,7 @@ public class Autocomplete extends AppCompatActivity implements OnMapReadyCallbac
                                     .build()), 4000);
                     System.out.println("babuchak" +selectedCarmenFeature + "$$$$$$$$$$$" +
                             selectedCarmenFeature.placeName());
+
                 }
             }
         }

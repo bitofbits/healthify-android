@@ -206,35 +206,7 @@ public class HomeFragment extends Fragment
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if(newState == recyclerView.SCROLL_STATE_IDLE)
-                {
-//                    confirmButton.setVisibility(View.VISIBLE);
-//                    getActivity().findViewById(R.id.setCurrentLocationButton).setVisibility(View.VISIBLE);
-//                    getActivity().findViewById(R.id.setCurrentLocationText).setVisibility(View.VISIBLE);
-//                    getActivity().findViewById(R.id.nav_view).setVisibility(View.VISIBLE);
-                }
-            }
 
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if(dy != 0){
-//                    confirmButton.setVisibility(View.GONE);
-//                    getActivity().findViewById(R.id.setCurrentLocationButton).setVisibility(View.GONE);
-//                    getActivity().findViewById(R.id.setCurrentLocationText).setVisibility(View.GONE);
-//                    getActivity().findViewById(R.id.nav_view).setVisibility(View.GONE);
-                }
-                else{
-//                    confirmButton.setVisibility(View.VISIBLE);
-//                    getActivity().findViewById(R.id.setCurrentLocationButton).setVisibility(View.VISIBLE);
-//                    getActivity().findViewById(R.id.setCurrentLocationText).setVisibility(View.VISIBLE);
-//                    getActivity().findViewById(R.id.nav_view).setVisibility(View.VISIBLE);
-                }
-
-            }
         });
     }
     public static class confirmationFragment extends DialogFragment{
@@ -253,20 +225,32 @@ public class HomeFragment extends Fragment
             View rootView = inflater.inflate(R.layout.content_confirmation, container, false);
             listView = (ListView) rootView.findViewById(R.id.orderListView);
             final TextView setTotalValue = (TextView) rootView.findViewById(R.id.orderTotalValue);
+            final TextView orderTotalWithoutDiscount = (TextView) rootView.findViewById(R.id.orderTotalWithoutDiscount);
+            final TextView orderDiscount = (TextView) rootView.findViewById(R.id.totalDiscount);
+
             promo = rootView.findViewById(R.id.promoCode);
             promo_button=rootView.findViewById(R.id.promo_button);
-            setTotalValue.setText("Total Cost       ₹"  + String.valueOf(mBundle.getInt("total")));
+
+
             final Adapter adapterDialog = new Adapter((HashMap<String, ArrayList<String>>) mBundle.getSerializable("HashMap"));
             listView.setAdapter(adapterDialog);
+            orderTotalWithoutDiscount.setText("Order Total    ₹ " +  String.valueOf(mBundle.getInt("total")));
 
             Log.v("confirmationFragment", "Currently Inside confirmationFragment");
             getDialog().setTitle("Hello");
             mBundle.putInt("preferred_discount",0);
             if(cust_details.isPreferred_customer())
             {
+                int totalDiscount = mBundle.getInt("total") - (int)Math.floor(mBundle.getInt("total")* 0.9);
                 mBundle.putInt("preferred_discount",10);
-                setTotalValue.setText("Total Cost       ₹"  + String.valueOf((int)Math.floor(mBundle.getInt("total")* 0.9)));
+                setTotalValue.setText("Total Payable Amount    ₹ "  + String.valueOf((int)Math.floor(mBundle.getInt("total")* 0.9)));
+                orderDiscount.setText("Savings   ₹ " + totalDiscount);
+                mBundle.putInt("totalPayable", (int)Math.floor(mBundle.getInt("total")* 0.9));
                 Toast.makeText(getContext(), "10% regular customer discount added!", Toast.LENGTH_LONG).show();
+            }
+            else{
+                setTotalValue.setText("@string/total    " + " ₹"  + String.valueOf(mBundle.getInt("total")));
+                mBundle.putInt("totalPayable", (int)Math.floor(mBundle.getInt("total")));
             }
             final Button placeOrder = rootView.findViewById(R.id.orderButtonDialog);
 
@@ -288,7 +272,7 @@ public class HomeFragment extends Fragment
                             otp=generateOTP();
                             mBundle.putString("OTP",otp);
                             int totalDiscount = mBundle.getInt("promo_discount") + mBundle.getInt("preferred_discount");
-                            Order createNewOrder = new Order(mBundle.get("user_email").toString(),deliveryPersonID,mBundle.getInt("total"),(HashMap<String,ArrayList<String>>)mBundle.getSerializable("HashMap"),otp, totalDiscount);
+                            Order createNewOrder = new Order(mBundle.get("user_email").toString(),deliveryPersonID,mBundle.getInt("totalPayable"),(HashMap<String,ArrayList<String>>)mBundle.getSerializable("HashMap"),otp, totalDiscount);
                             createNewOrder.sendToFirestore();
                             // Send a confirmation email
 
@@ -312,7 +296,6 @@ public class HomeFragment extends Fragment
                             //Redirect to Order Confirmation Page a.k.a dashboard page
                             DashboardFragment dashboardFragment = (DashboardFragment) getActivity().getSupportFragmentManager().findFragmentByTag("DashboardFragment");
                             HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentByTag("HomeFragment");
-                            System.out.println("called from home fragment");
                             dashboardFragment.setActiveOrder(activeOrder);
                             dashboardFragment.setArguments(mBundle);
                             dashboardFragment.resetTextView();
@@ -320,7 +303,6 @@ public class HomeFragment extends Fragment
                             mBottomNavigationView.findViewById(R.id.navigation_dashboard).performClick();
                             confirmButton.hide();
                             if(!promo.getText().toString().isEmpty()) {
-                                System.out.println("mcdi " + promo.getText().toString());
                                 BaseFirestore.db.collection("PromoCodes").document(promo.getText().toString()).delete();
                             }
                         }
@@ -362,19 +344,25 @@ public class HomeFragment extends Fragment
                                             DocumentSnapshot document = task.getResult();
                                             if(document.exists())
                                             {
+                                                final TextView orderDiscount = (TextView) rootView.findViewById(R.id.totalDiscount);
+
                                                 PromoCodes pr;
                                                 pr = document.toObject(PromoCodes.class);
 
                                                 System.out.println("------------disc : "+pr.getDiscount_percent());
                                                 double regularDiscount = (double)mBundle.getInt("preferred_discount")/100;
                                                 int final_val = (int)Math.floor((1-(pr.getDiscount_percent()+regularDiscount))*mBundle.getInt("total"));
-                                                System.out.println("--------------------final_Val (integer) is : "+final_val);
-                                                setTotalValue.setText("Total Cost       ₹"  + String.valueOf(final_val));
+                                                int totalDiscountVal = mBundle.getInt("total") - final_val;
+
+                                                orderDiscount.setText("Savings   ₹ " + totalDiscountVal);
+                                                setTotalValue.setText("Total Payable Amount    ₹ "  + String.valueOf(final_val));
                                                 mBundle.putInt("promo_discount",(int) (pr.getDiscount_percent()* 100));
-                                                Toast.makeText(getActivity(), "Voila, Promo Applied!", Toast.LENGTH_SHORT).show();
+                                                mBundle.putInt("totalPayable", final_val);
+
                                                 promo_button.setClickable(false);
-                                                System.out.println(mBundle + "oops" + (int) (pr.getDiscount_percent()* 100) );
                                                 placeOrder.setClickable(true);
+                                                Toast.makeText(getActivity(), "Voila, Promo Applied!", Toast.LENGTH_SHORT).show();
+
                                             }
                                             else
                                             {
