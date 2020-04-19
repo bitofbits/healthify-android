@@ -15,7 +15,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import Model.BaseFirestore;
 import Model.Customer;
-import Model.DeliveryPartner;
+import Model.PromoCodes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -31,6 +31,10 @@ public class login extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        PromoCodes c1 = new PromoCodes("AA123",0.1);
+        c1.sendToFirestore();
+        BaseFirestore.db.collection("PromoCodes").document(c1.getID()).update("Code","AB123");
+        System.out.println("PROMO SHOULD BE UPDATED NOW--------------------");
         //DeliveryPartner raj = new DeliveryPartner("dp","1212","dp","dp",false,0);
         //raj.sendToFirestore();
         email=findViewById(R.id.edittext_login_enail);
@@ -107,6 +111,11 @@ public class login extends AppCompatActivity
                                                     Toast.makeText(getApplicationContext(),"Incorrect Password delivery",Toast.LENGTH_SHORT).show();
                                                 }
                                             }
+                                            else
+                                            {
+                                                Toast.makeText(getApplicationContext(),"User does not exist , please sign up",Toast.LENGTH_SHORT).show();
+                                                finish();
+                                            }
                                         }
                                         else
                                         {
@@ -114,8 +123,8 @@ public class login extends AppCompatActivity
                                         }
                                     }
                                 });
-                                Toast.makeText(getApplicationContext(),"User does not exist , please sign up",Toast.LENGTH_SHORT).show();
-                                finish();
+                                //Toast.makeText(getApplicationContext(),"User does not exist , please sign up",Toast.LENGTH_SHORT).show();
+                                //finish();
                                 //go to previous activity
                             }
                         }

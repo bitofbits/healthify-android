@@ -1,21 +1,9 @@
 package com.example.healthify;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,35 +12,22 @@ import com.example.healthify.ui.fragmentAboutUs;
 import com.example.healthify.ui.home.HomeFragment;
 import com.example.healthify.ui.notifications.NotificationsFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import Model.Customer;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-
-import Model.Customer;
 
 public class CustomerHome extends AppCompatActivity{
     public boolean activeOrder = false;
@@ -67,7 +42,7 @@ public class CustomerHome extends AppCompatActivity{
     TextView latTextView;
     FusedLocationProviderClient mFusedLocationClient;
     DrawerLayout drawerLayout;
-
+    Customer det = new Customer();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +71,7 @@ public class CustomerHome extends AppCompatActivity{
                     }
                     else
                     {
+
                         activeOrder = true;
                     }
                     Log.v("CustomerHome", "Order Found");
@@ -277,10 +253,17 @@ public class CustomerHome extends AppCompatActivity{
             System.out.println("cyka blyat");
             switch (item.getItemId()) {
                 case R.id.drawer_about_us:
+                    System.out.println("Drawer_about_us-------------");
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             new fragmentAboutUs()).commit();
                     break;
-
+                case R.id.drawer_profile:
+                    Intent prof = new Intent(getApplication(),Profile_UpdatePage.class);
+                    prof.putExtra("username",getIntent().getStringExtra("user_email"));
+                    System.out.println("BEFORE-----------------------");
+                    startActivity(prof);
+                    System.out.println("AFTER-----------------------");
+                    break;
             }
 
             drawerLayout.closeDrawer(GravityCompat.START);
