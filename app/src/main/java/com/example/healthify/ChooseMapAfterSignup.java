@@ -23,6 +23,7 @@ public class ChooseMapAfterSignup extends AppCompatActivity {
                 Intent intent = new Intent(ChooseMapAfterSignup.this, PickPlace.class);
                 intent.putExtra("user_email", getIntent().getStringExtra("user_email"));
                 intent.putExtra("signupType", getIntent().getStringExtra("signupType"));
+                System.out.println("Extra" + getIntent().getStringExtra("signupType"));
                 startActivity(intent);
             }
         });
