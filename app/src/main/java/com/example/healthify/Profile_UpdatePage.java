@@ -71,6 +71,7 @@ public class Profile_UpdatePage extends AppCompatActivity
 
     private void UpdateDetails()
     {
+        System.out.println("------------- + "+email.getText());
         BaseFirestore.db.collection("Customer").document(email.getText().toString())
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
         {
@@ -80,24 +81,27 @@ public class Profile_UpdatePage extends AppCompatActivity
                 if(task.isSuccessful())
                 {
                     DocumentSnapshot documentSnapshot = task.getResult();
-                    if(documentSnapshot!=null)
-                    {
-                        Toast.makeText(Profile_UpdatePage.this, "user already exists, enter new email", Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
+//                    if(documentSnapshot.exists())
+//                    {
+//                        Customer cnew = tmp;
+//
+//                        Toast.makeText(Profile_UpdatePage.this, "user already exists, enter new email", Toast.LENGTH_SHORT).show();
+//                    }
+//                    else
+//                    {
                         String id = tmp.getID();
                         Customer cnew = tmp;
                         cnew.setEmail(email.getText().toString());
+                        System.out.println("------------------New name : "+name.getText().toString());
                         cnew.setName(name.getText().toString());
                         cnew.setPassword(pass.getText().toString());
                         cnew.setPhone_number(phone.getText().toString());
                         BaseFirestore.db.collection("Customer").document(id).delete();
                         cnew.sendToFirestore();
                         Intent goback = new Intent(getApplicationContext(),CustomerHome.class);
-                        goback.putExtra("user_name",cnew.getEmail());
+                        goback.putExtra("user_email",cnew.getEmail());
                         startActivity(goback);
-                    }
+//                    }
                 }
                 else
                 {
