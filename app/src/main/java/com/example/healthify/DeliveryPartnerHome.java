@@ -48,6 +48,8 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 
+import org.w3c.dom.Text;
+
 public class DeliveryPartnerHome extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
     ArrayList<String> order_list = new ArrayList<>();
@@ -89,6 +91,18 @@ public class DeliveryPartnerHome extends AppCompatActivity implements Navigation
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
+        TextView radiusViewSelect = findViewById(R.id.radiusDeliverySelect);
+        radiusViewSelect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextView radiusViewText = findViewById(R.id.radiusDeliveryText);
+                if(radiusViewText.getText().toString() != null){
+                    BaseFirestore.db.collection("DeliveryPartner").document(email).
+                            update("radius",Double.valueOf(radiusViewText.getText().toString()));
+                }
+            }
+        });
 
         fab.performClick();
         DocumentReference doc = BaseFirestore.db.collection("DeliveryPartner").document(email);

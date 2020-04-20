@@ -11,6 +11,15 @@ public class DeliveryPartner extends BaseFirestore
     private String address;
     private double latitude;
     private double longitude;
+    private double radius = 10;
+
+    public double getRadius() {
+        return radius;
+    }
+
+    public void setRadius(double radius) {
+        this.radius = radius;
+    }
 
     public String getAddress() {
         return address;

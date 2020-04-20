@@ -79,14 +79,16 @@
             android:orientation="horizontal">
 
             <EditText
+                android:id="@+id/radiusDeliveryText"
                 android:layout_width="200dp"
                 android:layout_height="45dp"
-                android:hint="DISTANCE"
+                android:hint="RADIUS"
                 android:textColorHint="@color/colorPrimary"
                 android:gravity="center"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="5dp"
                 android:padding="5dp"
+                android:inputType="numberDecimal"
                 android:background="@drawable/del_list_back"/>
 
             <TextView
@@ -98,6 +100,17 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
                 />
+            <Button
+                android:id="@+id/radiusDeliverySelect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="Set Radius"
+                android:padding="15dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="right"
+                android:background="@drawable/del_list_back"/>
 
         </LinearLayout>
 

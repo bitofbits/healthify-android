@@ -170,15 +170,35 @@ public class HomeFragment extends Fragment
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 DeliveryPartner t = document.toObject(DeliveryPartner.class);
-                                if(t.getAlloted_till_now() < deliveryOrderAllotedTillNow)
-                                {
-                                    System.out.println(deliveryPersonID + "deliveryPersonId" + t.getAlloted_till_now());
-                                    deliveryPersonID = t.getID();
-                                    deliveryOrderAllotedTillNow = t.getAlloted_till_now();
 
-                                }
+                                BaseFirestore.db.collection("Customer").document(getArguments().getString("user_email")).
+                                        get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if(task.isSuccessful()){
+                                            Customer customer = task.getResult().toObject(Customer.class);
+                                            Point point1 = Point.fromLngLat(customer.getLongitude(), customer.getLatitude());
+                                            Point point2 = Point.fromLngLat(t.getLongitude(), t.getLatitude());
+                                            double distance = TurfMeasurement.distance(point1, point2);
+                                            double radius = t.getRadius();
+                                            System.out.println("Distance" + distance + "radius" + radius);
+                                            if(t.getAlloted_till_now() < deliveryOrderAllotedTillNow && distance < radius)
+                                            {
+                                                System.out.println(deliveryPersonID + "deliveryPersonId" + t.getAlloted_till_now());
+                                                deliveryPersonID = t.getID();
+                                                deliveryOrderAllotedTillNow = t.getAlloted_till_now();
+
+                                            }
+                                        }
+
+                                    }
+                                });
+
+
+
                             }
-                        } else {
+                        }
+                        else {
                         }
                     }
                 });
