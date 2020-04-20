@@ -277,6 +277,7 @@ public class DeliveryPartnerHome extends AppCompatActivity implements Navigation
             View rootView = inflater.inflate(R.layout.content_delivery_dialogbox, container, false);
             Bundle properties = getArguments();
             System.out.println("inside oncreateView   "+properties);
+            TextView navigateRoute = rootView.findViewById(R.id.navigateDelivery);
             pick = rootView.findViewById(R.id.pickup_DeliveryPartner);
             details = rootView.findViewById(R.id.order_details_deliverypartner);
             total = rootView.findViewById(R.id.total_DeliveryParter);
@@ -388,6 +389,15 @@ public class DeliveryPartnerHome extends AppCompatActivity implements Navigation
                     System.out.println("Clicking fab inside Dialog-----------------");
                     //fab.performClick();
                     getDialog().dismiss();
+                }
+            });
+
+            navigateRoute.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), NavigationDelivery.class);
+                    intent.putExtra("user_email", current_customer.getEmail());
+                    startActivity(intent);
                 }
             });
             getDialog().setTitle("Details");

@@ -21,6 +21,7 @@ import com.google.android.gms.common.util.JsonUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -114,6 +115,14 @@ public class DashboardFragment extends Fragment
                 });
             }
         });
+
+        FloatingActionButton floatingActionButton = root.findViewById(R.id.refreshButton);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetTextView();
+            }
+        });
         return root;
     }
     public void setActiveOrder(boolean activeOrder){
@@ -128,6 +137,7 @@ public class DashboardFragment extends Fragment
         TextView dashBoardDeliveryPersonOTP = this.root.findViewById(R.id.dashBoardDeliveryPersonOTP);
         TextView cancelButtonDashboardFragment = this.root.findViewById(R.id.cancelButtonDashboardFragment);
         TextView dashBoardDeliveryDetails = this.root.findViewById(R.id.dashBoardDeliveryDetails);;
+        TextView orderStatusView = this.root.findViewById(R.id.textView);
         ListView listView =  this.root.findViewById(R.id.dashboardListView);
 
         activeOrderTextView.setText("There are no orders right now");
@@ -158,6 +168,12 @@ public class DashboardFragment extends Fragment
                             DeliveryPersonTextView.setText("Name " + order.getPartner());
                             TotalValueTextView.setText("Total Cost ₹ "  +String.valueOf(order.getCost()));
                             dashBoardDeliveryPersonOTP.setText("OTP " + order.getOtp());
+                            if(order.getStatus() == 0){
+                                orderStatusView.setText("Food is being prepared!");
+                            }
+                            else{
+                                orderStatusView.setText("Out for Delivery!");
+                            }
                             listView.setAdapter(adapterDialog);
                             System.out.println("DeliveryPersonTextView.getText()" + DeliveryPersonTextView.getText());
                             BaseFirestore.db.collection("DeliveryPartner").whereEqualTo("name", order.getPartner()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

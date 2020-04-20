@@ -105,6 +105,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/cust_phone_DeliveryPartner" />
 
         <Button
+            android:id="@+id/navigateDelivery"
             android:layout_width="90dp"
             android:layout_height="90dp"
             android:background="@drawable/order_list_background"
