@@ -7,12 +7,13 @@
     android:layout_height="match_parent"
     android:background="@drawable/back_gradient"
     android:padding="20dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:minWidth="500dp">
 
     <ListView
         android:id="@+id/order_details_deliverypartner"
         android:layout_width="match_parent"
-        android:layout_height="344dp"
+        android:layout_height="200dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/order_list_background"
         android:divider="#008577"
@@ -102,6 +103,19 @@
             android:textColor="@color/colorInput"
             android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="@+id/cust_phone_DeliveryPartner" />
+
+        <Button
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:background="@drawable/order_list_background"
+            android:layout_marginTop="-119dp"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="right"
+            android:drawableTop="@drawable/ic_map_white_24dp"
+            android:padding="10dp"
+            android:text="Navigate"
+            android:textColor="#006b39"
+            app:layout_constraintTop_toBottomOf="@+id/total_DeliveryParter" />
 
     </LinearLayout>
 
