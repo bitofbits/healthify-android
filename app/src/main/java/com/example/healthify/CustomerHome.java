@@ -114,6 +114,7 @@ public class CustomerHome extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Intent intent;
         System.out.println("cyka");
         switch (item.getItemId()) {
             case R.id.drawer_about_us:
@@ -121,10 +122,27 @@ public class CustomerHome extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.drawer_profile:
-                Intent prof = new Intent(getApplication(),Profile_UpdatePage.class);
-                prof.putExtra("username",getIntent().getStringExtra("user_email"));
+                intent = new Intent(getApplication(),Profile_UpdatePage.class);
+                intent.putExtra("username",getIntent().getStringExtra("user_email"));
+                intent.putExtra("CustomerType", "Customer");
                 System.out.println("BEFORE-----------------------");
-                startActivity(prof);
+                startActivity(intent);
+                System.out.println("AFTER-----------------------");
+                break;
+            case R.id.drawer_pick_place:
+                intent = new Intent(getApplication(),PickPlace.class);
+                intent.putExtra("user_email",getIntent().getStringExtra("user_email"));
+                intent.putExtra("signupType", "Customer");
+                System.out.println("BEFORE-----------------------");
+                startActivity(intent);
+                System.out.println("AFTER-----------------------");
+                break;
+            case R.id.drawer_search_place:
+                intent = new Intent(getApplication(),Autocomplete.class);
+                intent.putExtra("user_email",getIntent().getStringExtra("user_email"));
+                intent.putExtra("signupType", "Customer");
+                System.out.println("BEFORE-----------------------");
+                startActivity(intent);
                 System.out.println("AFTER-----------------------");
                 break;
         }

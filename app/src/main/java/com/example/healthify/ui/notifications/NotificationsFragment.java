@@ -148,20 +148,20 @@ public class NotificationsFragment extends Fragment implements OnMapReadyCallbac
 //                estimatedTimeText.setText(String.valueOf(currentRoute.duration()));
 
                 mapboxMap.addOnMapClickListener(NotificationsFragment.this);
-                button = getView().findViewById(R.id.startButton);
-                button.setVisibility(View.GONE);
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        boolean simulateRoute = true;
-                        NavigationLauncherOptions options = NavigationLauncherOptions.builder()
-                                .directionsRoute(currentRoute)
-                                .shouldSimulateRoute(simulateRoute)
-                                .build();
-                        NavigationLauncher.startNavigation(getActivity(), options);
-//                        currentRoute.routeOptions().
-                    }
-                });
+//                button = getView().findViewById(R.id.startButton);
+//                button.setVisibility(View.GONE);
+//                button.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        boolean simulateRoute = true;
+//                        NavigationLauncherOptions options = NavigationLauncherOptions.builder()
+//                                .directionsRoute(currentRoute)
+//                                .shouldSimulateRoute(simulateRoute)
+//                                .build();
+//                        NavigationLauncher.startNavigation(getActivity(), options);
+////                        currentRoute.routeOptions().
+//                    }
+//                });
             }
         });
     }
@@ -206,8 +206,8 @@ public class NotificationsFragment extends Fragment implements OnMapReadyCallbac
 
                                                 getRoute(originPoint, destinationPoint);
                                                 System.out.println("current ROutemapclick" + currentRoute);
-                                                button.setEnabled(true);
-                                                button.setBackgroundResource(R.color.black);
+//                                                button.setEnabled(true);
+//                                                button.setBackgroundResource(R.color.black);
                                                 System.out.println();
                                             }
                                         }

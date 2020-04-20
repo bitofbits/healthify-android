@@ -114,7 +114,7 @@ public class login extends AppCompatActivity
                                             else
                                             {
                                                 Toast.makeText(getApplicationContext(),"User does not exist , please sign up",Toast.LENGTH_SHORT).show();
-                                                finish();
+//                                                finish();
                                             }
                                         }
                                         else

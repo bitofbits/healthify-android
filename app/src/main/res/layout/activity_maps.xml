@@ -31,18 +31,18 @@
         android:text="Estimated Time"
         android:textAlignment="center"/>
 
-    <Button
-        android:id="@+id/startButton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@android:color/holo_blue_light"
-        android:enabled="false"
-        android:text="Start navigation"
-        android:textColor="@android:color/holo_green_light"
-        mapbox:layout_constraintStart_toStartOf="parent"
-        mapbox:layout_constraintTop_toTopOf="parent" />
+<!--    <Button-->
+<!--        android:id="@+id/startButton"-->
+<!--        android:layout_width="fill_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginLeft="16dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        android:background="@android:color/holo_blue_light"-->
+<!--        android:enabled="false"-->
+<!--        android:text="Start navigation"-->
+<!--        android:textColor="@android:color/holo_green_light"-->
+<!--        mapbox:layout_constraintStart_toStartOf="parent"-->
+<!--        mapbox:layout_constraintTop_toTopOf="parent" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

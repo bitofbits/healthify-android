@@ -1,9 +1,11 @@
 package com.example.healthify;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -19,6 +21,7 @@ import com.example.healthify.ui.home.Adapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -38,18 +41,24 @@ import Model.Order;
 import Model.PromoCodes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 
-public class DeliveryPartnerHome extends AppCompatActivity
+public class DeliveryPartnerHome extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
-ArrayList<String> order_list = new ArrayList<>();
-ListView display;
-Switch aSwitch;
-Bundle info = new Bundle();
-Context context = this;
-String email;
-FloatingActionButton fab;
+    ArrayList<String> order_list = new ArrayList<>();
+    ListView display;
+    Switch aSwitch;
+    Bundle info = new Bundle();
+    Context context = this;
+    String email;
+    FloatingActionButton fab;
+    DrawerLayout drawerLayout;
+
 //    @Override
 //    protected void onStop()
 //    {
@@ -71,6 +80,16 @@ FloatingActionButton fab;
         display = findViewById(R.id.list_view_delivery);
         aSwitch = findViewById(R.id.switch_DeliveryPartner);
         System.out.println("Clicking fab inside oncreate od DeliveryPartnerHome----------");
+
+        Toolbar toolbar = findViewById(R.id.toolbarDelivery);
+        NavigationView navigationView = findViewById(R.id.nav_drawer);
+        navigationView.setNavigationItemSelectedListener(this);
+        drawerLayout = findViewById(R.id.drawerLayoutDelivery);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
         fab.performClick();
         DocumentReference doc = BaseFirestore.db.collection("DeliveryPartner").document(email);
         doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
@@ -397,6 +416,46 @@ FloatingActionButton fab;
             else
                 return 0.20;
         }
+    }
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        System.out.println("cyka");
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.drawer_about_us:
+                startActivity(new Intent(this, AboutUs.class));
+                Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.drawer_profile:
+                intent = new Intent(getApplication(),Profile_UpdatePage.class);
+                intent.putExtra("username",getIntent().getStringExtra("user_name"));
+                intent.putExtra("CustomerType", "DeliveryPartner");
+                System.out.println("BEFORE-----------------------");
+                startActivity(intent);
+                System.out.println("AFTER-----------------------");
+                break;
+            case R.id.drawer_pick_place:
+                intent = new Intent(getApplication(),PickPlace.class);
+                intent.putExtra("user_email",getIntent().getStringExtra("user_name"));
+                intent.putExtra("signupType", "DeliveryPartner");
+                System.out.println("BEFORE-----------------------");
+                startActivity(intent);
+                System.out.println("AFTER-----------------------");
+                break;
+            case R.id.drawer_search_place:
+                intent = new Intent(getApplication(),Autocomplete.class);
+                intent.putExtra("user_email",getIntent().getStringExtra("user_name"));
+                intent.putExtra("signupType", "DeliveryPartner");
+                System.out.println("BEFORE-----------------------");
+                startActivity(intent);
+                System.out.println("AFTER-----------------------");
+                break;
+
+
+    }
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
 }

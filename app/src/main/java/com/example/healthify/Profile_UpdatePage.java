@@ -14,6 +14,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import Model.BaseFirestore;
 import Model.Customer;
+import Model.DeliveryPartner;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -36,7 +38,7 @@ public class Profile_UpdatePage extends AppCompatActivity
         phone= findViewById(R.id.upphone);
         pass = findViewById(R.id.up_pass);
         up = findViewById(R.id.up_change);
-        DocumentReference documentReference = BaseFirestore.db.collection("Customer").document(getIntent().getStringExtra("username"));
+        DocumentReference documentReference = BaseFirestore.db.collection(getIntent().getStringExtra("CustomerType")).document(getIntent().getStringExtra("username"));
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
         {
             @Override
@@ -44,11 +46,21 @@ public class Profile_UpdatePage extends AppCompatActivity
             {
                 if(task.isSuccessful())
                 {
-                    tmp = task.getResult().toObject(Customer.class);
-                    name.setText(tmp.getName());
-                    email.setText(tmp.getEmail());
-                    phone.setText(tmp.getPhone_number());
-                    pass.setText(tmp.getPassword());
+                    if(getIntent().getStringExtra("CustomerType").equals("Customer")){
+                        tmp = task.getResult().toObject(Customer.class);
+                        name.setText(tmp.getName());
+                        email.setText(tmp.getEmail());
+                        phone.setText(tmp.getPhone_number());
+                        pass.setText(tmp.getPassword());
+                    }
+                    else{
+                        DeliveryPartner tmp = task.getResult().toObject(DeliveryPartner.class);
+                        name.setText(tmp.getName());
+                        email.setText(tmp.getEmail());
+                        phone.setText(tmp.getMobile_number());
+                        pass.setText(tmp.getPassword());
+                    }
+
                 }
                 else
                 {
@@ -72,7 +84,7 @@ public class Profile_UpdatePage extends AppCompatActivity
     private void UpdateDetails()
     {
         System.out.println("------------- + "+email.getText());
-        BaseFirestore.db.collection("Customer").document(email.getText().toString())
+        BaseFirestore.db.collection(getIntent().getStringExtra("CustomerType")).document(getIntent().getStringExtra("username"))
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
         {
             @Override
@@ -89,6 +101,8 @@ public class Profile_UpdatePage extends AppCompatActivity
 //                    }
 //                    else
 //                    {
+                    if(getIntent().getStringExtra("CustomerType").equals("Customer")){
+                        tmp = task.getResult().toObject(Customer.class);
                         String id = tmp.getID();
                         Customer cnew = tmp;
                         cnew.setEmail(email.getText().toString());
@@ -101,6 +115,22 @@ public class Profile_UpdatePage extends AppCompatActivity
                         Intent goback = new Intent(getApplicationContext(),CustomerHome.class);
                         goback.putExtra("user_email",cnew.getEmail());
                         startActivity(goback);
+                    }
+                    else{
+                        DeliveryPartner tmp = task.getResult().toObject(DeliveryPartner.class);
+                        String id = tmp.getID();
+                        DeliveryPartner cnew = tmp;
+                        cnew.setEmail(email.getText().toString());
+                        System.out.println("------------------New name : "+name.getText().toString());
+                        cnew.setName(name.getText().toString());
+                        cnew.setPassword(pass.getText().toString());
+                        cnew.setMobile_number(phone.getText().toString());
+                        BaseFirestore.db.collection("DeliveryPartner").document(id).delete();
+                        cnew.sendToFirestore();
+                        Intent goback = new Intent(getApplicationContext(),DeliveryPartnerHome.class);
+                        goback.putExtra("user_name",cnew.getEmail());
+                        startActivity(goback);
+                    }
 //                    }
                 }
                 else
