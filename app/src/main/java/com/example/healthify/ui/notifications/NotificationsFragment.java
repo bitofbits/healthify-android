@@ -257,8 +257,15 @@ public class NotificationsFragment extends Fragment implements OnMapReadyCallbac
 
                         distanceText.setText(String.format("%.2f km", currentRoute.distance() / 1000));
                         int millis = currentRoute.duration().intValue() * 1000;
-                        String time = String.format("%02d hr  %02d min", TimeUnit.MILLISECONDS.toHours(millis),TimeUnit.MILLISECONDS.toMinutes(millis) -
-                                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)));
+                        String time;
+                        if(TimeUnit.MILLISECONDS.toHours(millis) != 0) {
+                            time = String.format("%02d hr  %02d min", TimeUnit.MILLISECONDS.toHours(millis), TimeUnit.MILLISECONDS.toMinutes(millis) -
+                                    TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)));
+                        }
+                        else{
+                            time = String.format("%02d min", TimeUnit.MILLISECONDS.toMinutes(millis) -
+                                    TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)));
+                        }
                         System.out.println("time" + time);
                         estimatedTimeText.setText(time);
                                 System.out.println("current ROute getroute distance = " + currentRoute.distance() + "time =" + currentRoute.duration());
