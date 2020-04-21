@@ -162,11 +162,10 @@ public class DashboardFragment extends Fragment
                             Order order = document.toObject(Order.class);
                             Adapter adapterDialog = new AdapterDashboard(order.getOrder_name());
                             ListView listView = (ListView) DashboardFragment.root.findViewById(R.id.dashboardListView);
-                            TextView DeliveryPersonTextView = DashboardFragment.root.findViewById(R.id.dashBoardDeliveryPersonName);
                             TextView TotalValueTextView = DashboardFragment.root.findViewById(R.id.dashBoardTotalOrder);
                             TextView dashBoardDeliveryPersonOTP = DashboardFragment.root.findViewById(R.id.dashBoardDeliveryPersonOTP);
-                            DeliveryPersonTextView.setText("Name " + order.getPartner());
-                            TotalValueTextView.setText("Total Cost ₹ "  +String.valueOf(order.getCost()));
+
+                            TotalValueTextView.setText("₹ "  +String.valueOf(order.getCost()));
                             dashBoardDeliveryPersonOTP.setText("OTP " + order.getOtp());
                             if(order.getStatus() == 0){
                                 orderStatusView.setText("Food is being prepared!");
@@ -176,7 +175,7 @@ public class DashboardFragment extends Fragment
                             }
                             listView.setAdapter(adapterDialog);
                             System.out.println("DeliveryPersonTextView.getText()" + DeliveryPersonTextView.getText());
-                            BaseFirestore.db.collection("DeliveryPartner").whereEqualTo("name", order.getPartner()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            BaseFirestore.db.collection("DeliveryPartner").whereEqualTo("email", order.getPartner()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                     System.out.println("andar gya");
@@ -184,11 +183,14 @@ public class DashboardFragment extends Fragment
                                         for (QueryDocumentSnapshot document : task.getResult()){
                                             if(document.exists())
                                             {
+                                                System.out.println("andar gya2");
                                                 DeliveryPartner deliveryPartner = document.toObject(DeliveryPartner.class);
                                                 TextView dashBoardDeliveryPersonPhone = DashboardFragment.root.findViewById(R.id.dashBoardDeliveryPersonPhone);
+                                                TextView DeliveryPersonTextView = DashboardFragment.root.findViewById(R.id.dashBoardDeliveryPersonName);
                                                 String phoneNumber = deliveryPartner.getMobile_number();
                                                 System.out.println("Phone Number" + phoneNumber);
-                                                dashBoardDeliveryPersonPhone.setText("Phone Number " + phoneNumber);
+                                                dashBoardDeliveryPersonPhone.setText("" + phoneNumber);
+                                                DeliveryPersonTextView.setText("" + deliveryPartner.getName());
                                             }
                                         }
 

@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:mapbox="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark">
 
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
@@ -20,7 +21,11 @@
         android:textSize="30sp"
         android:layout_marginTop="10dp"
         android:text="Distance"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:background="@drawable/del_list_back"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:padding="3dp"/>
     <TextView
         android:id="@+id/notificationsFragmentTime"
         android:layout_width="match_parent"
@@ -29,7 +34,11 @@
         android:textSize="30sp"
         android:layout_marginTop="10dp"
         android:text="Estimated Time"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:background="@drawable/del_list_back"
+        android:padding="3dp"/>
 
         <Button
             android:id="@+id/startButton"

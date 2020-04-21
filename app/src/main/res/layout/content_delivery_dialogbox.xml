@@ -109,7 +109,7 @@
             android:layout_width="90dp"
             android:layout_height="90dp"
             android:background="@drawable/order_list_background"
-            android:layout_marginTop="-119dp"
+            android:layout_marginTop="-180dp"
             android:layout_marginRight="20dp"
             android:layout_gravity="right"
             android:drawableTop="@drawable/ic_map_white_24dp"

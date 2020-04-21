@@ -190,12 +190,25 @@ public class DeliveryPartnerHome extends AppCompatActivity implements Navigation
                                     info.putString("cust_email"+document.get("order_id").toString(),document.get("customer_email").toString());
                                     info.putString("OTP"+document.get("order_id").toString(),document.get("otp").toString());
                                     info.putLong("status"+document.get("order_id").toString(), (Long) document.get("status"));
+
+                                    BaseFirestore.db.collection("Customer").document(document.get("customer_email").toString()).
+                                            get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if(task.isSuccessful()){
+                                                Customer customer = task.getResult().toObject(Customer.class);
+                                                System.out.println("Utsav " + customer.getAddress());
+                                                info.putString("address"+document.get("order_id").toString(),customer.getAddress());
+                                                ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(),android.R.layout.simple_list_item_1,order_list);
+                                                System.out.println(order_list.size());
+                                                display.setAdapter(arrayAdapter);
+                                                listener();
+                                            }
+                                        }
+                                    });
+
                                     //System.out.println("inside doc : "+info.getSerializable(document.get("order_id").toString()) + info.getInt(document.get("order_id").toString()));
                                 }
-                                ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(),android.R.layout.simple_list_item_1,order_list);
-                                System.out.println(order_list.size());
-                                display.setAdapter(arrayAdapter);
-                                listener();
                             }
                         }
                         else
@@ -263,6 +276,8 @@ public class DeliveryPartnerHome extends AppCompatActivity implements Navigation
                 specific.putString("KEY",val);
                 specific.putString("OTP"+val,info.get("OTP"+val).toString());
                 specific.putInt("status"+val,info.getInt("status"+val));
+                specific.putString("address"+val,info.get("address"+val).toString());
+                System.out.println("info.get(\"address\"+val)" + info.get("address"+val));
                 Details dialog = new Details();
                 dialog.setArguments(specific);
                 dialog.show(getSupportFragmentManager(),"Details Box");
@@ -279,6 +294,7 @@ public class DeliveryPartnerHome extends AppCompatActivity implements Navigation
         TextView cname;
         TextView cphone;
         TextView cadd;
+        TextView cotp;
         Button delivered;
         Button pick;
         Customer current_customer;
@@ -297,12 +313,14 @@ public class DeliveryPartnerHome extends AppCompatActivity implements Navigation
             total = rootView.findViewById(R.id.total_DeliveryParter);
             cname = rootView.findViewById(R.id.cust_name_DeliveryPartner);
             cphone= rootView.findViewById(R.id.cust_phone_DeliveryPartner);
+            cotp = rootView.findViewById(R.id.cust_otp_DeliveryPartner);
             cadd = rootView.findViewById(R.id.cust_add_DeliveryPartner);
             delivered=rootView.findViewById(R.id.deliverdone_DeliveryPartner);
             String many = properties.get("KEY").toString();
             total.setText("₹ "+Integer.toString(properties.getInt("cost"+many)));
             //cname.setText(properties.getString("cust_email"+many));
-            cadd.setText("OTP: "+properties.getString("OTP"+many));
+            cotp.setText("OTP: "+properties.getString("OTP"+many));
+            cadd.setText("Address: "+properties.getString("address"+many));
             adapter = new Adapter((HashMap<String, ArrayList<String>>) properties.getSerializable("HashMap"));
             details.setAdapter(adapter);
             final DocumentReference customer_ref = BaseFirestore.db.collection("Customer").document(properties.getString("cust_email"+many));
