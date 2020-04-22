@@ -34,24 +34,30 @@ public class login extends AppCompatActivity
         setContentView(R.layout.activity_login);
         PromoCodes c1 = new PromoCodes("AA123",0.1);
         c1.sendToFirestore();
-        SharedPreferences sharedPreferences=context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE);;
+        SharedPreferences sharedPreferences=context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
         BaseFirestore.db.collection("PromoCodes").document(c1.getID()).update("Code","AB123");
         System.out.println("PROMO SHOULD BE UPDATED NOW--------------------");
-        //DeliveryPartner raj = new DeliveryPartner("dp","1212","dp","dp",false,0);
-        //raj.sendToFirestore();
+
+
         email=findViewById(R.id.edittext_login_enail);
         password=findViewById(R.id.editText_password);
-
         signup=findViewById(R.id.text_signup);
 
+        System.out.println("sharedPreferences" + sharedPreferences.getString("customerType","null"));
+        email.setText(sharedPreferences.getString("email",""));
+        password.setText(sharedPreferences.getString("password",""));
+        if(sharedPreferences.getString("customerType","null").equals("Customer")){
+            go_to_Customet_Home();
+        }
+        else if(sharedPreferences.getString("customerType","null").equals("Delivery")){
+            got_to_DeliveryPerson_Home();
+        }
         signup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(login.this, signup.class);
                 startActivity(intent);
             }
         });
-        email.setText(sharedPreferences.getString("email",""));
-        password.setText(sharedPreferences.getString("password",""));
         System.out.println("INSIDE LOGIN CLASS -----------------------");
         System.out.println("Initially : "+signin);
         signin=findViewById(R.id.button_signin);
@@ -82,6 +88,7 @@ public class login extends AppCompatActivity
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putString("email",email.getText().toString());
                                     editor.putString("password",pa);
+                                    editor.putString("customerType", "Customer");
                                     editor.commit();
                                     go_to_Customet_Home();
                                 }
@@ -110,6 +117,7 @@ public class login extends AppCompatActivity
                                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                                     editor.putString("email",email.getText().toString());
                                                     editor.putString("password",pa);
+                                                    editor.putString("customerType", "Delivery");
                                                     editor.commit();
                                                     got_to_DeliveryPerson_Home();
                                                 }
@@ -153,6 +161,7 @@ public class login extends AppCompatActivity
         Intent i = new Intent(context,CustomerHome.class);
         i.putExtra("user_email",email.getText().toString());
         startActivity(i);
+        finish();
     }
     public void got_to_DeliveryPerson_Home()
     {
@@ -161,6 +170,7 @@ public class login extends AppCompatActivity
         Intent it = new Intent(context,DeliveryPartnerHome.class);
         it.putExtra("user_name",email.getText().toString());
         startActivity(it);
+        finish();
     }
 
 

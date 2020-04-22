@@ -68,6 +68,7 @@ public class PickPlace extends AppCompatActivity {
 
         if (resultCode == RESULT_CANCELED) {
             Button goToPickerActivityButton = findViewById(R.id.go_to_picker_button);
+            finish();
 //            goToPickerActivityButton.setVisibility(View.VISIBLE);
         } else if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             CarmenFeature carmenFeature = PlacePicker.getPlace(data);
@@ -116,4 +117,5 @@ public class PickPlace extends AppCompatActivity {
             EasyPermissions.requestPermissions(this, "Please grant the location permission", REQUEST_CODE, perms);
         }
     }
+
 }

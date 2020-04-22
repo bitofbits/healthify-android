@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="65dp"
         android:backgroundTint="#FFFFFF"
         android:clickable="true"
         android:src="@drawable/shopping_cart_racing"

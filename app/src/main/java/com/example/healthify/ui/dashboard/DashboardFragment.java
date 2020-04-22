@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -138,6 +139,7 @@ public class DashboardFragment extends Fragment
         TextView cancelButtonDashboardFragment = this.root.findViewById(R.id.cancelButtonDashboardFragment);
         TextView dashBoardDeliveryDetails = this.root.findViewById(R.id.dashBoardDeliveryDetails);;
         TextView orderStatusView = this.root.findViewById(R.id.textView);
+        RelativeLayout dashBoardOtpParent = this.root.findViewById(R.id.dashBoardOtpParent);
         ListView listView =  this.root.findViewById(R.id.dashboardListView);
 
         activeOrderTextView.setText("There are no orders right now");
@@ -149,6 +151,7 @@ public class DashboardFragment extends Fragment
             dashBoardDeliveryPersonOTP.setVisibility(View.VISIBLE);
             cancelButtonDashboardFragment.setVisibility(View.VISIBLE);
             dashBoardDeliveryDetails.setVisibility(View.VISIBLE);
+            dashBoardOtpParent.setVisibility(View.VISIBLE);
             listView.setVisibility(View.VISIBLE);
 
             System.out.println("resetTextView()" + this.activeOrder);
@@ -166,7 +169,7 @@ public class DashboardFragment extends Fragment
                             TextView dashBoardDeliveryPersonOTP = DashboardFragment.root.findViewById(R.id.dashBoardDeliveryPersonOTP);
 
                             TotalValueTextView.setText("₹ "  +String.valueOf(order.getCost()));
-                            dashBoardDeliveryPersonOTP.setText("OTP " + order.getOtp());
+                            dashBoardDeliveryPersonOTP.setText(order.getOtp());
                             if(order.getStatus() == 0){
                                 orderStatusView.setText("Food is being prepared!");
                             }
@@ -215,6 +218,7 @@ public class DashboardFragment extends Fragment
             cancelButtonDashboardFragment.setVisibility(View.INVISIBLE);
             listView.setVisibility(View.INVISIBLE);
             dashBoardDeliveryDetails.setVisibility(View.INVISIBLE);
+            dashBoardOtpParent.setVisibility(View.INVISIBLE);
             activeOrderTextView.setText("You have no pending orders right now");
         }
 

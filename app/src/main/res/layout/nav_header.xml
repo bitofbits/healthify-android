@@ -3,7 +3,7 @@
     android:id="@+id/nav_header"
     android:layout_width="match_parent"
     android:layout_height="160dp"
-    android:background="@color/colorAccent"
+    android:background="@drawable/abstract_3"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackgroundBorderless"
@@ -12,17 +12,23 @@
     android:padding="16dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/nav_header_imageView"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:src="@mipmap/ic_launcher" />
+        android:layout_width="104dp"
+        android:layout_height="84dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="10dp"
+        android:padding="0dp"
+        android:src="@drawable/pngwave" />
 
     <TextView
         android:id="@+id/nav_header_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="16dp"
-        android:text="Chike Mgbemena"
+        android:paddingTop="6dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="Customer Name"
+        android:layout_marginLeft="10dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 </LinearLayout>

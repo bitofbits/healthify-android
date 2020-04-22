@@ -92,7 +92,6 @@ public class HomeFragment extends Fragment
 
         //Check if the customer has active order or not
         this.activeOrder = getArguments().getBoolean("activeOrder");
-        Toast.makeText(getContext(),"Active Order : "+activeOrder,Toast.LENGTH_SHORT).show();
         System.out.println("Inside HomFragment activity with "+this+" ,activeOrder : "+activeOrder);
 
         //Initialize the view
@@ -311,7 +310,7 @@ public class HomeFragment extends Fragment
                                         ", Value = " + entry.getValue().get(0)+"-----------------------");
                             }
                             JavaMailAPI obj = new JavaMailAPI(getActivity(),
-                                    "utsavshah99@live.com",
+                                    mBundle.get("user_email").toString(),
                                     "Order Placed",
                                     "Hola, <b>"+/*createNewOrder.getCustomer_email()*/cust_details.getName()+"</b><br>"
                                             +"Thanks for ordering from Healthify-the new healthy eating joint!<br><br>"+adding+"<br><br>"

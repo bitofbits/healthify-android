@@ -2,6 +2,7 @@ package com.example.healthify;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -100,6 +101,7 @@ public class DeliveryPartnerHome extends AppCompatActivity implements Navigation
                 if(radiusViewText.getText().toString() != null){
                     BaseFirestore.db.collection("DeliveryPartner").document(email).
                             update("radius",Double.valueOf(radiusViewText.getText().toString()));
+                    Toast.makeText(context, "Radius Set to " + radiusViewText.getText().toString() + " km", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -113,8 +115,10 @@ public class DeliveryPartnerHome extends AppCompatActivity implements Navigation
             {
                 if(task.isSuccessful())
                 {
+                    TextView navDrawerCustomerName = findViewById(R.id.nav_header_textView);
                     DocumentSnapshot d = task.getResult();
                     DeliveryPartner x = d.toObject(DeliveryPartner.class);
+                    navDrawerCustomerName.setText(x.getName());
                     if(x.isIsonline())
                     {
                         aSwitch.setTextOn("Online");
@@ -386,7 +390,7 @@ public class DeliveryPartnerHome extends AppCompatActivity implements Navigation
 
                                         // Delete Order
                                         Order t = document.toObject(Order.class);
-                                        od= t.getOrder_name();
+                                        od = t.getOrder_name();
                                         BaseFirestore.db.collection("Order").document(document.getId()).delete();
                                         //setActiveOrder(false);
                                     }
@@ -398,8 +402,7 @@ public class DeliveryPartnerHome extends AppCompatActivity implements Navigation
 
                                     }
                                     PromoCodes code = new PromoCodes(generateString(),generate_disc());
-                                    JavaMailAPI obj = new JavaMailAPI(getActivity(),
-                                            "utsavshah99@live.com",
+                                    JavaMailAPI obj = new JavaMailAPI(getActivity(), current_customer.getEmail(),
                                             "Order Delivered!",
                                             "Hola, <b>"+current_customer.getName()+"</b><br>"
                                                     +"Thanks for trusting us!<br><br>"
@@ -492,12 +495,21 @@ public class DeliveryPartnerHome extends AppCompatActivity implements Navigation
                 startActivity(intent);
                 System.out.println("AFTER-----------------------");
                 break;
+            case R.id.drawer_logout:
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
+                sharedPreferences.edit();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();
+                editor.apply();
+                intent = new Intent(getApplication(), login.class);
+                startActivity(intent);
+                finish();
 
 
     }
 
         drawerLayout.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 
 }

@@ -1,6 +1,8 @@
 package com.example.healthify;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -16,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import Model.Customer;
@@ -75,7 +78,6 @@ public class CustomerHome extends AppCompatActivity implements NavigationView.On
                 {
                     if(task.getResult().isEmpty())
                     {
-                        Toast.makeText(getApplicationContext(),"isEmpty",Toast.LENGTH_SHORT).show();
                         activeOrder = false;
                     }
                     else
@@ -101,7 +103,15 @@ public class CustomerHome extends AppCompatActivity implements NavigationView.On
         });
 
         System.out.println("IN CUSTOMER HOME ACTIVE ORDER------------2222222222222222 : " + activeOrder);
-
+        Customer.db.collection("Customer").document(emailAddress).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                TextView navDrawerCustomerName = findViewById(R.id.nav_header_textView);
+                Customer customer = task.getResult().toObject(Customer.class);
+                navDrawerCustomerName.setText(customer.getName());
+                System.out.println("customer.getName()" + customer.getName());
+            }
+        });
 
 
         //Initialize and populate BottomNavView
@@ -145,10 +155,20 @@ public class CustomerHome extends AppCompatActivity implements NavigationView.On
                 startActivity(intent);
                 System.out.println("AFTER-----------------------");
                 break;
+            case R.id.drawer_logout:
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
+                sharedPreferences.edit();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();
+                editor.apply();
+                intent = new Intent(getApplication(), login.class);
+                startActivity(intent);
+                finish();
+
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 
 //    private void getLastLocation(){

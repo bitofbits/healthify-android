@@ -34,28 +34,27 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:text="Amount to Collect:"
+            android:layout_centerVertical="true"
+            android:textStyle="bold"
             android:textColor="#8cb8b7"
-            android:textSize="27sp"
-            app:layout_constraintBottom_toBottomOf="@+id/list_view_delivery"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:textSize="24sp"
+            />
 
         <TextView
             android:id="@+id/total_DeliveryParter"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:gravity="right"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:text="Rs xxxx"
             android:textColor="@color/colorInput"
             android:textSize="27sp"
-            app:layout_constraintBottom_toBottomOf="@+id/list_view_delivery"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            />
 
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
@@ -66,32 +65,34 @@
             android:id="@+id/cust_name_DeliveryPartner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:text="cust_name"
             android:textColor="@color/colorInput"
-            android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="@+id/total_DeliveryParter" />
+            android:textSize="19sp"
+            />
 
         <TextView
             android:id="@+id/cust_phone_DeliveryPartner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="45dp"
             android:text="cust_phone"
-            android:textSize="22sp"
+            android:textSize="19sp"
             android:textColor="@color/colorInput"
-            app:layout_constraintBottom_toBottomOf="@+id/cust_name_DeliveryPartner" />
+            />
 
         <TextView
             android:id="@+id/cust_otp_DeliveryPartner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="80dp"
             android:text="otp"
-            android:textSize="22sp"
+            android:textSize="19sp"
             android:textColor="@color/colorInput"
-            app:layout_constraintBottom_toBottomOf="@+id/cust_name_DeliveryPartner" />
+             />
 
         <TextView
             android:id="@+id/cust_add_DeliveryPartner"
@@ -99,26 +100,29 @@
             android:layout_marginLeft="10dp"
             android:layout_marginBottom="10dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="115dp"
             android:text="cust_add"
             android:textColor="@color/colorInput"
-            android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="@+id/cust_phone_DeliveryPartner" />
+            android:textSize="19sp"
+            />
 
         <Button
             android:id="@+id/navigateDelivery"
             android:layout_width="90dp"
             android:layout_height="90dp"
             android:background="@drawable/order_list_background"
-            android:layout_marginTop="-180dp"
             android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="15dp"
+            android:layout_alignParentTop="true"
             android:layout_gravity="right"
             android:drawableTop="@drawable/ic_map_white_24dp"
             android:padding="10dp"
             android:text="Navigate"
             android:textColor="#006b39"
-            app:layout_constraintTop_toBottomOf="@+id/total_DeliveryParter" />
+             />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <Button
         android:id="@+id/pickup_DeliveryPartner"
@@ -136,6 +140,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/deliver_back"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
         android:text="Delivered"
         android:textColor="@color/colorInput"
         app:layout_constraintTop_toBottomOf="@+id/total_DeliveryParter" />
