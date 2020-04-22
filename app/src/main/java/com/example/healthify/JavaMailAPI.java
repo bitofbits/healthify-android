@@ -1,12 +1,11 @@
 package com.example.healthify;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -32,12 +31,10 @@ public class JavaMailAPI extends AsyncTask<Void,Void,Void>{
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        // Not doing anything for now. Add pre-execute tasks below, if any.
     }
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-//        Toast.makeText(context,"Order Confirmed. Please Check your Mail",Toast.LENGTH_LONG).show();
     }
     @Override
     protected Void doInBackground(Void... params) {

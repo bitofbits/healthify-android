@@ -2,6 +2,7 @@ package com.example.healthify;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -33,6 +34,7 @@ public class login extends AppCompatActivity
         setContentView(R.layout.activity_login);
         PromoCodes c1 = new PromoCodes("AA123",0.1);
         c1.sendToFirestore();
+        SharedPreferences sharedPreferences=context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE);;
         BaseFirestore.db.collection("PromoCodes").document(c1.getID()).update("Code","AB123");
         System.out.println("PROMO SHOULD BE UPDATED NOW--------------------");
         //DeliveryPartner raj = new DeliveryPartner("dp","1212","dp","dp",false,0);
@@ -48,7 +50,8 @@ public class login extends AppCompatActivity
                 startActivity(intent);
             }
         });
-
+        email.setText(sharedPreferences.getString("email",""));
+        password.setText(sharedPreferences.getString("password",""));
         System.out.println("INSIDE LOGIN CLASS -----------------------");
         System.out.println("Initially : "+signin);
         signin=findViewById(R.id.button_signin);
@@ -73,19 +76,19 @@ public class login extends AppCompatActivity
                             if(doc.exists())
                             {
                                 String pa = doc.getString("password");
-
                                 Customer c = doc.toObject(Customer.class);
                                 //System.out.println(c);
-                                if(pa.equals(password.getText().toString()))
-                                {
-                                    //login successful
-
-                                    //Toast.makeText(getApplicationContext(),"Correct: "+c.getEmail(),Toast.LENGTH_SHORT).show();
+                                if(pa.equals(password.getText().toString())) {
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putString("email",email.getText().toString());
+                                    editor.putString("password",pa);
+                                    editor.commit();
                                     go_to_Customet_Home();
                                 }
-                                else
-                                {
-                                    Toast.makeText(getApplicationContext(),"Incorrect Password customer",Toast.LENGTH_SHORT).show();
+                                else {
+                                    Toast.makeText(getApplicationContext(),
+                                            "Incorrect Password customer",
+                                            Toast.LENGTH_SHORT).show();
                                 }
                             }
                             else
@@ -104,6 +107,10 @@ public class login extends AppCompatActivity
                                                 String pa = ref.getString("password");
                                                 if(pa.equals(password.getText().toString()))
                                                 {
+                                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                                    editor.putString("email",email.getText().toString());
+                                                    editor.putString("password",pa);
+                                                    editor.commit();
                                                     got_to_DeliveryPerson_Home();
                                                 }
                                                 else
