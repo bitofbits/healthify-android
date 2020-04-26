@@ -4,7 +4,7 @@ public class Customer extends BaseFirestore
 {
     private int past_orders;
     private String name;
-    private int age;
+//    private int age;
     private String email;
     private String password;
     private String phone_number;
@@ -28,7 +28,7 @@ public class Customer extends BaseFirestore
         email=e;
         password=pass;
         phone_number=pho;
-        age=0;
+//        age=0;
         preferred_customer=false;
         past_orders=0;
     }
@@ -104,15 +104,15 @@ public class Customer extends BaseFirestore
         this.name = name;
     }
 
-    public int getAge()
-    {
-        return age;
-    }
-
-    public void setAge(int age)
-    {
-        this.age = age;
-    }
+//    public int getAge()
+//    {
+//        return age;
+//    }
+//
+//    public void setAge(int age)
+//    {
+//        this.age = age;
+//    }
 
     public String getEmail()
     {

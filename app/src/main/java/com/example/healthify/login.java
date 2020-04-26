@@ -16,6 +16,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import Model.BaseFirestore;
 import Model.Customer;
+import Model.Product;
 import Model.PromoCodes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +35,7 @@ public class login extends AppCompatActivity
         setContentView(R.layout.activity_login);
         PromoCodes c1 = new PromoCodes("AA123",0.1);
         c1.sendToFirestore();
+
         SharedPreferences sharedPreferences=context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
         BaseFirestore.db.collection("PromoCodes").document(c1.getID()).update("Code","AB123");
         System.out.println("PROMO SHOULD BE UPDATED NOW--------------------");

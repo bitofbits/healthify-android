@@ -78,7 +78,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View view)
             {
-                Toast.makeText(context,"Hello food item!", Toast.LENGTH_SHORT).show();
+
             }
         });
 

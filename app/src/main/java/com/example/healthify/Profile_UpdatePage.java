@@ -76,7 +76,7 @@ public class Profile_UpdatePage extends AppCompatActivity
             {
 
                 UpdateDetails();
-                Toast.makeText(Profile_UpdatePage.this, "Clicked onClick!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Profile_UpdatePage.this, "Clicked onClick!", Toast.LENGTH_SHORT).show();
             }
         });
     }

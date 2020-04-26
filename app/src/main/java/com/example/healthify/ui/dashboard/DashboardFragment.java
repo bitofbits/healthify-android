@@ -161,52 +161,54 @@ public class DashboardFragment extends Fragment
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if(task.isSuccessful()){
-                        for (QueryDocumentSnapshot document : task.getResult()){
-                            Order order = document.toObject(Order.class);
-                            Adapter adapterDialog = new AdapterDashboard(order.getOrder_name());
-                            ListView listView = (ListView) DashboardFragment.root.findViewById(R.id.dashboardListView);
-                            TextView TotalValueTextView = DashboardFragment.root.findViewById(R.id.dashBoardTotalOrder);
-                            TextView dashBoardDeliveryPersonOTP = DashboardFragment.root.findViewById(R.id.dashBoardDeliveryPersonOTP);
-
-                            TotalValueTextView.setText("₹ "  +String.valueOf(order.getCost()));
-                            dashBoardDeliveryPersonOTP.setText(order.getOtp());
-                            if(order.getStatus() == 0){
-                                orderStatusView.setText("Food is being prepared!");
-                            }
-                            else{
-                                orderStatusView.setText("Out for Delivery!");
-                            }
-                            listView.setAdapter(adapterDialog);
-                            System.out.println("DeliveryPersonTextView.getText()" + DeliveryPersonTextView.getText());
-                            BaseFirestore.db.collection("DeliveryPartner").whereEqualTo("email", order.getPartner()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    System.out.println("andar gya");
-                                    if(task.isSuccessful()){
-                                        for (QueryDocumentSnapshot document : task.getResult()){
-                                            if(document.exists())
-                                            {
-                                                System.out.println("andar gya2");
-                                                DeliveryPartner deliveryPartner = document.toObject(DeliveryPartner.class);
-                                                TextView dashBoardDeliveryPersonPhone = DashboardFragment.root.findViewById(R.id.dashBoardDeliveryPersonPhone);
-                                                TextView DeliveryPersonTextView = DashboardFragment.root.findViewById(R.id.dashBoardDeliveryPersonName);
-                                                String phoneNumber = deliveryPartner.getMobile_number();
-                                                System.out.println("Phone Number" + phoneNumber);
-                                                dashBoardDeliveryPersonPhone.setText("" + phoneNumber);
-                                                DeliveryPersonTextView.setText("" + deliveryPartner.getName());
-                                            }
-                                        }
-
-                                    }
-                                }
-                            });
+                        if(task.getResult().isEmpty()){
+                            Intent intent = new Intent(getContext(), CustomerHome.class);
+                            intent.putExtra("user_email", getArguments().getString("user_email"));
+                            startActivity(intent);
                         }
+                        else {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Order order = document.toObject(Order.class);
+                                Adapter adapterDialog = new AdapterDashboard(order.getOrder_name());
+                                ListView listView = (ListView) DashboardFragment.root.findViewById(R.id.dashboardListView);
+                                TextView TotalValueTextView = DashboardFragment.root.findViewById(R.id.dashBoardTotalOrder);
+                                TextView dashBoardDeliveryPersonOTP = DashboardFragment.root.findViewById(R.id.dashBoardDeliveryPersonOTP);
 
+                                TotalValueTextView.setText("₹ " + String.valueOf(order.getCost()));
+                                dashBoardDeliveryPersonOTP.setText(order.getOtp());
+                                if (order.getStatus() == 0) {
+                                    orderStatusView.setText("Food is being prepared!");
+                                } else {
+                                    orderStatusView.setText("Out for Delivery!");
+                                }
+                                listView.setAdapter(adapterDialog);
+                                System.out.println("DeliveryPersonTextView.getText()" + DeliveryPersonTextView.getText());
+                                BaseFirestore.db.collection("DeliveryPartner").whereEqualTo("email", order.getPartner()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                if (document.exists()) {
+                                                    DeliveryPartner deliveryPartner = document.toObject(DeliveryPartner.class);
+                                                    TextView dashBoardDeliveryPersonPhone = DashboardFragment.root.findViewById(R.id.dashBoardDeliveryPersonPhone);
+                                                    TextView DeliveryPersonTextView = DashboardFragment.root.findViewById(R.id.dashBoardDeliveryPersonName);
+                                                    String phoneNumber = deliveryPartner.getMobile_number();
+                                                    System.out.println("Phone Number" + phoneNumber);
+                                                    dashBoardDeliveryPersonPhone.setText("" + phoneNumber);
+                                                    DeliveryPersonTextView.setText("" + deliveryPartner.getName());
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                });
+                            }
+                        }
                     }
                 }
             });
             activeOrderTextView.setVisibility(View.INVISIBLE);
-            TotalValueTextView.setText("Total Cost    ₹"  + String.valueOf(getArguments().getInt("total")));
+//            TotalValueTextView.setText("Total Cost    ₹"  + String.valueOf(getArguments().getInt("total")));
 //            Adapter adapterDialog = new Adapter((HashMap<String, Long>) getArguments().getSerializable("HashMap"));
 
         }

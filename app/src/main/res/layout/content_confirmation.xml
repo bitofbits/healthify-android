@@ -70,15 +70,14 @@
         android:layout_width="218dp"
         android:layout_height="45dp"
         android:layout_marginBottom="-47dp"
+        android:background="@drawable/textbox_back"
         android:ems="10"
         android:hint="PROMO CODE?"
         android:inputType="textPersonName"
-        android:textColor="#000000"
-        android:textColorHint="@color/colorHint"
-        android:background="@drawable/textbox_back"
         android:padding="10dp"
         android:textAllCaps="true"
-        />
+        android:textColor="#FFFFFF"
+        android:textColorHint="@color/colorHint" />
 
     <Button
         android:id="@+id/promo_button"

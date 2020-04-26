@@ -98,15 +98,17 @@ public class DeliveryPartnerHome extends AppCompatActivity implements Navigation
             @Override
             public void onClick(View v) {
                 TextView radiusViewText = findViewById(R.id.radiusDeliveryText);
-                if(radiusViewText.getText().toString() != null){
+                if(!radiusViewText.getText().toString().equals("")){
                     BaseFirestore.db.collection("DeliveryPartner").document(email).
                             update("radius",Double.valueOf(radiusViewText.getText().toString()));
                     Toast.makeText(context, "Radius Set to " + radiusViewText.getText().toString() + " km", Toast.LENGTH_SHORT).show();
                 }
+                else{
+                    Toast.makeText(context, "Please enter a radius" + radiusViewText.getText().toString() + " km", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
-        fab.performClick();
         DocumentReference doc = BaseFirestore.db.collection("DeliveryPartner").document(email);
         doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
         {
@@ -158,7 +160,7 @@ public class DeliveryPartnerHome extends AppCompatActivity implements Navigation
 
             }
         });
-        //fab.performClick();
+        fab.performClick();
         fab.setOnClickListener(new View.OnClickListener()
         {
             @Override
